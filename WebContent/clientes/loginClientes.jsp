@@ -11,22 +11,21 @@
 </head>
 <body>
     <div class="container">
-        <div class="col-12 mt-5">
-            <h3 class="text-center">Inicio de sesion para clientes</h3>
-        </div>
-        <div class="col-12 mt-5">
-            <div class="d-flex justify-content-center align-items-center">
-                <form class="w-25 shadow-lg p-3 mb-5 bg-white rounded p-5">
-                    <div class="form-group mt-3">
-                        <span>Correo</span>
-                        <input type="email" class="form-control">
-                    </div>
-                    <div class="form-group mt-3">
-                        <span>Contraseña</span>
-                        <input type="password" class="form-control">
-                    </div>
-                    <div class="text-center mt-5"><button type="submit" class="btn btn-primary">Ingresar</button></div>
-                </form>
+        <div class="row">
+            <div class="col-12 mt-5">
+                <div class="d-flex justify-content-center align-items-center">
+                    <form class="w-25 shadow-lg p-3 mb-5 bg-white rounded p-5">
+                        <div class="form-group mt-3">
+                            <span>Correo</span>
+                            <input type="email" class="form-control">
+                        </div>
+                        <div class="form-group mt-3">
+                            <span>Contraseña</span>
+                            <input type="password" class="form-control">
+                        </div>
+                        <div class="text-center mt-5"><button type="submit" class="btn btn-primary">Ingresar</button></div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
