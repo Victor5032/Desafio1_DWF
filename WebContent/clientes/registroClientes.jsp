@@ -47,7 +47,7 @@
                                 <span>Contraseña</span>
                                 <input type="password" class="form-control" id="contraseñaRegistroClientes">
                             </div>
-                            <div class="text-center mt-5"><button type="submit" class="btn btn-primary">Ingresar</button></div>
+                            <div class="text-center mt-5"><button type="submit" class="btn btn-primary">Registrarse</button></div>
                         </div>
                     </form>
                 </div>
