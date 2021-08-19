@@ -2,6 +2,12 @@
 
 ##### © 2021
 
-Bueno que los dioses de la programacion nos bendigan 
-recuerden siempre mejor afuera que adentro como dice
-el shertk 🐱‍👤🐱‍👤🐱‍👤
+Srek is love shrek is life
+
+att: Fernando Merlos uwu 
+
+
+Palabras clave:
+
+
+oyo es oyo
