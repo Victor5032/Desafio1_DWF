@@ -1,9 +1,16 @@
+html, body, main {
+    height: 100% !important;
+}
+
+.bg-silver {
+    background-color: #ADB5BD !important;
+}
 
 .contenedortotal{
     background-color: silver;
-     border-radius: 10px;
-      padding: 25px;
-      margin-top: 50px;
+    border-radius: 10px;
+    padding: 25px;
+    margin-top: 50px;
     margin-right: 35%;
     margin-left: 35%;
 }
@@ -32,12 +39,13 @@
 	font-size: 22px;
 }
 
-.password{
+/*.password{
 	text-align: center;
 }
 #password{
 	text-align: center;
-}
+}*/
+
 .botonenviar{
 	text-align:center;
 }
@@ -45,7 +53,7 @@
 	text-align:center;
 }
 
-/*Acá comienza el estilo de formulario*/
+/*Acï¿½ comienza el estilo de formulario*/
 
 #tablaoferta{
 	background-color: #E5E7E9;
