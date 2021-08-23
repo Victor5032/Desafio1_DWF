@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import sv.edu.udb.www.beans.Oferta;
+import sv.edu.udb.www.models.EmpresaModel;
 import sv.edu.udb.www.db.Conexion;
 
 public class OfertaModel extends Conexion {
@@ -37,18 +38,29 @@ public class OfertaModel extends Conexion {
 		}
 	}
 	
-		public Oferta obtnerOferta(int idOferta) throws SQLException {
+		public Oferta obtenerOferta(int idOferta) throws SQLException {
 		try {
 			Oferta oferta = new Oferta();
-			String sqlString = "CALL obtenerOferta(?)";
+			
+			String sqlString = "SELECT * FROM ofertas WHERE oferta_id = ?";
+			
 			this.conectar();
+			
 			cs = conexion.prepareCall(sqlString);
+			
 			cs.setInt(1, idOferta);
+			
 			rs = cs.executeQuery();
+			
 			if (rs.next()) {
+				EmpresaModel empresa = new EmpresaModel();
+				
+				String nombreEmpresa = empresa.obtenerEmpresa(rs.getInt("empresa_id")).getNombreEmpresa();
+				
 				oferta.setIdOferta(rs.getInt("oferta_id"));
+				oferta.setNombreEmpresa(nombreEmpresa);
 				oferta.setTituloOferta(rs.getString("titulo"));
-				oferta.setDescripcionOferta(rs.getString("descripciom"));
+				oferta.setDescripcionOferta(rs.getString("descripcion"));
 				oferta.setFechaInicioOferta(rs.getDate("fecha_inicio"));
 				oferta.setFechaFinOferta(rs.getDate("fecha_fin"));
 				oferta.setPrecioRegularOferta(rs.getDouble("precio_regular"));
@@ -57,12 +69,16 @@ public class OfertaModel extends Conexion {
 				oferta.setExtrasOferta(rs.getString("extras"));
 				oferta.setObservacionesOferta(rs.getString("observaciones"));
 			}
+			
 			this.desconectar();
+			
 			return oferta;
 		} catch (SQLException ex) {
 			// TODO: handle exception
 			Logger.getLogger(OfertaModel.class.getName()).log(Level.SEVERE, null, ex);
+			
 			this.desconectar();
+			
 			return null;
 		}
 	}
@@ -128,7 +144,7 @@ public class OfertaModel extends Conexion {
 				EmpresaModel empresa = new EmpresaModel();
 				
 				String nombreEmpresa = empresa.obtenerEmpresa(rs.getInt("empresa_id")).getNombreEmpresa();
-				// System.out.println(rs.getInt("oferta_id"));
+				
 				oferta.setIdOferta(rs.getInt("oferta_id"));
 				oferta.setNombreEmpresa(nombreEmpresa);
 				oferta.setTituloOferta(rs.getString("titulo"));

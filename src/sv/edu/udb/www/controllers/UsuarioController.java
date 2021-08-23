@@ -69,7 +69,9 @@ public class UsuarioController extends HttpServlet {
 				case "details":
 					loginRequired(response, session);
 					
-					request.setAttribute("oferta", "Hola");
+					String id = request.getParameter("codigo");
+					
+					request.setAttribute("oferta", ofertaModel.obtenerOferta(Integer.parseInt(id)));
 					
 					request.getRequestDispatcher("/admin/detalles.jsp").forward(request, response);
 					break;

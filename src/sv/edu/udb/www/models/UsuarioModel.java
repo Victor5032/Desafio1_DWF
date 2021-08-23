@@ -7,8 +7,6 @@ import java.security.NoSuchAlgorithmException;
 
 import sv.edu.udb.www.db.Conexion;
 import sv.edu.udb.www.utils.Sha1;
-import sv.edu.udb.www.beans.Oferta;
-import sv.edu.udb.www.models.EmpresaModel;
 
 public class UsuarioModel extends Conexion {
 	public int loginAdmin(String usuario, String password) throws SQLException, NoSuchAlgorithmException {
@@ -31,6 +29,8 @@ public class UsuarioModel extends Conexion {
 			if (rs.next()) {
 				response = 1;
 			}
+			 
+			this.desconectar();
 			
 			return response;
 		} catch (SQLException e) {
