@@ -32,13 +32,16 @@ public class EmpresaController extends HttpServlet {
 	ArrayList<String> listaEventos = new ArrayList<>();
 	EmpresaModel model = new EmpresaModel();
 	Empresa empresa = new Empresa();
-
-	protected void processRequest(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+    
+	
+	
+	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		HttpSession session = request.getSession();
 		response.setContentType("text/html;charset=UTF-8");
 		try (PrintWriter out = response.getWriter()) {
 			if (request.getParameter("op") == null) {
-			   request.getRequestDispatcher("/empresas/LoginEmpresas.jsp").forward(request, response);
+				request.getRequestDispatcher("/empresas/LoginEmpresas.jsp").forward(request, response);
 			}
 
 			String opeacionString = request.getParameter("op");
@@ -61,7 +64,7 @@ public class EmpresaController extends HttpServlet {
 				request.getRequestDispatcher("/empresas/LoginEmpresas.jsp").forward(request, response);
 				break;
 			case "logInEmpresa":
-				logIngEmpresa(request, response, session);
+				logIngEmpresa(request, response,session);
 				break;
 
 			default:
@@ -85,7 +88,7 @@ public class EmpresaController extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		processRequest(request, response, null);
+		processRequest(request, response);
 	}
 
 	/**
@@ -99,7 +102,7 @@ public class EmpresaController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		processRequest(request, response, null);
+		processRequest(request, response);
 	}
 
 	/**
@@ -162,18 +165,20 @@ public class EmpresaController extends HttpServlet {
 			listaEventos.clear();
 			String correoEmpresaString = request.getParameter("correoEmpresa");
 			String passwordEmpresaString = request.getParameter("passwordEmpresa");
-			Empresa logEmpresa = model.iniciarSesion(correoEmpresaString, passwordEmpresaString);
-			if (logEmpresa != null) {
-				session.setAttribute("usser", logEmpresa.getEmpresa_id());
-				session.setAttribute("name", logEmpresa.getNombreEmpresa());
-				response.sendRedirect(request.getContextPath() + "/empresas/IngresarOferta.jsp");
-			}else {
+			Empresa empresaLogIn = model.iniciarSesion(correoEmpresaString, passwordEmpresaString);
+			if (empresaLogIn != null) {
+			session.setAttribute("usser", empresaLogIn.getEmpresa_id());
+			session.setAttribute("name", empresaLogIn.getNombreEmpresa());
+				response.sendRedirect(request.getContextPath() + "/empresas/VerEmpresa.jsp");
+			} else {
 				listaEventos.add("El usuario o contraseña no son correctos");
-				listaEventos.add("Ya avtico su cuenta con el codigo de verificacion ?");
+				listaEventos.add("Ya activo su cuenta con el codigo de verificacion ?");
+				request.setAttribute("listaEventos", listaEventos);
+				request.getRequestDispatcher("empresas.do?op=logIn").forward(request, response);
 			}
-		} catch (IOException | SQLException e) {
+		} catch (IOException | SQLException | ServletException ex) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.getLogger(EmpresaController.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 

@@ -1,6 +1,6 @@
 package sv.edu.udb.www.utils;
 
-import java.util.Properties;
+import java.util.Properties; 
 import java.util.logging.*;
 
 import javax.mail.*;
@@ -350,10 +350,10 @@ public class SendEmail {
 					+ "<table id=\"u_content_heading_1\" style=\"font-family:arial,helvetica,sans-serif;\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" border=\"1\">\r\n"
 					+ "  <tbody>\r\n"
 					+ "    <tr>\r\n"
-					+ "      <td class=\"v-container-padding-padding\" style=\"overflow-wrap:break-word;word-break:break-word;padding:50px 44px 15px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\r\n"
+					+ "      <td class=\"v-container-padding-padding\" style=\"overflow-wrap:break-word;word-break:break-word;padding:50px 44px 15px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\r\n" 
 					+ "        \r\n"
 					+ "  <h1 class=\"v-text-align\" style=\"margin: 0px; color: #00113f; line-height: 140%; text-align: center; word-wrap: break-word; font-weight: normal; font-family: 'Open Sans',sans-serif; font-size: 28px;\">\r\n"
-					+ "    <strong>Su codigo de verificacion <br /> <p> "+tokem+" </p><br />Puedes ingresar haciendo click en el siguiente boton<br /><a href=\"http://localhost:8080/CuponeraDWF/empresas.do?op=TokenValidate&userToken="+tokem+"\" class=\"myButton\">Click aqui</a> </strong>\r\n"
+					+ "    <strong>Su codigo de verificacion <br /> <p> "+tokem+" </p><br />Puedes ingresar haciendo click en el siguiente boton<br /><a href=\"http://localhost:8080/Desafio1_DWF/empresa.do?op=completarValidar&userToken="+tokem+"\" class=\"myButton\">Click aqui</a> </strong>\r\n"
 					+ "  </h1>\r\n"
 					+ "\r\n"
 					+ "      </td>\r\n"

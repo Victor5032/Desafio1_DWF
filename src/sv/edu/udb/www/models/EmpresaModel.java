@@ -46,8 +46,8 @@ public class EmpresaModel extends Conexion {
 			String sqlString = "CALL activarEmpresa(?,?)";
 			this.conectar();
 			cs = conexion.prepareCall(sqlString);
-			cs.setInt(1, 1);
-			cs.setInt(2, idEmpresa);
+			cs.setInt(1, idEmpresa);
+			cs.setInt(2, 1);
 			cs.executeUpdate();
 			this.desconectar();
 		} catch (SQLException ex) {
@@ -91,10 +91,10 @@ public class EmpresaModel extends Conexion {
 		try {
 			CodigoEmpresa codigo = new CodigoEmpresa();
 			SendEmail email = new SendEmail();
-			String sql = "CALL insertarToken(?,?)";
+			String sql = "CALL insertarToken(?,?)"; 
 			this.conectar();
 			cs = conexion.prepareCall(sql);
-			cs.setInt(1, codigo.codigoEmpresaToken());
+			cs.setInt(1, codigo.codigoEmpresaToken()); 
 			cs.setString(2, email.sendEmpresaVerificationEmail(destinatarioEmail, nombreEmpresa));
 			cs.executeUpdate();
 			this.desconectar();
@@ -107,21 +107,26 @@ public class EmpresaModel extends Conexion {
 
 	public Empresa iniciarSesion(String correoEmpresa, String passwordEmpresa) throws SQLException {
 		try {
+			Sha1 getSha1 = new Sha1();
 		   Empresa logEmpresa = new Empresa();
            String sqlString = "CALL loginEmpresa(?,?)";
            this.conectar();
            cs = conexion.prepareCall(sqlString);
            cs.setString(1, correoEmpresa);
-           cs.setString(2, passwordEmpresa);
+           cs.setString(2, getSha1.sha1Hash(passwordEmpresa));
            rs = cs.executeQuery();
            if(rs.next()) {
         	   logEmpresa.setEmpresa_id(rs.getInt("empresa_id"));
         	   logEmpresa.setNombreEmpresa(rs.getString("nombre"));
+        	   this.desconectar();
+        	   return logEmpresa;
            }
+           
            this.desconectar();
-           return logEmpresa;
-		} catch (SQLException ex) {
+           return null;
+		} catch (SQLException | NoSuchAlgorithmException ex) {
 			// TODO: handle exception
+			
 			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
 			this.desconectar();
 			return null;

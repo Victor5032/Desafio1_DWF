@@ -36,12 +36,11 @@
 						</div>
 						<div class="form-group mt-3">
 							<span>Contraseña</span> <input type="password"
-								class="form-control" required
+								class="form-control" name="passwordEmpresa" required
 								placeholder="Ingresar su Contraseña">
 						</div>
 						<div class="text-center mt-5">
-							<button type="submit" name="passwordEmpresa"
-								class="btn btn-primary">Ingresar</button>
+							<button type="submit" class="btn btn-primary">Ingresar</button>
 						</div>
 					</form>
 				</div>
