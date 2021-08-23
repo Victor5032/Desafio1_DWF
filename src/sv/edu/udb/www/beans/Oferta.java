@@ -5,6 +5,7 @@ import java.sql.Date;
 public class Oferta {
 	private int idOferta;
 	private int idEmpresaOferta;
+	private String nombreEmpresa;
 	private String tituloOferta;
 	private String descripcionOferta;
 	private double precioRegularOferta;
@@ -33,10 +34,9 @@ public class Oferta {
 		this.estadoOferta = 0;
 	}
 
-	public Oferta(int idOferta, int idEmpresaOferta, String tituloOferta, String descripcionOferta, double precioRegularOferta,
+	public Oferta(int idEmpresaOferta, String tituloOferta, String descripcionOferta, double precioRegularOferta,
 			double precio_ofertaOferta, Date fechaInicioOferta, Date fechaFinOferta, int cantidadCuponesOferta,
 			String extrasOferta, String observacionesOferta, Date fechaRegistroOferta, int estadoOferta) {
-		this.idOferta = idOferta;
 		this.idEmpresaOferta = idEmpresaOferta;
 		this.tituloOferta = tituloOferta;
 		this.descripcionOferta = descripcionOferta;
@@ -65,6 +65,14 @@ public class Oferta {
 
 	public void setIdEmpresaOferta(int idEmpresaOferta) {
 		this.idEmpresaOferta = idEmpresaOferta;
+	}
+	
+	public String getNombreEmpresa() {
+		return nombreEmpresa;
+	}
+	
+	public void setNombreEmpresa(String nombreEmpresa) {
+		this.nombreEmpresa = nombreEmpresa;
 	}
 
 	public String getTituloOferta() {
