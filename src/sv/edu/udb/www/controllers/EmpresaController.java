@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.taglibs.standard.tag.common.fmt.RequestEncodingSupport;
+
 import sv.edu.udb.www.beans.Empresa;
 import sv.edu.udb.www.models.EmpresaModel;
 import sv.edu.udb.www.utils.CodigoEmpresa;
@@ -56,6 +58,10 @@ public class EmpresaController extends HttpServlet {
 			case "logIn":
 				request.getRequestDispatcher("/empresas/LoginEmpresas.jsp").forward(request, response);
 				break;
+			case "logInEmpresa":
+				logIngEmpresa(request,response);
+			break;
+				
 			default:
 				break;
 			}
@@ -147,6 +153,15 @@ public class EmpresaController extends HttpServlet {
 		} catch (IOException | SQLException | NoSuchAlgorithmException ex) {
 			// TODO: handle exception
 			Logger.getLogger(EmpresaController.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+	
+	private void logIngEmpresa(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			response.sendRedirect(request.getContextPath() + "/empresas/IngresarOferta.jsp");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

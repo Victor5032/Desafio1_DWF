@@ -40,7 +40,7 @@
                             <div class="col-6 mt-3">
                                 <span>Telefono</span>
                                 <input type="text" class="form-control" id="telefonoEmpresa" pattern="^[0-9]{4}-?[0-9]{4}$" 
-                                title="Solo acepta números en el siguiente formato: 2222-2222" required>
+                                title="Solo acepta nï¿½meros en el siguiente formato: 2222-2222" required>
                             </div>
                             
                             <div class="col-6 mt-3">
@@ -53,6 +53,7 @@
                         <div class="col-10 m-3">
                             <div class="text-center">
                                 <input class="btn btn-success mt-2" type="submit" value="Generar Oferta" />
+                                <a href="${pageContext.request.contextPath}/empresas/IngresarOferta.jsp" class="btn btn-">ingresar nueva oferta</a>
                                 <a href="#" class="btn btn-danger mt-2">Volver</a>
                             </div>
                         </div>

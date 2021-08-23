@@ -14,7 +14,7 @@ import sv.edu.udb.www.utils.Sha1;
 import sv.edu.udb.www.beans.Empresa;
 
 public class EmpresaModel extends Conexion {
-	
+
 //	ciclo registro de empresa
 
 	public int verificarTokenExistente(String tokenString) throws SQLException {
@@ -105,5 +105,23 @@ public class EmpresaModel extends Conexion {
 			this.desconectar();
 		}
 	}
- 
+
+	public Empresa iniciarSesion(Empresa empresa) throws SQLException {
+		try {
+		   Empresa logEmpresa = new Empresa();
+           String sqlString = "CALL loginEmpresa(?,?)";
+           this.conectar();
+           cs = conexion.prepareCall(sqlString);
+           cs.setString(1, empresa.getCorreoEmpresa());
+           cs.setString(2, empresa.getEmpresa_password());
+           
+           return logEmpresa;
+		} catch (SQLException ex) {
+			// TODO: handle exception
+			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
+			this.desconectar();
+			return null;
+		}
+	}
+
 }

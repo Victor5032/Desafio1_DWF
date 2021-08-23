@@ -24,11 +24,15 @@
 		<div class="row">
 			<div class="col-12 mt-5">
 				<div class="d-flex justify-content-center align-items-center">
-					<form class="w-25 shadow-lg p-3 mb-5 bg-white rounded p-5">
+					<form class="w-25 shadow-lg p-3 mb-5 bg-white rounded p-5"
+						method="POST"
+						action="${pageContext.request.contextPath}/empresas.do?">
+						<input hidden="hidden" value="logInEmpresa" name="op">
 						<div class="form-group mt-3">
 							<h3>Iniciar Sesion</h3>
-							<span>correo electronico</span> <input type="text" class="form-control"
-								required placeholder="Ingresar Usuario">
+							<span>correo electronico</span> <input type="text"
+								class="form-control" required name="correoEmpresa"
+								placeholder="Ingresar Usuario">
 						</div>
 						<div class="form-group mt-3">
 							<span>Contraseña</span> <input type="password"
@@ -36,7 +40,8 @@
 								placeholder="Ingresar su Contraseña">
 						</div>
 						<div class="text-center mt-5">
-							<button type="submit" class="btn btn-primary">Ingresar</button>
+							<button type="submit" name="passwordEmpresa"
+								class="btn btn-primary">Ingresar</button>
 						</div>
 					</form>
 				</div>
