@@ -7,11 +7,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.mail.Session;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.taglibs.standard.tag.common.fmt.RequestEncodingSupport;
 
@@ -25,18 +28,17 @@ import sv.edu.udb.www.utils.CodigoEmpresa;
 @WebServlet(name = "EmpresaController", urlPatterns = { "/empresas.do" })
 public class EmpresaController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
+
 	ArrayList<String> listaEventos = new ArrayList<>();
 	EmpresaModel model = new EmpresaModel();
 	Empresa empresa = new Empresa();
 
-	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+	protected void processRequest(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 		try (PrintWriter out = response.getWriter()) {
 			if (request.getParameter("op") == null) {
-				//
-				return;
+			   request.getRequestDispatcher("/empresas/LoginEmpresas.jsp").forward(request, response);
 			}
 
 			String opeacionString = request.getParameter("op");
@@ -59,9 +61,9 @@ public class EmpresaController extends HttpServlet {
 				request.getRequestDispatcher("/empresas/LoginEmpresas.jsp").forward(request, response);
 				break;
 			case "logInEmpresa":
-				logIngEmpresa(request,response);
-			break;
-				
+				logIngEmpresa(request, response, session);
+				break;
+
 			default:
 				break;
 			}
@@ -83,7 +85,7 @@ public class EmpresaController extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		processRequest(request, response);
+		processRequest(request, response, null);
 	}
 
 	/**
@@ -97,7 +99,7 @@ public class EmpresaController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		processRequest(request, response);
+		processRequest(request, response, null);
 	}
 
 	/**
@@ -116,7 +118,7 @@ public class EmpresaController extends HttpServlet {
 			String userGetTokenString = request.getParameter("userToken");
 			if (model.verificarTokenExistente(userGetTokenString) > 0) {
 				listaEventos.add("Su cuenta ha sido verificada, Inicie sesion");
-			    request.setAttribute("listaEventos", listaEventos);
+				request.setAttribute("listaEventos", listaEventos);
 				response.sendRedirect(request.getContextPath() + "/empresas.do?op=logIn");
 			} else {
 				listaEventos.add("El token ingresado no es valido, vuelva a intentarlo");
@@ -129,8 +131,7 @@ public class EmpresaController extends HttpServlet {
 			Logger.getLogger(EmpresaController.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
-    
-	
+
 	private void validarEmpresa(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			CodigoEmpresa codigoEmpresa = new CodigoEmpresa();
@@ -155,11 +156,22 @@ public class EmpresaController extends HttpServlet {
 			Logger.getLogger(EmpresaController.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
-	
-	private void logIngEmpresa(HttpServletRequest request, HttpServletResponse response) {
+
+	private void logIngEmpresa(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		try {
-			response.sendRedirect(request.getContextPath() + "/empresas/IngresarOferta.jsp");
-		} catch (IOException e) {
+			listaEventos.clear();
+			String correoEmpresaString = request.getParameter("correoEmpresa");
+			String passwordEmpresaString = request.getParameter("passwordEmpresa");
+			Empresa logEmpresa = model.iniciarSesion(correoEmpresaString, passwordEmpresaString);
+			if (logEmpresa != null) {
+				session.setAttribute("usser", logEmpresa.getEmpresa_id());
+				session.setAttribute("name", logEmpresa.getNombreEmpresa());
+				response.sendRedirect(request.getContextPath() + "/empresas/IngresarOferta.jsp");
+			}else {
+				listaEventos.add("El usuario o contraseña no son correctos");
+				listaEventos.add("Ya avtico su cuenta con el codigo de verificacion ?");
+			}
+		} catch (IOException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

@@ -106,15 +106,20 @@ public class EmpresaModel extends Conexion {
 		}
 	}
 
-	public Empresa iniciarSesion(Empresa empresa) throws SQLException {
+	public Empresa iniciarSesion(String correoEmpresa, String passwordEmpresa) throws SQLException {
 		try {
 		   Empresa logEmpresa = new Empresa();
            String sqlString = "CALL loginEmpresa(?,?)";
            this.conectar();
            cs = conexion.prepareCall(sqlString);
-           cs.setString(1, empresa.getCorreoEmpresa());
-           cs.setString(2, empresa.getEmpresa_password());
-           
+           cs.setString(1, correoEmpresa);
+           cs.setString(2, passwordEmpresa);
+           rs = cs.executeQuery();
+           if(rs.next()) {
+        	   logEmpresa.setEmpresa_id(rs.getInt("empresa_id"));
+        	   logEmpresa.setNombreEmpresa(rs.getString("nombre"));
+           }
+           this.desconectar();
            return logEmpresa;
 		} catch (SQLException ex) {
 			// TODO: handle exception
