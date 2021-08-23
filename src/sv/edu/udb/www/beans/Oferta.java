@@ -3,6 +3,7 @@ package sv.edu.udb.www.beans;
 import java.sql.Date;
 
 public class Oferta {
+	private int idOferta;
 	private int idEmpresaOferta;
 	private String tituloOferta;
 	private String descripcionOferta;
@@ -17,6 +18,7 @@ public class Oferta {
 	private int estadoOferta;
 
 	public Oferta() {
+		this.idOferta= 0;
 		this.idEmpresaOferta = 0;
 		this.tituloOferta = "";
 		this.descripcionOferta = "";
@@ -31,9 +33,10 @@ public class Oferta {
 		this.estadoOferta = 0;
 	}
 
-	public Oferta(int idEmpresaOferta, String tituloOferta, String descripcionOferta, double precioRegularOferta,
+	public Oferta(int idOferta, int idEmpresaOferta, String tituloOferta, String descripcionOferta, double precioRegularOferta,
 			double precio_ofertaOferta, Date fechaInicioOferta, Date fechaFinOferta, int cantidadCuponesOferta,
 			String extrasOferta, String observacionesOferta, Date fechaRegistroOferta, int estadoOferta) {
+		this.idOferta = idOferta;
 		this.idEmpresaOferta = idEmpresaOferta;
 		this.tituloOferta = tituloOferta;
 		this.descripcionOferta = descripcionOferta;
@@ -46,6 +49,14 @@ public class Oferta {
 		this.observacionesOferta = observacionesOferta;
 		this.fechaRegistroOferta = fechaRegistroOferta;
 		this.estadoOferta = estadoOferta;
+	}
+	
+	public int getIdOferta() {
+		return idOferta;
+	}
+
+	public void setIdOferta(int idOferta) {
+		this.idOferta = idOferta;
 	}
 
 	public int getIdEmpresaOferta() {
