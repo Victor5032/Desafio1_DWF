@@ -8,9 +8,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import java.security.NoSuchAlgorithmException;
 
 import sv.edu.udb.www.models.UsuarioModel;
+import sv.edu.udb.www.beans.*;
 
 /**
  * Servlet implementation class UsuarioController
@@ -21,9 +24,15 @@ public class UsuarioController extends HttpServlet {
     
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException, NoSuchAlgorithmException, SQLException {
+		HttpSession session = request.getSession();
+		 
 		try (PrintWriter out = response.getWriter()) {
 			if (request.getParameter("op") == null) {
-				request.getRequestDispatcher("/admin/Loginadmin.jsp").forward(request, response);
+				if (session.getAttribute("sesion") != null) {
+					response.sendRedirect("admin.do?op=home");
+				} else {
+					request.getRequestDispatcher("/admin/Loginadmin.jsp").forward(request, response);
+				}
 				
 				return;
 			}
@@ -36,19 +45,32 @@ public class UsuarioController extends HttpServlet {
 				case "login":
 					String user = request.getParameter("usuario");
 					String password = request.getParameter("password");
-					
-					out.println(user);
-					out.println(password);
-					
+
 					if (model.loginAdmin(user, password) > 0) {
-						out.println("siuuuu");
-					} else {
-						out.println("nop :(");
+						session.setAttribute("usuario", user);
+						session.setAttribute("sesion", 1);
+						
+						response.sendRedirect("admin.do?op=home");
+					} else {						
+						request.getRequestDispatcher("/admin/Loginadmin.jsp").forward(request, response);
 					}
 					
 					break;
+				
+				case "home":
+					loginRequired(response, session);
+					
+					request.setAttribute("ofertas", model.ofertas());
+					
+					for (Oferta oferta : model.ofertas()) {
+						System.out.println(oferta.getIdOferta());
+					}
+
+					request.getRequestDispatcher("/admin/inicio.jsp").forward(request, response);
+					break;
 			
 				default:
+					
 					break;
 			}
 		}
@@ -87,5 +109,10 @@ public class UsuarioController extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-
+	
+	protected void loginRequired(HttpServletResponse response, HttpSession session) throws ServletException, IOException {
+		if (session.getAttribute("sesion") == null) {
+			response.sendRedirect("admin.do");
+		}
+	}
 }

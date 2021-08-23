@@ -15,8 +15,7 @@ import sv.edu.udb.www.beans.Empresa;
 
 public class EmpresaModel extends Conexion {
 
-//	ciclo registro de empresa
-
+	// Ciclo registro de empresa
 	public int verificarTokenExistente(String tokenString) throws SQLException {
 		try {
 			int tokenExistente = 0;
@@ -125,6 +124,42 @@ public class EmpresaModel extends Conexion {
 			// TODO: handle exception
 			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
 			this.desconectar();
+			return null;
+		}
+	}
+
+	// Obtenemos la empresa
+	public Empresa obtenerEmpresa(int idEmpresa) throws SQLException {
+		try {
+			String sql = "SELECT * FROM empresas WHERE empresa_id = ?";
+			
+			Empresa empresa = new Empresa();
+			
+			this.conectar();
+			
+			cs = conexion.prepareCall(sql);
+			
+			cs.setInt(1, idEmpresa);
+			
+			rs = cs.executeQuery();
+			
+			if (rs.next()) {
+				empresa.setCodigo_empresa(rs.getString("codigo"));
+				empresa.setNombreEmpresa(rs.getString("nombre"));
+
+				this.desconectar();
+			
+				return empresa;
+			}
+
+			this.desconectar();
+			
+			return null;
+		} catch (SQLException ex) {
+			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
+			
+			this.desconectar();
+			
 			return null;
 		}
 	}
