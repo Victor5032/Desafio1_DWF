@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import java.security.NoSuchAlgorithmException;
 
-import sv.edu.udb.www.models.UsuarioModel;
+import sv.edu.udb.www.models.*;
 import sv.edu.udb.www.beans.*;
 
 /**
@@ -38,6 +38,7 @@ public class UsuarioController extends HttpServlet {
 			}
 			
 			UsuarioModel model = new UsuarioModel();
+			OfertaModel ofertaModel = new OfertaModel();
 
 			String op = request.getParameter("op");
 
@@ -60,14 +61,19 @@ public class UsuarioController extends HttpServlet {
 				case "home":
 					loginRequired(response, session);
 					
-					request.setAttribute("ofertas", model.ofertas());
-					
-					for (Oferta oferta : model.ofertas()) {
-						System.out.println(oferta.getIdOferta());
-					}
+					request.setAttribute("ofertas", ofertaModel.ofertas());
 
 					request.getRequestDispatcher("/admin/inicio.jsp").forward(request, response);
 					break;
+				
+				case "details":
+					loginRequired(response, session);
+					
+					request.setAttribute("oferta", "Hola");
+					
+					request.getRequestDispatcher("/admin/detalles.jsp").forward(request, response);
+					break;
+			
 			
 				default:
 					

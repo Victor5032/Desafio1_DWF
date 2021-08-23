@@ -1,31 +1,21 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
-</head>
-<body>
-<form action="ver" method="post">
-<div>
-<label>Ofertas a rechazar o aceptar</label>
-<table>
-<tr>
-<th>Nombre de la oferta</th>
-<th><input class=btnoferta value="Ver" name="action" type="submit" ></th>
-</tr>
-</table>
-</div>
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
 
-<div>
-<label>Ofertas pendientes de aprobacion</label>
-<table>
-<tr>
-<th>Nombre de la oferta</th>
-</tr>
-</table>
-</div>
-</form>
-</body>
-</html>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Administrador</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link" href="${pageContext.request.contextPath}/admin.do">Ofertas</a>
+            </div>
+        </div>
+        <div class="d-flex">
+            <div class="navbar-nav">
+                <a class="nav-link" href="${pageContext.request.contextPath}/admin.do?op=profile">Activo como: <strong><c:out value="${sessionScope.usuario}" /></strong></a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/admin.do?op=logout">Cerrar sesión</a>
+            </div>
+        </div>
+    </div>
+</nav>
