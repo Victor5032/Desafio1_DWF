@@ -14,25 +14,7 @@
 		<link href="${pageContext.request.contextPath}/public/css/estiloadmin.css" rel="stylesheet" type=text/css>
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">Administrador</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                    <div class="navbar-nav">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/admin.do">Ofertas</a>
-                    </div>
-                </div>
-                <div class="d-flex">
-                    <div class="navbar-nav">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/admin.do?op=profile">Activo como: <strong><c:out value="${sessionScope.usuario}" /></strong></a>
-                        <a class="nav-link" href="${pageContext.request.contextPath}/admin.do?op=logout">Cerrar sesión</a>
-                    </div>
-                </div>
-            </div>
-        </nav>
+        <%@ include file="menu.jsp" %>
         <main>
             <section class="py-5">
                 <div class="container">
@@ -65,7 +47,7 @@
 	                                        <td>${oferta.nombreEmpresa}</td>
 	                                        <td>${oferta.fechaRegistroOferta}</td>
 	                                        <td>
-	                                        	<!-- <c:if test="${oferta.estadoOferta == 1}">
+	                                        	<c:if test="${oferta.estadoOferta == 1}">
 	                                        		Aprobada
 	                                        	</c:if>
 	                                        	<c:if test="${oferta.estadoOferta == 2}">
@@ -76,12 +58,12 @@
 	                                        	</c:if>
 	                                        	<c:if test="${oferta.estadoOferta == 4}">
 	                                        		Reenviado a revisión
-	                                        	</c:if> -->
+	                                        	</c:if>
 	                                        </td>
 	                                        <td>
 	                                            <div class="row">
 	                                                <div class="col-12">
-	                                                    <a href="#" class="btn btn-info">Ver</a>
+	                                                    <a href="${pageContext.request.contextPath}/admin.do?op=details&codigo=${oferta.idOferta}" class="btn btn-info">Ver</a>
 	                                                </div>
 	                                            </div>
 	                                        </td>
