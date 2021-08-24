@@ -56,9 +56,6 @@
 	                                        	<c:if test="${oferta.estadoOferta == 3}">
 	                                        		Pendiente de aprobación
 	                                        	</c:if>
-	                                        	<c:if test="${oferta.estadoOferta == 4}">
-	                                        		Reenviado a revisión
-	                                        	</c:if>
 	                                        </td>
 	                                        <td>
 	                                            <div class="row">

@@ -32,7 +32,7 @@ public class CodigoEmpresa extends Conexion{
 			}else if(total < 9){
 				codigoEmpresaString +="00"+ String.valueOf(total + 1);
 			}
-			
+			this.desconectar();
 			return codigoEmpresaString;
 		} catch (SQLException ex) {
 			// TODO: handle exception
@@ -53,6 +53,7 @@ public class CodigoEmpresa extends Conexion{
 			while(rs.next()) {
 				codigoEmpresaActual = Integer.valueOf(rs.getInt("codigo")); 
 			}
+			this.desconectar();
 			return codigoEmpresaActual;
 		} catch (Exception e) {
 			// TODO: handle exception

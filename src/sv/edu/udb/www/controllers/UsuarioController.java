@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,7 +14,6 @@ import javax.servlet.http.HttpSession;
 import java.security.NoSuchAlgorithmException;
 
 import sv.edu.udb.www.models.*;
-import sv.edu.udb.www.beans.*;
 
 /**
  * Servlet implementation class UsuarioController
@@ -21,14 +21,17 @@ import sv.edu.udb.www.beans.*;
 @WebServlet(name = "UsuarioController", urlPatterns = { "/admin.do" })
 public class UsuarioController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+
+	static int sesion = 0;
     
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException, NoSuchAlgorithmException, SQLException {
 		HttpSession session = request.getSession();
+		Cookie cookie = null;
 		 
 		try (PrintWriter out = response.getWriter()) {
 			if (request.getParameter("op") == null) {
-				if (session.getAttribute("sesion") != null) {
+				if (loginRequired(request, response) > 0) {
 					response.sendRedirect("admin.do?op=home");
 				} else {
 					request.getRequestDispatcher("/admin/Loginadmin.jsp").forward(request, response);
@@ -41,16 +44,18 @@ public class UsuarioController extends HttpServlet {
 			OfertaModel ofertaModel = new OfertaModel();
 
 			String op = request.getParameter("op");
-
+			// System.out.println(op);
 			switch (op) {
 				case "login":
 					String user = request.getParameter("usuario");
 					String password = request.getParameter("password");
 
 					if (model.loginAdmin(user, password) > 0) {
-						session.setAttribute("usuario", user);
-						session.setAttribute("sesion", 1);
+						sesion = 1;
 						
+						cookie = new Cookie("usuario", user);
+						
+						response.addCookie(cookie);
 						response.sendRedirect("admin.do?op=home");
 					} else {						
 						request.getRequestDispatcher("/admin/Loginadmin.jsp").forward(request, response);
@@ -58,25 +63,69 @@ public class UsuarioController extends HttpServlet {
 					
 					break;
 				
-				case "home":
-					loginRequired(response, session);
+				case "logout":
+					sesion = 0;
 					
-					request.setAttribute("ofertas", ofertaModel.ofertas());
+					cookie = new Cookie("usuario", null);
+					cookie.setMaxAge(0); 
 
-					request.getRequestDispatcher("/admin/inicio.jsp").forward(request, response);
+					response.sendRedirect("admin.do");
+					break;
+				
+				case "home":
+					if (loginRequired(request, response) > 0) {
+						request.setAttribute("ofertas", ofertaModel.ofertas());
+						request.getRequestDispatcher("/admin/inicio.jsp").forward(request, response);
+					} else {
+						response.sendRedirect("admin.do");
+					}
+				
+					
 					break;
 				
 				case "details":
-					loginRequired(response, session);
-					
-					String id = request.getParameter("codigo");
-					
-					request.setAttribute("oferta", ofertaModel.obtenerOferta(Integer.parseInt(id)));
-					
-					request.getRequestDispatcher("/admin/detalles.jsp").forward(request, response);
+					if (loginRequired(request, response) > 0) {
+						String id = request.getParameter("codigo");
+						
+						request.setAttribute("oferta", ofertaModel.obtenerOferta(Integer.parseInt(id)));
+						request.getRequestDispatcher("/admin/detalles.jsp").forward(request, response);
+					} else {
+						response.sendRedirect("admin.do");
+					}					
 					break;
-			
-			
+				
+				case "sale":
+					if (loginRequired(request, response) > 0) {
+						String id = request.getParameter("codigo");
+						
+						request.setAttribute("oferta", ofertaModel.obtenerOferta(Integer.parseInt(id)));
+						request.getRequestDispatcher("/admin/detalles.jsp").forward(request, response);
+					} else {
+						response.sendRedirect("admin.do");
+					}					
+					break;
+				
+				case "sale-status":
+					if (loginRequired(request, response) > 0) {
+						String id = request.getParameter("codigo");
+						String status = request.getParameter("estado");
+						String observaciones = request.getParameter("estado");
+						
+						int result = 0;
+						
+						if (observaciones.equals("")) {
+							result = ofertaModel.validarOferta(id, status);
+						} else {
+							result = ofertaModel.validarOferta(id, status, observaciones);
+						}
+						
+						request.setAttribute("mensaje", result);
+						request.getRequestDispatcher("/admin/messages/mensajeOfertaValidad.jsp").forward(request, response);
+					} else {
+						response.sendRedirect("admin.do");
+					}					
+					break;
+					
 				default:
 					
 					break;
@@ -118,9 +167,13 @@ public class UsuarioController extends HttpServlet {
 		}
 	}
 	
-	protected void loginRequired(HttpServletResponse response, HttpSession session) throws ServletException, IOException {
-		if (session.getAttribute("sesion") == null) {
-			response.sendRedirect("admin.do");
-		}
+	protected int loginRequired(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int res = 0;
+		System.out.println(sesion);
+		if (sesion > 0) {
+			res = 1;
+		} 
+		
+		return res;
 	}
 }

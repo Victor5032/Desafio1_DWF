@@ -27,8 +27,70 @@
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            
+                            <div class="card">
+                                <h5 class="card-header"><i>Detalles de la oferta</i></h5>
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">${oferta.tituloOferta}</h5>
+                                    <p class="card-text"><strong>Descripción:&nbsp;</strong>${oferta.descripcionOferta}</p>
+                                    <p class="card-text"><strong>Empresa:&nbsp;</strong>${oferta.nombreEmpresa}</p>
+                                    <div class="row">
+                                   		<div class="col-6">
+                                   			<p class="card-text text-center">
+                                    			<strong>Precio Regular:&nbsp;</strong>$<span>${oferta.precioRegularOferta}</span>
+                                    		</p>
+                                   		</div>
+                                   		<div class="col-6">
+                                   			<p class="card-text text-center">
+                                    			<strong>Precio Regular:&nbsp;</strong>$<span>${oferta.precio_ofertaOferta}</span>
+                                    		</p>
+                                   		</div>
+                                   	</div>
+                                   	<br>
+                                   	<div class="row">
+                                   		<div class="col-6">
+                                   			<p class="card-text text-center">
+                                    			<strong>Fecha de inicio:&nbsp;</strong><span>${oferta.fechaInicioOferta}</span>
+                                    		</p>
+                                   		</div>
+                                   		<div class="col-6">
+                                   			<p class="card-text text-center">
+                                    			<strong>Fecha de fin:&nbsp;</strong><span>${oferta.fechaFinOferta}</span>
+                                    		</p>
+                                   		</div>
+                                   	</div>
+                                    <br>
+                                    <c:if test="${not empty oferta.extrasOferta}">
+	                                	<p class="card-text"><strong>Extras:&nbsp;</strong>${oferta.extrasOferta}</p>
+	                                </c:if>
+                                </div>
+                                <c:if test="${oferta.estadoOferta == 1}">
+                                	<div class="card-footer text-center text-white bg-success">Oferta aprobada</div>
+                                </c:if>
+                                <c:if test="${oferta.estadoOferta == 2}">
+                                	<div class="card-footer text-center text-white bg-danger">Oferta rechazada</div>
+                                </c:if>
+                                <c:if test="${oferta.estadoOferta == 3}">
+                                	<div class="card-footer text-center text-black bg-warning">Pendiente de aprobación</div>
+                                </c:if>
+                            </div>
                         </div>
+                        <c:if test="${not empty oferta.observacionesOferta}">
+                        	<div class="col-12">
+	                    		<div class="pt-5 pb-3">
+	                    			<div class="card">
+									  	<div class="card-header text-center">Observaciones</div>
+									  	<div class="card-body">
+									    	<p class="card-text">${oferta.observacionesOferta}</p>
+									    	<c:if test="${oferta.estadoOferta == 3}">
+									    		<div class="text-center">
+										    		<a href="#" class="btn btn-primary">Realizar acción</a>
+										    	</div>
+									    	</c:if>
+									  	</div>
+									</div>
+	                    		</div>
+	                    	</div>
+                        </c:if>
                     </div>
                 </div>
             </section>
