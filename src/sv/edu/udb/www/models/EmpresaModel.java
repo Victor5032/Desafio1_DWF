@@ -118,6 +118,11 @@ public class EmpresaModel extends Conexion {
            if(rs.next()) {
         	   logEmpresa.setEmpresa_id(rs.getInt("empresa_id"));
         	   logEmpresa.setNombreEmpresa(rs.getString("nombre"));
+        	   logEmpresa.setContactoEmpresa(rs.getString("contacto"));
+        	   logEmpresa.setTelefonoEmpresa(rs.getString("telefono"));
+        	   logEmpresa.setDireccionEmpresa(rs.getString("direccion"));
+        	   logEmpresa.setCorreoEmpresa(rs.getString("correo"));
+        	   logEmpresa.setRubro_id(rs.getInt("rubro_id"));
         	   this.desconectar();
         	   return logEmpresa;
            }
@@ -125,6 +130,36 @@ public class EmpresaModel extends Conexion {
            this.desconectar();
            return null;
 		} catch (SQLException | NoSuchAlgorithmException ex) {
+			// TODO: handle exception
+			
+			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
+			this.desconectar();
+			return null;
+		}
+	}
+	public Empresa recuperarSesion(Object idEmpresa) throws SQLException {
+		try {
+		   Empresa logEmpresa = new Empresa();
+           String sqlString = "CALL obtenerEmpresa(?)";
+           this.conectar();
+           cs = conexion.prepareCall(sqlString);
+           cs.setObject(1, idEmpresa);
+           rs = cs.executeQuery();
+           if(rs.next()) {
+        	   logEmpresa.setEmpresa_id(rs.getInt("empresa_id"));
+        	   logEmpresa.setNombreEmpresa(rs.getString("nombre"));
+        	   logEmpresa.setContactoEmpresa(rs.getString("contacto"));
+        	   logEmpresa.setTelefonoEmpresa(rs.getString("telefono"));
+        	   logEmpresa.setDireccionEmpresa(rs.getString("direccion"));
+        	   logEmpresa.setCorreoEmpresa(rs.getString("correo"));
+        	   logEmpresa.setRubro_id(rs.getInt("rubro_id"));
+        	   this.desconectar();
+        	   return logEmpresa;
+           }
+           
+           this.desconectar();
+           return null;
+		} catch (SQLException  ex) {
 			// TODO: handle exception
 			
 			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);

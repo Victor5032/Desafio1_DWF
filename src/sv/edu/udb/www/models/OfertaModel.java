@@ -7,7 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import sv.edu.udb.www.beans.Oferta;
-import sv.edu.udb.www.models.EmpresaModel;
 import sv.edu.udb.www.db.Conexion;
 
 public class OfertaModel extends Conexion {
@@ -69,10 +68,10 @@ public class OfertaModel extends Conexion {
 				oferta.setExtrasOferta(rs.getString("extras"));
 				oferta.setObservacionesOferta(rs.getString("observaciones"));
 				oferta.setEstadoOferta(rs.getInt("estado"));
+				this.desconectar();
+				return oferta;
 			}
-			
 			this.desconectar();
-			
 			return oferta;
 		} catch (SQLException ex) {
 			// TODO: handle exception
@@ -102,10 +101,10 @@ public class OfertaModel extends Conexion {
 		}
 	}
 
-	public int updateOferta(Oferta oferta) throws SQLException{
+	public int updateOferta(Oferta oferta, int idEmpresa) throws SQLException{
         try {
 			int filasAfectadas = 0;
-            String slqString = "CALL updateOferta(?,?,?,?,?,?,?,?,?)";
+            String slqString = "CALL updateOferta(?,?,?,?,?,?,?,?,?,?)";
 			this.conectar();
 			cs = conexion.prepareCall(slqString);
 			cs.setString(1, oferta.getTituloOferta());
@@ -117,6 +116,7 @@ public class OfertaModel extends Conexion {
 			cs.setInt(7, oferta.getCantidadCuponesOferta());
 			cs.setString(8, oferta.getExtrasOferta());
 			cs.setInt(9, oferta.getIdOferta());
+			cs.setInt(10, idEmpresa);
             filasAfectadas = cs.executeUpdate();
 			this.desconectar(); 
             return filasAfectadas;

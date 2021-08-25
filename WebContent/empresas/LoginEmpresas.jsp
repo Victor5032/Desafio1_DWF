@@ -11,6 +11,7 @@
 <title>Inicio de Sesion</title>
 </head>
 <body>
+<%@ include file="navbar.jsp"%>
 	<div class="container">
 		<c:if test="${not empty listaEventos}">
 			<div class="alert alert-dark">

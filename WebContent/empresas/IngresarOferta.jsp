@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 
@@ -13,6 +13,7 @@
 </head>
 
 <body>
+<%@ include file="navbar.jsp"%>
     <div class="container">
         <div class="row">
             <div class="col-12 mt-5">
@@ -20,61 +21,53 @@
             </div>
             <div class="col-12 mt-5">
                 <div class="d-flex justify-content-center align-items-center">
-                    <form class="w-50 shadow-lg p-3 mb-5 bg-white rounded p-5" action="#" method="POST">
+                    <form class="w-50 shadow-lg p-3 mb-5 bg-white rounded p-5" action="${pageContext.request.contextPath}/ofertas.do" method="POST">
+                        <input value="insert" name="op" hidden>
+                        <input value="${sessionScope.usser}" name="empresaID" hidden>
                         <div class="row">
                             <div class="col-8 mt-3">
                                 <span style="text-align: center;">Titulo</span>
-                                <input type="text" class="form-control" id="tituloOferta" required>
+                                <input type="text" name="ofertaTitulo" class="form-control" id="tituloOferta" required>
+                                
                             </div>
                             <div class="col-12 mt-3">
                                 <span>Descripcion</span>
-                                <textarea class="form-control " name="detalles" id="descripcionOferta" cols="10" rows="5"
+                                <textarea class="form-control" name="ofertaDescripcion" id="descripcionOferta" cols="10" rows="5"
                                 required></textarea>
                             </div>
 
                             <div class="col-6 mt-3">
                                 <span>Precio Regular</span>
-                                <input class="form-control" type="number" name="total" min="0" step="0.01" required id="precioRegular">
+                                <input class="form-control" type="number" name="regularOferta" min="0" step="0.01" required id="precioRegular">
                             </div>
                             
                             <div class="col-6 mt-3">
                                 <span>Precio Oferta</span>
-                                <input class="form-control" type="number" name="total" min="0" step="0.01" required id="precioOferta">
+                                <input class="form-control" type="number" name="ofertaOferta" min="0" step="0.01" required id="precioOferta">
                             </div>
                             <div class="col-6 mt-3">
                                 <span>Fecha Inicio</span>
-                                <input type="datetime-local" class="form-control" id="fechaInicio" required>
+                                <input type="date" name="ofertaInicio" class="form-control" required>
                             </div>
 
                             <div class="col-6 mt-3">
                                 <span>Fecha Final</span>
-                                <input class="form-control" type="datetime-local" name="fechaFinal" required="" id="fechaFinal" />
+                                <input class="form-control" type="date" name="ofertaFinal" required="" id="fechaFinal" />
 
                             </div>
                             <div class="col-6 mt-3">
                                 <span>Cantidad de Cupones</span>
-                                <input class="form-control" type="text" id="cantidadOfertas" required>
+                                <input class="form-control" name="ofertaCantidadCupones" type="text" id="cantidadOfertas" required>
                             </div>
                             <div class="col-6 mt-3">
                                 <span>Extras</span>
-                                <input class="form-control" type="text" id="extrasOfertas" required>
+                                <input class="form-control" name="ofertasExtras" type="text" id="extrasOfertas" >
                             </div>
-                            <div class="col-12 mt-3">
-                                <span>Observaciones</span>
-                                <input class="form-control" type="text" id="observacionOfertas" required>
-                            </div>
-                             <div class="col-6 mt-3">
-                                <span>Estado</span>
-                                <input class="form-control" type="text" id="estadoOfertas" required>
-                            </div>
-
-
                         </div>
                         <div class="col-10 m-3">
                             <div class="text-center">
                                 <input class="btn btn-success mt-2" type="submit" value="Registrar" />
-                                <a href="#" class="btn btn-danger mt-2">Cancelar</a>
-
+                                <a href="${pageContext.request.contextPath}/empresas.do?op=perfilEmpresa" class="btn btn-danger mt-2">Cancelar</a>
                             </div>
                         </div>
                            

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.mail.Session;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,10 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.taglibs.standard.tag.common.fmt.RequestEncodingSupport;
-
 import sv.edu.udb.www.beans.Empresa;
 import sv.edu.udb.www.models.EmpresaModel;
+import sv.edu.udb.www.models.OfertaModel;
 import sv.edu.udb.www.utils.CodigoEmpresa;
 
 /**
@@ -32,16 +30,17 @@ public class EmpresaController extends HttpServlet {
 	ArrayList<String> listaEventos = new ArrayList<>();
 	EmpresaModel model = new EmpresaModel();
 	Empresa empresa = new Empresa();
-    
-	
-	
+	OfertaModel ofertaModel = new OfertaModel();
+
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		response.setContentType("text/html;charset=UTF-8");
 		try (PrintWriter out = response.getWriter()) {
 			if (request.getParameter("op") == null) {
-				request.getRequestDispatcher("/empresas/LoginEmpresas.jsp").forward(request, response);
+				if (session.getAttribute("usser") == null && session.getAttribute("name") == null) {
+					request.getRequestDispatcher("/empresas/LoginEmpresas.jsp").forward(request, response);
+				}
 			}
 
 			String opeacionString = request.getParameter("op");
@@ -51,6 +50,7 @@ public class EmpresaController extends HttpServlet {
 				validarEmpresa(request, response);
 				break;
 			case "nuevaEmpresa":
+				registroEmpresa(request,response);
 				request.getRequestDispatcher("/empresas/RegistroEmpresa.jsp").forward(request, response);
 
 				break;
@@ -64,9 +64,14 @@ public class EmpresaController extends HttpServlet {
 				request.getRequestDispatcher("/empresas/LoginEmpresas.jsp").forward(request, response);
 				break;
 			case "logInEmpresa":
-				logIngEmpresa(request, response,session);
+				logIngEmpresa(request, response, session);
 				break;
-
+			case "logout":
+				logoutEmpresa(request, response, session);
+				break;
+			case "perfilEmpresa":
+				perfilEmpresa(request, response, session);
+				break;
 			default:
 				break;
 			}
@@ -115,6 +120,14 @@ public class EmpresaController extends HttpServlet {
 		return "Short description";
 	}// </editor-fold>
 
+	private void registroEmpresa(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
 	private void tokenValidate(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			listaEventos.clear();
@@ -159,6 +172,21 @@ public class EmpresaController extends HttpServlet {
 			Logger.getLogger(EmpresaController.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
+	
+	private void perfilEmpresa(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+		try {
+			Empresa empresaLogueada = new Empresa();
+			empresaLogueada = model.recuperarSesion(session.getAttribute("usser"));
+			if(empresaLogueada != null) {
+				request.setAttribute("listaOfertas", ofertaModel.ofertasEmpresa(empresaLogueada.getEmpresa_id()));
+				request.setAttribute("empresa", empresaLogueada);
+				request.getRequestDispatcher("/empresas/VerEmpresa.jsp").forward(request, response);
+			}
+		} catch (Exception ex) {
+			// TODO: handle exception
+			Logger.getLogger(EmpresaController.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
 
 	private void logIngEmpresa(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		try {
@@ -167,9 +195,9 @@ public class EmpresaController extends HttpServlet {
 			String passwordEmpresaString = request.getParameter("passwordEmpresa");
 			Empresa empresaLogIn = model.iniciarSesion(correoEmpresaString, passwordEmpresaString);
 			if (empresaLogIn != null) {
-			session.setAttribute("usser", empresaLogIn.getEmpresa_id());
-			session.setAttribute("name", empresaLogIn.getNombreEmpresa());
-				response.sendRedirect(request.getContextPath() + "/empresas/VerEmpresa.jsp");
+				session.setAttribute("usser", empresaLogIn.getEmpresa_id());
+				session.setAttribute("name", empresaLogIn.getNombreEmpresa());
+				request.getRequestDispatcher("empresas.do?op=perfilEmpresa").forward(request, response);
 			} else {
 				listaEventos.add("El usuario o contraseña no son correctos");
 				listaEventos.add("Ya activo su cuenta con el codigo de verificacion ?");
@@ -182,4 +210,13 @@ public class EmpresaController extends HttpServlet {
 		}
 	}
 
+	private void logoutEmpresa(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+		try {
+			session.invalidate();
+			request.getRequestDispatcher("empresas.do").forward(request, response);
+		} catch (Exception ex) {
+			// TODO: handle exception
+			Logger.getLogger(EmpresaController.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
 }
