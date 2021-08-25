@@ -212,4 +212,79 @@ public class OfertaModel extends Conexion {
 			return null;
 		}
 	}
+	
+	public int cantidadCupones(int codigo) throws SQLException {
+		try {			
+			String sql = "SELECT * FROM ofertas ";
+			
+			this.conectar();
+			
+			/*cs =  conexion.prepareCall(sql);
+			rs = cs.executeQuery();
+			
+			while (rs.next()) {
+				Oferta oferta = new Oferta();
+				EmpresaModel empresa = new EmpresaModel();
+				
+				String nombreEmpresa = empresa.obtenerEmpresa(rs.getInt("empresa_id")).getNombreEmpresa();
+				
+				oferta.setIdOferta(rs.getInt("oferta_id"));
+				oferta.setNombreEmpresa(nombreEmpresa);
+				oferta.setTituloOferta(rs.getString("titulo"));
+				oferta.setDescripcionOferta(rs.getString("descripcion"));
+				oferta.setPrecioRegularOferta(rs.getDouble("precio_regular"));
+				oferta.setPrecio_ofertaOferta(rs.getDouble("precio_oferta"));
+				oferta.setFechaInicioOferta(rs.getDate("fecha_inicio"));
+				oferta.setFechaFinOferta(rs.getDate("fecha_fin"));
+				oferta.setCantidadCuponesOferta(rs.getInt("cantidad_cupones"));
+				oferta.setFechaRegistroOferta(rs.getDate("fecha_registro"));
+				oferta.setEstadoOferta(rs.getInt("estado"));
+				
+				lista.add(oferta);
+			}*/
+			
+			this.desconectar();
+			
+			return 0;
+		} catch (SQLException ex) {
+			Logger.getLogger(UsuarioModel.class.getName()).log(Level.SEVERE, null, ex);
+
+			this.desconectar();
+
+			return 0;
+		}
+	}
+	
+	public int validarOferta(String codigo, String estado, String observaciones) throws SQLException {
+		int response = 0;
+		
+		String sql = "UPDATE ofertas SET estado = ?, observaciones = ? WHERE oferta_id = ?";
+		
+		if (observaciones.equals("")) {
+			observaciones = null;
+		}
+		
+		try {
+			this.conectar();
+			
+			cs = conexion.prepareCall(sql);
+
+			cs.setString(1, estado);
+			cs.setString(2, observaciones);
+			cs.setString(3, codigo);
+
+			response = cs.executeUpdate();
+
+			
+			this.desconectar();
+			
+			return response;
+		} catch (SQLException e) {
+			Logger.getLogger(UsuarioModel.class.getName()).log(Level.SEVERE, null, e);
+
+			this.desconectar();
+
+			return response;
+		}
+	}
 }

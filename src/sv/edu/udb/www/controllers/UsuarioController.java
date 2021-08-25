@@ -99,7 +99,7 @@ public class UsuarioController extends HttpServlet {
 						String id = request.getParameter("codigo");
 						
 						request.setAttribute("oferta", ofertaModel.obtenerOferta(Integer.parseInt(id)));
-						request.getRequestDispatcher("/admin/detalles.jsp").forward(request, response);
+						request.getRequestDispatcher("/admin/formulario.jsp").forward(request, response);
 					} else {
 						response.sendRedirect("admin.do");
 					}					
@@ -108,19 +108,20 @@ public class UsuarioController extends HttpServlet {
 				case "sale-status":
 					if (loginRequired(request, response) > 0) {
 						String id = request.getParameter("codigo");
-						String status = request.getParameter("estado");
-						String observaciones = request.getParameter("estado");
-						
+						String status_a = request.getParameter("estado-aprobar");
+						String status_r = request.getParameter("estado-rechazar");
+						String observaciones = request.getParameter("observaciones");
+
 						int result = 0;
 						
 						if (observaciones.equals("")) {
-							result = ofertaModel.validarOferta(id, status);
+							result = ofertaModel.validarOferta(id, status_a, "");
 						} else {
-							result = ofertaModel.validarOferta(id, status, observaciones);
+							result = ofertaModel.validarOferta(id, status_r, observaciones);
 						}
 						
 						request.setAttribute("mensaje", result);
-						request.getRequestDispatcher("/admin/messages/mensajeOfertaValidad.jsp").forward(request, response);
+						request.getRequestDispatcher("/admin/messages/mensajeOfertaValidada.jsp").forward(request, response);
 					} else {
 						response.sendRedirect("admin.do");
 					}					
