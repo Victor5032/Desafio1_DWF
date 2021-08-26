@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,50 +18,25 @@
                 <h3 class="text-center mt-5 mb-5">Oferta de cupones</h3>
                 <div class="container">
                     <div class="row">
+                       <c:forEach items="${requestScope.ofertasEmpresa}" var="ofertacupon">
                         <div class="col-4 shadow-sm p-3 mb-5 rounded">
                             <div class="card text-center">
                                 <div class="card-header">
-                                  Featured
+                                  ${ofertacupon.tituloOferta}
                                 </div>
-                                <div class="card-body">
-                                  <h5 class="card-title">Special title treatment</h5>
-                                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                  <a href="#" class="btn btn-primary">Go somewhere</a>
+									
+									<div class="card-body">
+                                  <p class="card-text">${ofertacupon.descripcionOferta}</p>
+                                  <p class="">${ofertacupon.precio_ofertaOferta}</p>
+                                  <p class="card-text"><strike>${ofertacupon.precioRegularOferta}</strike></p>
+                                  <p class="card-text">${ofertacupon.cantidadCuponesOferta}</p>
+                                  <a href="${pageContext.request.contextPath}/ofertacupon.do?op=confirmar&idoferta=${ofertacupon.idOferta}&idempresa=${ofertacupon.idEmpresaOferta}"
+									class="btn btn-primary">Adquirir</a>
                                 </div>
-                                <div class="card-footer text-muted">
-                                  2 days ago
-                                </div>
+								
+								
                               </div>
-                        </div>
-                        <div class="col-4 shadow-sm p-3 mb-5 rounded">
-                            <div class="card text-center">
-                                <div class="card-header">
-                                  Featured
-                                </div>
-                                <div class="card-body">
-                                  <h5 class="card-title">Special title treatment</h5>
-                                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                  <a href="#" class="btn btn-primary">Go somewhere</a>
-                                </div>
-                                <div class="card-footer text-muted">
-                                  2 days ago
-                                </div>
-                              </div>
-                        </div>
-                        <div class="col-4 shadow-sm p-3 mb-5 rounded">
-                            <div class="card text-center">
-                                <div class="card-header">
-                                  Featured
-                                </div>
-                                <div class="card-body">
-                                  <h5 class="card-title">Special title treatment</h5>
-                                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                  <a href="#" class="btn btn-primary">Go somewhere</a>
-                                </div>
-                                <div class="card-footer text-muted">
-                                  2 days ago
-                                </div>
-                              </div>
+                              </c:forEach>
                         </div>
                     </div>
                 </div>

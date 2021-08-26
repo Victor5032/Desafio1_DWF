@@ -14,7 +14,7 @@
         <div class="row">
             <div class="col-12 mt-5">
                 <div class="d-flex justify-content-center align-items-center">
-                    <form class="w-25 shadow-lg p-3 mb-5 bg-white rounded p-5">
+                    <form class="w-25 shadow-lg p-3 mb-5 bg-white rounded p-5" method="post" action="${pageContext.request.contextPath}/ofertacupon.do?op=ofertasEmpresa">
                         <div class="form-group mt-3">
                             <span>Correo</span>
                             <input type="email" class="form-control">
