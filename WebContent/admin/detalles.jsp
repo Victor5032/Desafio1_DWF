@@ -25,6 +25,22 @@
                             <a href="${pageContext.request.contextPath}/admin.do?op=home" class="btn btn-primary">Regresar</a>
                         </div>
                     </div>
+                    <c:if test="${param.message == 1}">
+                    	<div class="alert alert-success alert-dismissible d-flex align-items-center" role="alert">
+	                    	<div>	
+								Oferta aprobada
+							</div>
+							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>
+                    </c:if>
+                    <c:if test="${param.message == 2}">
+                    	<div class="alert alert-danger alert-dismissible d-flex align-items-center" role="alert">
+	                    	<div>
+								La oferta ha sido rechazada
+							</div>
+							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>
+                    </c:if>
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
