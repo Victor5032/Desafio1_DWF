@@ -1,8 +1,11 @@
 package sv.edu.udb.www.controllers;
 
+import java.util.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -28,6 +31,8 @@ public class UsuarioController extends HttpServlet {
 			throws ServletException, IOException, NoSuchAlgorithmException, SQLException {
 		HttpSession session = request.getSession();
 		Cookie cookie = null;
+		
+		ArrayList<String> mensajes = new ArrayList<>();
 		 
 		try (PrintWriter out = response.getWriter()) {
 			if (request.getParameter("op") == null) {
@@ -79,7 +84,16 @@ public class UsuarioController extends HttpServlet {
 					} else {
 						response.sendRedirect("admin.do");
 					}
-				
+					
+					break;
+					
+				case "standby":
+					if (loginRequired(request, response) > 0) {
+						request.setAttribute("ofertas", ofertaModel.ofertasEstado(3));
+						request.getRequestDispatcher("/admin/pendientes.jsp").forward(request, response);
+					} else {
+						response.sendRedirect("admin.do");
+					}
 					
 					break;
 				
@@ -112,7 +126,8 @@ public class UsuarioController extends HttpServlet {
 						String status_r = request.getParameter("estado-rechazar");
 						String observaciones = request.getParameter("observaciones");
 
-						int result = 0;
+						int result = 0; 
+						int mensaje = 0;
 						
 						if (observaciones.equals("")) {
 							result = ofertaModel.validarOferta(id, status_a, "");
@@ -120,8 +135,15 @@ public class UsuarioController extends HttpServlet {
 							result = ofertaModel.validarOferta(id, status_r, observaciones);
 						}
 						
-						request.setAttribute("mensaje", result);
-						request.getRequestDispatcher("/admin/messages/mensajeOfertaValidada.jsp").forward(request, response);
+						if (result > 0) {
+							if (observaciones.equals("")) {
+								mensaje = 1;
+							} else {
+								mensaje = 2;	
+							}
+						}
+
+						response.sendRedirect("admin.do?op=details&codigo=" + id + "&message=" + mensaje);
 					} else {
 						response.sendRedirect("admin.do");
 					}					
