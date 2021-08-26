@@ -255,6 +255,41 @@ public class OfertaModel extends Conexion {
 		}
 	}
 	
+	public List<Oferta> obtenerOfertasClientes() throws SQLException{
+		
+		try {
+			List<Oferta> listaOfertaDisponibles = new ArrayList();
+			String sql="SELECT * FROM `ofertas` WHERE ofertas.estado = 1 and LOCALTIMESTAMP() >= ofertas.fecha_inicio and LOCALTIMESTAMP() <= ofertas.fecha_fin";
+			this.conectar();
+			cs=conexion.prepareCall(sql);
+			rs=cs.executeQuery(); 
+			
+			while (rs.next()) {
+				Oferta misOfertas = new Oferta();
+				misOfertas.setIdOferta(rs.getInt("oferta_id"));
+				misOfertas.setIdEmpresaOferta(rs.getInt("empresa_id"));
+				misOfertas.setTituloOferta(rs.getString("titulo"));
+				misOfertas.setDescripcionOferta(rs.getString("descripcion"));
+				misOfertas.setPrecioRegularOferta(rs.getDouble("precio_regular"));
+				misOfertas.setPrecio_ofertaOferta(rs.getDouble("precio_oferta"));
+				misOfertas.setFechaInicioOferta(rs.getDate("fecha_inicio"));
+				misOfertas.setFechaFinOferta(rs.getDate("fecha_fin"));
+				misOfertas.setCantidadCuponesOferta(rs.getInt("cantidad_cupones"));
+				listaOfertaDisponibles.add(misOfertas);
+			}
+			
+			this.desconectar();
+			return listaOfertaDisponibles;
+		}catch (SQLException ex) {
+
+			Logger.getLogger(OfertaModel.class.getName()).log(Level.SEVERE, null, ex);
+			
+			this.desconectar();
+			return null;
+		}
+		
+	}
+	
 	public int validarOferta(String codigo, String estado, String observaciones) throws SQLException {
 		int response = 0;
 		
