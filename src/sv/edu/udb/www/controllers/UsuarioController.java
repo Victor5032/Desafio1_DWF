@@ -47,6 +47,7 @@ public class UsuarioController extends HttpServlet {
 			
 			UsuarioModel model = new UsuarioModel();
 			OfertaModel ofertaModel = new OfertaModel();
+			RubroModel rubroModel = new RubroModel();
 
 			String op = request.getParameter("op");
 			// System.out.println(op);
@@ -148,6 +149,35 @@ public class UsuarioController extends HttpServlet {
 						response.sendRedirect("admin.do");
 					}					
 					break;
+					
+				case "headings":
+					if (loginRequired(request, response) > 0) {
+						request.setAttribute("rubros", rubroModel.rubros());
+						request.getRequestDispatcher("/admin/rubros.jsp").forward(request, response);
+					} else {
+						response.sendRedirect("admin.do");
+					}
+					break;
+				
+				case "details-heading":
+					if (loginRequired(request, response) > 0) {
+						String id = request.getParameter("codigo");
+						
+						request.setAttribute("rubro", rubroModel.obtenerRubro(Integer.parseInt(id)));
+						request.getRequestDispatcher("/admin/verRubro.jsp").forward(request, response);
+					} else {
+						response.sendRedirect("admin.do");
+					}					
+					break;
+					
+				case "new-heading":
+					if (loginRequired(request, response) > 0) {
+						request.getRequestDispatcher("/admin/nuevoRubro.jsp").forward(request, response);
+					} else {
+						response.sendRedirect("admin.do");
+					}					
+					break;
+				
 					
 				default:
 					
