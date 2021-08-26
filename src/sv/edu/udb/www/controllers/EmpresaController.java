@@ -50,9 +50,7 @@ public class EmpresaController extends HttpServlet {
 				validarEmpresa(request, response);
 				break;
 			case "nuevaEmpresa":
-				registroEmpresa(request,response);
-				request.getRequestDispatcher("/empresas/RegistroEmpresa.jsp").forward(request, response);
-
+				registroEmpresa(request, response);
 				break;
 			case "completarValidar":
 				request.getRequestDispatcher("/empresas/confirmarToken.jsp").forward(request, response);
@@ -71,6 +69,9 @@ public class EmpresaController extends HttpServlet {
 				break;
 			case "perfilEmpresa":
 				perfilEmpresa(request, response, session);
+				break;
+			case "update":
+				updateEmpresa(request, response);
 				break;
 			default:
 				break;
@@ -122,12 +123,36 @@ public class EmpresaController extends HttpServlet {
 
 	private void registroEmpresa(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			
+            request.setAttribute("rubros", model.listarRubros());
+			request.getRequestDispatcher("/empresas/RegistroEmpresa.jsp").forward(request, response);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 	}
-	
+
+	private void updateEmpresa(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			listaEventos.clear();
+			Empresa miEmpresa = new Empresa();
+			miEmpresa.setEmpresa_id(Integer.valueOf(request.getParameter("empresaID")));
+			miEmpresa.setNombreEmpresa(request.getParameter("nombreEmpresa"));
+			miEmpresa.setContactoEmpresa(request.getParameter("contacto"));
+			miEmpresa.setDireccionEmpresa(request.getParameter("direccion"));
+			miEmpresa.setTelefonoEmpresa(request.getParameter("telefono"));
+			miEmpresa.setCorreoEmpresa(request.getParameter("correo"));
+			miEmpresa.setRubro_id(Integer.valueOf(request.getParameter("rubro")));
+			if (model.actualizarEmpresa(miEmpresa) > 0) {
+				listaEventos.add("Su informacion se ha actualizado exitosamente");
+				request.setAttribute("listaEventos", listaEventos);
+				request.getRequestDispatcher("empresas.do?op=perfilEmpresa").forward(request, response);
+			}
+			int empresaID = Integer.valueOf(request.getParameter("empresaID"));
+		} catch (SQLException | ServletException | IOException ex) {
+			// TODO: handle exception
+			Logger.getLogger(EmpresaController.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
 	private void tokenValidate(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			listaEventos.clear();
@@ -158,6 +183,7 @@ public class EmpresaController extends HttpServlet {
 			empresa.setTelefonoEmpresa(request.getParameter("telefonoEmpresa"));
 			empresa.setEmpresa_password(request.getParameter("passwordEmpresa"));
 			empresa.setCorreoEmpresa(request.getParameter("correoEmpresa"));
+			empresa.setRubro_id(Integer.valueOf(request.getParameter("rubro")));
 			empresa.setComisionEmpresa(10);
 			if (model.registrarEmpresaPendienteVerificaion(empresa) > 0) {
 				request.getSession().setAttribute("exito", "Revise su correo electronico");
@@ -172,12 +198,13 @@ public class EmpresaController extends HttpServlet {
 			Logger.getLogger(EmpresaController.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
-	
+
 	private void perfilEmpresa(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		try {
 			Empresa empresaLogueada = new Empresa();
 			empresaLogueada = model.recuperarSesion(session.getAttribute("usser"));
-			if(empresaLogueada != null) {
+			if (empresaLogueada != null) {
+			    request.setAttribute("rubro", model.listarRubros());
 				request.setAttribute("listaOfertas", ofertaModel.ofertasEmpresa(empresaLogueada.getEmpresa_id()));
 				request.setAttribute("empresa", empresaLogueada);
 				request.getRequestDispatcher("/empresas/VerEmpresa.jsp").forward(request, response);

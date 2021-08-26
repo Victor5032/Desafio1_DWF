@@ -147,7 +147,7 @@
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary"
 							data-bs-dismiss="modal">Cancelar</button>
-						<a href="${oferta.idOferta}" class="btn btn-primary">Eliminar</a>
+						<a href="${pageContext.request.contextPath}/ofertas.do?op=delete&ofertaID=${oferta.idOferta}" class="btn btn-primary">Eliminar</a>
 					</div>
 				</div>
 			</div>

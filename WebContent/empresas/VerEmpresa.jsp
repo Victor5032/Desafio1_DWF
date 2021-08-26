@@ -17,7 +17,7 @@
 <body>
 	<%@ include file="navbar.jsp"%>
 	<div class="container">
-	<c:if test="${not empty listaEventos}">
+		<c:if test="${not empty listaEventos}">
 			<div class="alert alert-dark">
 				<ul>
 					<c:forEach var="eventos" items="${requestScope.listaEventos}">
@@ -33,23 +33,24 @@
 			<div class="col-12 mt-5">
 				<div class="d-flex justify-content-center align-items-center">
 					<form class="w-50 shadow-lg p-3 mb-5 bg-white rounded p-5"
-						action="#" method="POST">
+						action="${pageContext.request.contextPath}/empresas.do" method="POST">
+						<input value="update" name="op" hidden/>
+						<input value="${sessionScope.usser}" name="empresaID" hidden>
 						<div class="row">
-
 							<div class="col-6 mt-3">
 								<span>Nombre Empresa</span> <input type="text"
 									class="form-control" value="${empresa.nombreEmpresa}"
-									id="nombreRegistroEmpresa" required>
+									id="nombreRegistroEmpresa" name="nombreEmpresa" required>
 							</div>
 							<div class="col-6 mt-3">
 								<span>Contacto</span> <input type="text" class="form-control"
-									id="contactoEmpresa" value="${empresa.contactoEmpresa}"
+									id="contactoEmpresa" name="contacto" value="${empresa.contactoEmpresa}"
 									required>
 							</div>
 
 							<div class="col-12 mt-3">
 								<span>Direccion</span> <input type="text" class="form-control"
-									id="direccionEmpresa" value="${empresa.direccionEmpresa}"
+									id="direccionEmpresa" name="direccion" value="${empresa.direccionEmpresa}"
 									required>
 							</div>
 
@@ -57,21 +58,34 @@
 								<span>Telefono</span> <input type="text" class="form-control"
 									id="telefonoEmpresa" pattern="^[0-9]{4}-?[0-9]{4}$"
 									title="Solo acepta nï¿½meros en el siguiente formato: 2222-2222"
-									value="${empresa.telefonoEmpresa}" required>
+									name="telefono" value="${empresa.telefonoEmpresa}" required>
 							</div>
 
 							<div class="col-6 mt-3">
 								<span>Correo Electronico</span> <input type="email"
 									class="form-control" value="${empresa.correoEmpresa}"
-									id="emialEmpresa" required>
+									id="emialEmpresa" name="correo" required>
 							</div>
-
+							<div class="col-6 mt-3">
+								<span>rubro empresa</span> <select name="rubro" class="form-select"
+									aria-label="Default select example">
+									<c:set var="selec" value="" />
+									<c:forEach items="${requestScope.rubro}" var="rubros">
+									   <c:if test="${empresa.rubro_id == rubros.rubroID}">
+									     <c:set var="selec" value="selected" />
+									   </c:if> 
+									<option <c:out value="${selec}" /> value="${rubros.rubroID}">${rubros.rubro}</option>
+									<c:set var="selec" value="" />
+									</c:forEach>
+								</select>
+							</div>
 
 						</div>
 						<div class="col-10 m-3">
 							<div class="text-center">
-								<a href="${pageContext.request.contextPath}/empresas/IngresarOferta.jsp" class="btn btn-success mt-2">Ingresar una oferta</a>
-								<a href="#" class="btn btn-warning mt-2">Editar informacion</a>
+								<a
+									href="${pageContext.request.contextPath}/empresas/IngresarOferta.jsp"
+									class="btn btn-success mt-2">Ingresar una oferta</a> <input type="submit" class="btn btn-warning mt-2" value="Actualizar perfil"/>
 							</div>
 						</div>
 					</form>
@@ -113,7 +127,9 @@
 									test="${ofertas.estadoOferta == 4}">
 	                                        		Reenviado a revisión
 	                                        	</c:if></td>
-							<td><a href="${pageContext.request.contextPath}/ofertas.do?op=detallesOferta&idOferta=${ofertas.idOferta}" class="btn btn-secondary"><svg
+							<td><a
+								href="${pageContext.request.contextPath}/ofertas.do?op=detallesOferta&idOferta=${ofertas.idOferta}"
+								class="btn btn-secondary"><svg
 										xmlns="http://www.w3.org/2000/svg" width="23" height="23"
 										fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
   <path

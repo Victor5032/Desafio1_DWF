@@ -27,7 +27,7 @@
 				<div class="d-flex justify-content-center align-items-center">
 					<form class="w-25 shadow-lg p-3 mb-5 bg-white rounded p-5"
 						method="POST"
-						action="${pageContext.request.contextPath}/empresas.do?">
+						action="${pageContext.request.contextPath}/empresas.do">
 						<input hidden="hidden" value="logInEmpresa" name="op">
 						<div class="form-group mt-3">
 							<h3>Iniciar Sesion</h3>

@@ -60,6 +60,10 @@ public class OfertaController extends HttpServlet {
 				break;
 			case "updateOferta":
 				updateOferta(request, response);
+				break;
+			case "delete":
+				deleteOferta(request, response);
+				break;
 			default:
 				break;
 
@@ -109,9 +113,26 @@ public class OfertaController extends HttpServlet {
 		return "Short description";
 	}// </editor-fold>
 
+	
+	private void deleteOferta(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			listaEventos.clear();
+			int ofertID = Integer.valueOf(request.getParameter("ofertaID"));
+			if(model.eliminarOFerta(ofertID) > 0 ) {
+				listaEventos.add("La oferta ha sido eliminada de manera exitosa");
+				request.setAttribute("listaEventos", listaEventos);
+				request.getRequestDispatcher("empresas.do?op=perfilEmpresa").forward(request, response);
+			}
+		} catch (Exception ex) {
+			// TODO: handle exception
+			Logger.getLogger(OfertaController.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+	
 	private void insertOfertaEnEspera(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated method stub
 		try {
+			listaEventos.clear();
 			int idEmpresa = Integer.valueOf(request.getParameter("empresaID"));
 			Oferta miOferta = new Oferta();
 			miOferta.setTituloOferta(request.getParameter("ofertaTitulo"));
@@ -152,6 +173,7 @@ public class OfertaController extends HttpServlet {
 
 	private void updateOferta(HttpServletRequest request, HttpServletResponse response) {
 		try {
+			listaEventos.clear();
 			Oferta miOferta = new Oferta();
 			int idEmpresa = Integer.valueOf(request.getParameter("empresaID"));
 			miOferta.setIdOferta(Integer.valueOf(request.getParameter("ofertaID")));

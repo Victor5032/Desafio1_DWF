@@ -1,5 +1,7 @@
 package sv.edu.udb.www.models;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,6 +14,7 @@ import sv.edu.udb.www.utils.CodigoEmpresa;
 import sv.edu.udb.www.utils.SendEmail;
 import sv.edu.udb.www.utils.Sha1;
 import sv.edu.udb.www.beans.Empresa;
+import sv.edu.udb.www.beans.Rubro;
 
 public class EmpresaModel extends Conexion {
 
@@ -41,6 +44,32 @@ public class EmpresaModel extends Conexion {
 		}
 	}
 
+	public List<Rubro> listarRubros() throws SQLException {
+		try {
+			List<Rubro> rubrosList = new ArrayList<Rubro>();
+			String slqString = "SELECT * FROM `rubros` WHERE rubros.estado = 1";
+			this.conectar();
+			cs = conexion.prepareCall(slqString);
+			rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Rubro rubro = new Rubro();
+				rubro.setRubro(rs.getString("rubro"));
+				rubro.setRubroID(rs.getInt("rubro_id"));
+				rubrosList.add(rubro);
+			}
+
+			this.desconectar();
+			return rubrosList;
+		} catch (Exception ex) {
+			// TODO: handle exception
+			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
+			this.desconectar();
+			return null;
+		}
+
+	}
+
 	private void activarEmpresa(int idEmpresa) throws SQLException {
 		try {
 			String sqlString = "CALL activarEmpresa(?,?)";
@@ -58,6 +87,30 @@ public class EmpresaModel extends Conexion {
 
 	}
 
+	public int actualizarEmpresa(Empresa empresa) throws SQLException {
+		try {
+			int filasAfectadas = 0;
+			String sqlString = "CALL updateEmpresa(?,?,?,?,?,?,?)";
+			this.conectar();
+			cs = conexion.prepareCall(sqlString);
+			cs.setString(1, empresa.getNombreEmpresa());
+			cs.setString(2, empresa.getDireccionEmpresa());
+			cs.setString(3, empresa.getContactoEmpresa());
+			cs.setString(4, empresa.getTelefonoEmpresa());
+			cs.setString(5, empresa.getCorreoEmpresa());
+			cs.setInt(6, empresa.getRubro_id());
+			cs.setInt(7, empresa.getEmpresa_id());
+			filasAfectadas = cs.executeUpdate();
+			this.desconectar();
+			return filasAfectadas;
+		} catch (SQLException ex) {
+			// TODO: handle exception
+			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
+			this.desconectar();
+			return 0;
+		}
+	}
+	
 	public int registrarEmpresaPendienteVerificaion(Empresa empresa) throws SQLException, NoSuchAlgorithmException {
 		try {
 			Sha1 sha1 = new Sha1();
@@ -72,7 +125,7 @@ public class EmpresaModel extends Conexion {
 			cs.setString(5, empresa.getTelefonoEmpresa());
 			cs.setString(6, empresa.getCorreoEmpresa());
 			cs.setString(7, sha1.sha1Hash(empresa.getEmpresa_password()));
-			cs.setInt(8, 1);
+			cs.setInt(8, empresa.getRubro_id());
 			cs.setDouble(9, empresa.getComisionEmpresa());
 			cs.setInt(10, 3);
 			filasAfectadas = cs.executeUpdate();
@@ -87,14 +140,14 @@ public class EmpresaModel extends Conexion {
 		}
 	}
 
-	private void asignarToken(String destinatarioEmail, String nombreEmpresa) throws SQLException {
+	private void asignarToken(String destinatarioEmail, String nombreEmpresa) throws SQLException{
 		try {
 			CodigoEmpresa codigo = new CodigoEmpresa();
 			SendEmail email = new SendEmail();
-			String sql = "CALL insertarToken(?,?)"; 
+			String sql = "CALL insertarToken(?,?)";
 			this.conectar();
-			cs = conexion.prepareCall(sql);
-			cs.setInt(1, codigo.codigoEmpresaToken()); 
+			cs = conexion.prepareCall(sql); 
+			cs.setInt(1, codigo.codigoEmpresaToken());
 			cs.setString(2, email.sendEmpresaVerificationEmail(destinatarioEmail, nombreEmpresa));
 			cs.executeUpdate();
 			this.desconectar();
@@ -108,60 +161,61 @@ public class EmpresaModel extends Conexion {
 	public Empresa iniciarSesion(String correoEmpresa, String passwordEmpresa) throws SQLException {
 		try {
 			Sha1 getSha1 = new Sha1();
-		   Empresa logEmpresa = new Empresa();
-           String sqlString = "CALL loginEmpresa(?,?)";
-           this.conectar();
-           cs = conexion.prepareCall(sqlString);
-           cs.setString(1, correoEmpresa);
-           cs.setString(2, getSha1.sha1Hash(passwordEmpresa));
-           rs = cs.executeQuery();
-           if(rs.next()) {
-        	   logEmpresa.setEmpresa_id(rs.getInt("empresa_id"));
-        	   logEmpresa.setNombreEmpresa(rs.getString("nombre"));
-        	   logEmpresa.setContactoEmpresa(rs.getString("contacto"));
-        	   logEmpresa.setTelefonoEmpresa(rs.getString("telefono"));
-        	   logEmpresa.setDireccionEmpresa(rs.getString("direccion"));
-        	   logEmpresa.setCorreoEmpresa(rs.getString("correo"));
-        	   logEmpresa.setRubro_id(rs.getInt("rubro_id"));
-        	   this.desconectar();
-        	   return logEmpresa;
-           }
-           
-           this.desconectar();
-           return null;
+			Empresa logEmpresa = new Empresa();
+			String sqlString = "CALL loginEmpresa(?,?)";
+			this.conectar();
+			cs = conexion.prepareCall(sqlString);
+			cs.setString(1, correoEmpresa);
+			cs.setString(2, getSha1.sha1Hash(passwordEmpresa));
+			rs = cs.executeQuery();
+			if (rs.next()) {
+				logEmpresa.setEmpresa_id(rs.getInt("empresa_id"));
+				logEmpresa.setNombreEmpresa(rs.getString("nombre"));
+				logEmpresa.setContactoEmpresa(rs.getString("contacto"));
+				logEmpresa.setTelefonoEmpresa(rs.getString("telefono"));
+				logEmpresa.setDireccionEmpresa(rs.getString("direccion"));
+				logEmpresa.setCorreoEmpresa(rs.getString("correo"));
+				logEmpresa.setRubro_id(rs.getInt("rubro_id"));
+				this.desconectar();
+				return logEmpresa;
+			}
+
+			this.desconectar();
+			return null;
 		} catch (SQLException | NoSuchAlgorithmException ex) {
 			// TODO: handle exception
-			
+
 			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
 			this.desconectar();
 			return null;
 		}
 	}
+
 	public Empresa recuperarSesion(Object idEmpresa) throws SQLException {
 		try {
-		   Empresa logEmpresa = new Empresa();
-           String sqlString = "CALL obtenerEmpresa(?)";
-           this.conectar();
-           cs = conexion.prepareCall(sqlString);
-           cs.setObject(1, idEmpresa);
-           rs = cs.executeQuery();
-           if(rs.next()) {
-        	   logEmpresa.setEmpresa_id(rs.getInt("empresa_id"));
-        	   logEmpresa.setNombreEmpresa(rs.getString("nombre"));
-        	   logEmpresa.setContactoEmpresa(rs.getString("contacto"));
-        	   logEmpresa.setTelefonoEmpresa(rs.getString("telefono"));
-        	   logEmpresa.setDireccionEmpresa(rs.getString("direccion"));
-        	   logEmpresa.setCorreoEmpresa(rs.getString("correo"));
-        	   logEmpresa.setRubro_id(rs.getInt("rubro_id"));
-        	   this.desconectar();
-        	   return logEmpresa;
-           }
-           
-           this.desconectar();
-           return null;
-		} catch (SQLException  ex) {
+			Empresa logEmpresa = new Empresa();
+			String sqlString = "CALL obtenerEmpresa(?)";
+			this.conectar();
+			cs = conexion.prepareCall(sqlString);
+			cs.setObject(1, idEmpresa);
+			rs = cs.executeQuery();
+			if (rs.next()) {
+				logEmpresa.setEmpresa_id(rs.getInt("empresa_id"));
+				logEmpresa.setNombreEmpresa(rs.getString("nombre"));
+				logEmpresa.setContactoEmpresa(rs.getString("contacto"));
+				logEmpresa.setTelefonoEmpresa(rs.getString("telefono"));
+				logEmpresa.setDireccionEmpresa(rs.getString("direccion"));
+				logEmpresa.setCorreoEmpresa(rs.getString("correo"));
+				logEmpresa.setRubro_id(rs.getInt("rubro_id"));
+				this.desconectar();
+				return logEmpresa;
+			}
+
+			this.desconectar();
+			return null;
+		} catch (SQLException ex) {
 			// TODO: handle exception
-			
+
 			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
 			this.desconectar();
 			return null;
@@ -172,34 +226,34 @@ public class EmpresaModel extends Conexion {
 	public Empresa obtenerEmpresa(int idEmpresa) throws SQLException {
 		try {
 			String sql = "SELECT * FROM empresas WHERE empresa_id = ?";
-			
+
 			Empresa empresa = new Empresa();
-			
+
 			this.conectar();
-			
+
 			cs = conexion.prepareCall(sql);
-			
+
 			cs.setInt(1, idEmpresa);
-			
+
 			rs = cs.executeQuery();
-			
+
 			if (rs.next()) {
 				empresa.setCodigo_empresa(rs.getString("codigo"));
 				empresa.setNombreEmpresa(rs.getString("nombre"));
 
 				this.desconectar();
-			
+
 				return empresa;
 			}
 
 			this.desconectar();
-			
+
 			return null;
 		} catch (SQLException ex) {
 			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
-			
+
 			this.desconectar();
-			
+
 			return null;
 		}
 	}

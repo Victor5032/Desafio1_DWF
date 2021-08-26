@@ -353,7 +353,7 @@ public class SendEmail {
 					+ "      <td class=\"v-container-padding-padding\" style=\"overflow-wrap:break-word;word-break:break-word;padding:50px 44px 15px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\r\n" 
 					+ "        \r\n"
 					+ "  <h1 class=\"v-text-align\" style=\"margin: 0px; color: #00113f; line-height: 140%; text-align: center; word-wrap: break-word; font-weight: normal; font-family: 'Open Sans',sans-serif; font-size: 28px;\">\r\n"
-					+ "    <strong>Su codigo de verificacion <br /> <p> "+tokem+" </p><br />Puedes ingresar haciendo click en el siguiente boton<br /><a href=\"http://localhost:8080/Desafio1_DWF/empresas.do?op=completarValidar&userToken="+tokem+"\" class=\"myButton\">Click aqui</a> </strong>\r\n"
+					+ "    <strong>Su codigo de verificacion <br /> <p> "+tokem+" </p><br />Puedes ingresar haciendo click en el siguiente boton<br /><a href=\"http://localhost:8080/Desafio1_DWF/empresas/empresas.do?op=completarValidar&userToken="+tokem+"\" class=\"myButton\">Click aqui</a> </strong>\r\n"
 					+ "  </h1>\r\n"
 					+ "\r\n"
 					+ "      </td>\r\n"
