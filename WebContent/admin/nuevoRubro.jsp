@@ -33,7 +33,13 @@
 										<div class="py-3">
 											<form action="${pageContext.request.contextPath}/admin.do" method="POST">
 												<input type="hidden" name="op" id="op" value="insert-heading" />
-												
+                                                <div class="mb-3">
+                                                    <label for="label_rubro" class="form-label">Nombre del rubro</label>
+                                                    <input type="text" class="form-control" id="rubro" name="rubro" required>
+                                                </div>
+                                                <div class="d-grid gap-2">
+                                                    <button type="submit" class="btn btn-primary">Agregar</button>
+                                                </div>
 											</form>
 										</div>
 	                                </div>
