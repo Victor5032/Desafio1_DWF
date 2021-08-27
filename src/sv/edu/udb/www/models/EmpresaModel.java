@@ -172,7 +172,7 @@ public class EmpresaModel extends Conexion {
 			cs.setString(7, sha1.sha1Hash(passwor));
 			cs.setInt(8, empresa.getRubro_id());
 			cs.setDouble(9, empresa.getComisionEmpresa());
-			cs.setDouble(10,1);
+			cs.setInt(10,1);
 			filasAfectadas = cs.executeUpdate();
 			this.desconectar();
 //			
