@@ -1,8 +1,7 @@
 package sv.edu.udb.www.models;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -167,7 +166,65 @@ public class OfertaModel extends Conexion {
 		}
 	}
 		
+	public String codigoEmpresa(int oferta) throws SQLException {
+		String sql = "SELECT empresas.codigo FROM ofertas INNER JOIN empresas ON empresas.empresa_id = ofertas.empresa_id WHERE ofertas.oferta_id = ?";
 		
+		try {
+			String response = null;
+			
+			this.conectar();
+			
+			cs =  conexion.prepareCall(sql);
+			
+			cs.setInt(1, oferta);
+			
+			rs = cs.executeQuery();
+			
+			rs.last();
+			
+			response = rs.getString("codigo");
+			
+			this.desconectar();
+			
+			return response;
+		} catch (SQLException ex) {
+			Logger.getLogger(UsuarioModel.class.getName()).log(Level.SEVERE, null, ex);
+
+			this.desconectar();
+
+			return null;
+		}
+	}
+	
+	public Date obtenerFechaVencimiento(String oferta) throws SQLException {
+		String sql = "SELECT fecha_fin FROM ofertas WHERE oferta_id = ?";
+		
+		try {
+			Date response = null;
+			
+			this.conectar();
+			
+			cs =  conexion.prepareCall(sql);
+			
+			cs.setString(1, oferta);
+			
+			rs = cs.executeQuery();
+			
+			rs.last();
+			
+			response = rs.getDate("fecha_fin");
+			
+			this.desconectar();
+			
+			return response;
+		} catch (SQLException ex) {
+			Logger.getLogger(UsuarioModel.class.getName()).log(Level.SEVERE, null, ex);
+
+			this.desconectar();
+
+			return null;
+		}
+	}
 	
 	public List<Oferta> ofertas() throws SQLException {
 		try {
@@ -214,38 +271,26 @@ public class OfertaModel extends Conexion {
 	}
 	
 	public int cantidadCupones(int codigo) throws SQLException {
-		try {			
-			String sql = "SELECT * FROM ofertas ";
+		String sql = "SELECT cantidad_cupones FROM ofertas WHERE oferta_id = ?";
+		
+		try {
+			int response = 0;
 			
 			this.conectar();
 			
-			/*cs =  conexion.prepareCall(sql);
+			cs =  conexion.prepareCall(sql);
+			
+			cs.setInt(1, codigo);
+			
 			rs = cs.executeQuery();
 			
-			while (rs.next()) {
-				Oferta oferta = new Oferta();
-				EmpresaModel empresa = new EmpresaModel();
-				
-				String nombreEmpresa = empresa.obtenerEmpresa(rs.getInt("empresa_id")).getNombreEmpresa();
-				
-				oferta.setIdOferta(rs.getInt("oferta_id"));
-				oferta.setNombreEmpresa(nombreEmpresa);
-				oferta.setTituloOferta(rs.getString("titulo"));
-				oferta.setDescripcionOferta(rs.getString("descripcion"));
-				oferta.setPrecioRegularOferta(rs.getDouble("precio_regular"));
-				oferta.setPrecio_ofertaOferta(rs.getDouble("precio_oferta"));
-				oferta.setFechaInicioOferta(rs.getDate("fecha_inicio"));
-				oferta.setFechaFinOferta(rs.getDate("fecha_fin"));
-				oferta.setCantidadCuponesOferta(rs.getInt("cantidad_cupones"));
-				oferta.setFechaRegistroOferta(rs.getDate("fecha_registro"));
-				oferta.setEstadoOferta(rs.getInt("estado"));
-				
-				lista.add(oferta);
-			}*/
+			rs.last();
 			
+			response = rs.getInt("cantidad_cupones");
+			System.out.println(response);
 			this.desconectar();
 			
-			return 0;
+			return response;
 		} catch (SQLException ex) {
 			Logger.getLogger(UsuarioModel.class.getName()).log(Level.SEVERE, null, ex);
 
@@ -292,6 +337,8 @@ public class OfertaModel extends Conexion {
 	
 	public int validarOferta(String codigo, String estado, String observaciones) throws SQLException {
 		int response = 0;
+		int cupones = 0;
+		String codigoEmpresa = null;
 		
 		String sql = "UPDATE ofertas SET estado = ?, observaciones = ? WHERE oferta_id = ?";
 		
@@ -307,9 +354,22 @@ public class OfertaModel extends Conexion {
 			cs.setString(1, estado);
 			cs.setString(2, observaciones);
 			cs.setString(3, codigo);
-
+			
 			response = cs.executeUpdate();
-
+			
+			if (Integer.parseInt(estado) == 1) {
+				cupones = cantidadCupones(Integer.parseInt(codigo));
+				System.out.println("cupones: " + cupones);
+				Date fechaVencimiento = obtenerFechaVencimiento(codigo);
+				System.out.println("vencimiento: " + fechaVencimiento);
+				if (cupones > 0) {
+					CuponModel cupon = new CuponModel();
+					
+					codigoEmpresa = codigoEmpresa(Integer.parseInt(codigo));
+					System.out.println("empresa: " + codigoEmpresa);
+					cupon.generarCupon(cupones, codigoEmpresa, Integer.parseInt(codigo), fechaVencimiento);
+				}		
+			}
 			
 			this.desconectar();
 			
