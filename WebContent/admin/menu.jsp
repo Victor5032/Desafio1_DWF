@@ -10,7 +10,7 @@
             <div class="navbar-nav">
                 <a class="nav-link" href="${pageContext.request.contextPath}/admin.do?op=home">Ofertas</a>
                 <a class="nav-link" href="${pageContext.request.contextPath}/admin.do?op=headings">Rubros</a>
-                <a class="nav-link" href="${pageContext.request.contextPath}/admin.do?op=empresas">Empresas</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/empresas.do?op=nuevaEmpresa">Empresas</a>
                 <a class="nav-link" href="${pageContext.request.contextPath}/admin.do?op=clientes">Clientes</a>
             </div>
         </div>
