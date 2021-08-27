@@ -11,7 +11,7 @@
 <title>Inicio de Sesion</title>
 </head>
 <body>
-<%@ include file="navbar.jsp"%>
+	<%@ include file="navbar.jsp"%>
 	<div class="container">
 		<c:if test="${not empty listaEventos}">
 			<div class="alert alert-dark">
@@ -28,23 +28,21 @@
 					<form class="w-25 shadow-lg p-3 mb-5 bg-white rounded p-5"
 						method="POST"
 						action="${pageContext.request.contextPath}/empresas.do">
-						<input hidden="hidden" value="logInEmpresa" name="op">
+						<input hidden="hidden" value="updatePassword" name="op"> <input
+							value="${sessionScope.usser}" name="empresaID" hidden>
 						<div class="form-group mt-3">
-							<h3>Iniciar Sesion</h3>
-							<span>correo electronico</span> <input type="text"
-								class="form-control" required name="correoEmpresa"
-								placeholder="Ingresar Usuario">
+							<span>Ingrese su contraseña actual</span> <input type="password"
+								class="form-control" required name="actualPassword"
+								placeholder="contraseña actual">
 						</div>
 						<div class="form-group mt-3">
-							<span>Contraseña</span> <input type="password"
-								class="form-control" name="passwordEmpresa" required
-								placeholder="Ingresar su Contraseña">
+							<span>Contraseña nueva</span> <input type="password"
+								class="form-control" name="newPassword" required
+								placeholder="nueva contraseña">
 						</div>
 						<div class="text-center mt-5">
-							<button type="submit" class="btn btn-primary">Ingresar</button>
-							
+							<button type="submit" class="btn btn-primary">Actualizar</button>
 						</div>
-					<p class="text-start mt-3 fs-1">Has olvidado tu contraseña ?<a href="${pageContext.request.contextPath}/" class="mt-3">click aqui</a></p>
 					</form>
 				</div>
 			</div>

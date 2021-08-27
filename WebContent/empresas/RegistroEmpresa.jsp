@@ -16,7 +16,6 @@
 <body>
 	<%@ include file="navbar.jsp"%>
 	<div class="container">
-
 		<div class="row">
 			<div class="col-12 mt-5">
 				<h3 class="text-center">Registro para Empresas</h3>
@@ -50,11 +49,6 @@
 									name="telefonoEmpresa" required>
 							</div>
 							<div class="col-6 mt-3">
-								<span>Contraseña Empresa</span> <input type="password"
-									class="form-control" id="passwordEmpresa"
-									name="passwordEmpresa" required>
-							</div>
-							<div class="col-6 mt-3">
 								<span>Correo Electronico</span> <input type="email"
 									class="form-control" id="emialEmpresa" name="correoEmpresa"
 									required>
@@ -66,6 +60,11 @@
 									<option value="${rubros.rubroID}">${rubros.rubro}</option>
 									</c:forEach>
 								</select>
+							</div>
+							<div class="col-6 mt-3">
+								<span>Comision</span> <input type="text"
+									class="form-control" id="emialEmpresa" name="comision"
+									required>
 							</div>
 						</div>
 						<div class="col-10 m-3">

@@ -19,12 +19,6 @@
 							href="${pageContext.request.contextPath}/empresas.do?op=logout">Cerrar
 							sesión</a>
 					</c:when>
-					<c:when test="${empty sessionScope.name}">
-						<a class="btn btn-outline-success my-2 my-sm-0" href="${pageContext.request.contextPath}/empresas.do?op=logIn">Iniciar sesion</a>
-						<a class="btn btn-outline-secondary my-2 my-sm-0 ml-3"
-							href="${pageContext.request.contextPath}/empresas.do?op=nuevaEmpresa">Registrarse</a>
-
-					</c:when>
 				</c:choose>
 			</div>
 		</div>

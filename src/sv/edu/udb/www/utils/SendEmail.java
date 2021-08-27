@@ -1,5 +1,6 @@
 package sv.edu.udb.www.utils;
 
+import java.io.ObjectInputValidation;
 import java.util.Properties; 
 import java.util.logging.*;
 
@@ -7,15 +8,18 @@ import javax.mail.*;
 import javax.mail.internet.*;
 
 public class SendEmail {
-	public  String sendEmpresaVerificationEmail(String destino, String nombre) throws MessagingException {
+	
+	
+	
+	
+	
+	public  String senPasswordEmpresa(String destino, String nombre) throws MessagingException {
 		Token newTokem = new Token();
-		String generatedTokemString = newTokem.token();
+		String generatedTokemString = newTokem.password();
 		String destinatario = destino;
 		String nombreEmpresa = nombre;
-         
 		String host = "smtp.gmail.com";
 		Properties properties = System.getProperties();
-
 		properties.put("mail.smtp.auth", "true");
 		properties.put("mail.smtp.starttls.enable", "true");
 		properties.put("mail.smtp.host", host);
@@ -353,7 +357,7 @@ public class SendEmail {
 					+ "      <td class=\"v-container-padding-padding\" style=\"overflow-wrap:break-word;word-break:break-word;padding:50px 44px 15px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\r\n" 
 					+ "        \r\n"
 					+ "  <h1 class=\"v-text-align\" style=\"margin: 0px; color: #00113f; line-height: 140%; text-align: center; word-wrap: break-word; font-weight: normal; font-family: 'Open Sans',sans-serif; font-size: 28px;\">\r\n"
-					+ "    <strong>Su codigo de verificacion <br /> <p> "+tokem+" </p><br />Puedes ingresar haciendo click en el siguiente boton<br /><a href=\"http://localhost:8080/Desafio1_DWF/empresas/empresas.do?op=completarValidar&userToken="+tokem+"\" class=\"myButton\">Click aqui</a> </strong>\r\n"
+					+ "    <strong>Su contraseña <br /> <p> "+tokem+" </p><br /><br /></strong>\r\n"
 					+ "  </h1>\r\n"
 					+ "\r\n"
 					+ "      </td>\r\n"

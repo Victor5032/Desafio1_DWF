@@ -6,43 +6,42 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.HeaderTokenizer.Token;
 
 import java.sql.SQLException;
 import java.security.NoSuchAlgorithmException;
 import sv.edu.udb.www.db.Conexion;
-import sv.edu.udb.www.utils.CodigoEmpresa;
-import sv.edu.udb.www.utils.SendEmail;
-import sv.edu.udb.www.utils.Sha1;
+import sv.edu.udb.www.utils.*;
 import sv.edu.udb.www.beans.Empresa;
 import sv.edu.udb.www.beans.Rubro;
 
 public class EmpresaModel extends Conexion {
 
 	// Ciclo registro de empresa
-	public int verificarTokenExistente(String tokenString) throws SQLException {
-		try {
-			int tokenExistente = 0;
-			String sqlString = "CALL obtenerTokenExistente(?)";
-			int idAverificar = 0;
-			this.conectar();
-			cs = conexion.prepareCall(sqlString);
-			cs.setString(1, tokenString);
-			rs = cs.executeQuery();
-			if (rs.next()) {
-				idAverificar = rs.getInt("empresa");
-				tokenExistente++;
-			}
-			this.desconectar();
-			activarEmpresa(idAverificar);
-			return tokenExistente;
-		} catch (Exception ex) {
-			// TODO: handle exception
-			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
-			return 0;
-		} finally {
-			this.desconectar();
-		}
-	}
+//	public int verificarTokenExistente(String tokenString) throws SQLException {
+//		try {
+//			int tokenExistente = 0;
+//			String sqlString = "CALL obtenerTokenExistente(?)";
+//			int idAverificar = 0;
+//			this.conectar();
+//			cs = conexion.prepareCall(sqlString);
+//			cs.setString(1, tokenString);
+//			rs = cs.executeQuery();
+//			if (rs.next()) {
+//				idAverificar = rs.getInt("empresa");
+//				tokenExistente++;
+//			}
+//			this.desconectar();
+//			activarEmpresa(idAverificar);
+//			return tokenExistente;
+//		} catch (Exception ex) {
+//			// TODO: handle exception
+//			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
+//			return 0;
+//		} finally {
+//			this.desconectar();
+//		}
+//	}
 
 	public List<Rubro> listarRubros() throws SQLException {
 		try {
@@ -70,23 +69,67 @@ public class EmpresaModel extends Conexion {
 
 	}
 
-	private void activarEmpresa(int idEmpresa) throws SQLException {
+//	private void activarEmpresa(int idEmpresa) throws SQLException {
+//		try {
+//			String sqlString = "CALL activarEmpresa(?,?)";
+//			this.conectar();
+//			cs = conexion.prepareCall(sqlString);
+//			cs.setInt(1, idEmpresa);
+//			cs.setInt(2, 1);
+//			cs.executeUpdate();
+//			this.desconectar();
+//		} catch (SQLException ex) {
+//			// TODO: handle exception
+//			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
+//			this.desconectar();
+//		}
+//
+//	}
+    
+	public int actualPasswordExists(String actualPassword, int empresaID) throws SQLException {
+		
 		try {
-			String sqlString = "CALL activarEmpresa(?,?)";
+			Sha1 getSha1 = new Sha1();
+			int passwordActualCorrecto = 0;	
+			String sqlString = "CALL actualPassword(?,?)";
 			this.conectar();
 			cs = conexion.prepareCall(sqlString);
-			cs.setInt(1, idEmpresa);
-			cs.setInt(2, 1);
-			cs.executeUpdate();
+			cs.setString(1, getSha1.sha1Hash(actualPassword));
+			cs.setInt(2, empresaID);
+			rs = cs.executeQuery();
+			if(rs.next()) {
+				passwordActualCorrecto ++;
+			}
 			this.desconectar();
-		} catch (SQLException ex) {
+			return passwordActualCorrecto;	
+		} catch (SQLException |  NoSuchAlgorithmException ex) {
 			// TODO: handle exception
 			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
 			this.desconectar();
-		}
-
+			return 0;
+		}					
 	}
-
+	
+	public int updatePassword(String newPassword, int empresaID) throws SQLException {
+		try {
+			Sha1 getSha1 = new Sha1();
+			int filasAfectadas= 0;
+			String sqlString = "CALL updatePassword(?,?)";
+			this.conectar();
+			cs = conexion.prepareCall(sqlString);
+			cs.setString(1, getSha1.sha1Hash(newPassword));
+			cs.setInt(2, empresaID);
+			filasAfectadas = cs.executeUpdate();
+			this.desconectar();
+			return filasAfectadas;
+		} catch (SQLException | NoSuchAlgorithmException ex) {
+			// TODO: handle exception
+			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
+			this.desconectar();
+			return 0;
+		}
+	}
+	
 	public int actualizarEmpresa(Empresa empresa) throws SQLException {
 		try {
 			int filasAfectadas = 0;
@@ -111,8 +154,9 @@ public class EmpresaModel extends Conexion {
 		}
 	}
 	
-	public int registrarEmpresaPendienteVerificaion(Empresa empresa) throws SQLException, NoSuchAlgorithmException {
+	public int registrarEmpresaPendienteVerificaion(Empresa empresa) throws SQLException, NoSuchAlgorithmException, MessagingException {
 		try {
+			SendEmail mEmail = new SendEmail();
 			Sha1 sha1 = new Sha1();
 			int filasAfectadas = 0;
 			String sql = "CALL insertarEmpresa(?,?,?,?,?,?,?,?,?,?)";
@@ -124,13 +168,14 @@ public class EmpresaModel extends Conexion {
 			cs.setString(4, empresa.getContactoEmpresa());
 			cs.setString(5, empresa.getTelefonoEmpresa());
 			cs.setString(6, empresa.getCorreoEmpresa());
-			cs.setString(7, sha1.sha1Hash(empresa.getEmpresa_password()));
+			String passwor = mEmail.senPasswordEmpresa(empresa.getCorreoEmpresa(), empresa.getNombreEmpresa());
+			cs.setString(7, sha1.sha1Hash(passwor));
 			cs.setInt(8, empresa.getRubro_id());
 			cs.setDouble(9, empresa.getComisionEmpresa());
-			cs.setInt(10, 3);
+			cs.setDouble(10,1);
 			filasAfectadas = cs.executeUpdate();
 			this.desconectar();
-			asignarToken(empresa.getCorreoEmpresa(), empresa.getNombreEmpresa());
+//			
 			return filasAfectadas;
 		} catch (SQLException ex) {
 			// TODO: handle exception
@@ -140,23 +185,23 @@ public class EmpresaModel extends Conexion {
 		}
 	}
 
-	private void asignarToken(String destinatarioEmail, String nombreEmpresa) throws SQLException{
-		try {
-			CodigoEmpresa codigo = new CodigoEmpresa();
-			SendEmail email = new SendEmail();
-			String sql = "CALL insertarToken(?,?)";
-			this.conectar();
-			cs = conexion.prepareCall(sql); 
-			cs.setInt(1, codigo.codigoEmpresaToken());
-			cs.setString(2, email.sendEmpresaVerificationEmail(destinatarioEmail, nombreEmpresa));
-			cs.executeUpdate();
-			this.desconectar();
-		} catch (SQLException | MessagingException ex) {
-			// TODO: handle exception
-			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
-			this.desconectar();
-		}
-	}
+//	private void asignarToken(String destinatarioEmail, String nombreEmpresa) throws SQLException{
+//		try {
+//			CodigoEmpresa codigo = new CodigoEmpresa();
+//			SendEmail email = new SendEmail();
+//			String sql = "CALL insertarToken(?,?)";
+//			this.conectar();
+//			cs = conexion.prepareCall(sql); 
+//			cs.setInt(1, codigo.codigoEmpresaToken());
+//			cs.setString(2, email.sendEmpresaVerificationEmail(destinatarioEmail, nombreEmpresa));
+//			cs.executeUpdate();
+//			this.desconectar();
+//		} catch (SQLException | MessagingException ex) {
+//			// TODO: handle exception
+//			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
+//			this.desconectar();
+//		}
+//	}
 
 	public Empresa iniciarSesion(String correoEmpresa, String passwordEmpresa) throws SQLException {
 		try {

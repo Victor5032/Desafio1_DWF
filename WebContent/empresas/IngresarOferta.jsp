@@ -52,12 +52,12 @@
 
                             <div class="col-6 mt-3">
                                 <span>Fecha Final</span>
-                                <input class="form-control" type="date" name="ofertaFinal" required="" id="fechaFinal" />
+                                <input class="form-control" type="date" name="ofertaFinal"  required="" id="fechaFinal" />
 
                             </div>
                             <div class="col-6 mt-3">
                                 <span>Cantidad de Cupones</span>
-                                <input class="form-control" name="ofertaCantidadCupones" type="text" id="cantidadOfertas" required>
+                                <input class="form-control" name="ofertaCantidadCupones"  type="text" id="cantidadOfertas" required>
                             </div>
                             <div class="col-6 mt-3">
                                 <span>Extras</span>
