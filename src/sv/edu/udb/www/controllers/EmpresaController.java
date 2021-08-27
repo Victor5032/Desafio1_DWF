@@ -145,8 +145,20 @@ public class EmpresaController extends HttpServlet {
 	//aqui nos quedamos
 	private void recuperarPassword(HttpServletRequest request, HttpServletResponse response) {
 		try {
+			listaEventos.clear();
 			String emailExiString = request.getParameter("correoEmpresa");
-			
+			int empresaID = model.actualMailExist(emailExiString);
+			if(empresaID > 0 ) {
+				if(model.recuperarPassword(emailExiString, empresaID) > 0 ) {
+					listaEventos.add("Revise su correo, se le ha enviado su nueva contraseña");
+					request.setAttribute("listaEventos", listaEventos);
+					request.getRequestDispatcher("/empresas/LoginEmpresas.jsp").forward(request, response);
+				}
+			}else {
+				listaEventos.add("La direccion email que ha proporcionado, no se ha encontrado");
+				request.setAttribute("listaEventos", listaEventos);
+				request.getRequestDispatcher("/empresas/LoginEmpresas.jsp").forward(request, response);
+			}
 			
 		} catch (Exception ex) {
 			// TODO: handle exception
@@ -195,7 +207,6 @@ public class EmpresaController extends HttpServlet {
 				request.setAttribute("listaEventos", listaEventos);
 				request.getRequestDispatcher("empresas.do?op=perfilEmpresa").forward(request, response);
 			}
-			int empresaID = Integer.valueOf(request.getParameter("empresaID"));
 		} catch (SQLException | ServletException | IOException ex) {
 			// TODO: handle exception
 			Logger.getLogger(EmpresaController.class.getName()).log(Level.SEVERE, null, ex);

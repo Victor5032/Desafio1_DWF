@@ -110,6 +110,50 @@ public class EmpresaModel extends Conexion {
 		}					
 	}
 	
+	public int recuperarPassword(String emailEmpresa, int empresaID) throws SQLException {
+		try {
+			int filasAfectadas = 0;
+			Sha1 sha1 = new Sha1();
+			SendEmail mEmail = new SendEmail();
+			String sqlString = "CALL recuperarPassword(?,?)";
+			this.conectar();		
+			cs = conexion.prepareCall(sqlString);
+			String newPasswordString = mEmail.recuperarPasswordMail(emailEmpresa);
+			cs.setString(1, sha1.sha1Hash(newPasswordString));
+			cs.setInt(2, empresaID);
+			filasAfectadas = cs.executeUpdate();
+			this.desconectar();
+			return filasAfectadas;
+		} catch (SQLException | MessagingException | NoSuchAlgorithmException ex) {
+			// TODO: handle exception
+			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
+			this.desconectar();
+			return 0;
+		}
+	}
+	
+	
+	public int actualMailExist(String emailString) throws SQLException{
+		try {
+			int correoEncontrado = 0;
+			String sqlString = "CALL correoExistente(?)";
+			this.conectar();
+			cs = conexion.prepareCall(sqlString);
+			cs.setString(1, emailString);
+			rs = cs.executeQuery();
+			if(rs.next()) {
+				correoEncontrado = rs.getInt("empresa_id");
+			}
+			this.desconectar();
+			return correoEncontrado;
+		} catch (SQLException ex) {
+			// TODO: handle exception
+			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
+			this.desconectar();
+			return 0;
+		}
+	}
+	
 	public int updatePassword(String newPassword, int empresaID) throws SQLException {
 		try {
 			Sha1 getSha1 = new Sha1();

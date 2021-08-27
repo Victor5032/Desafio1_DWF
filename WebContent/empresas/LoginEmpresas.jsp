@@ -44,7 +44,7 @@
 							<button type="submit" class="btn btn-primary">Ingresar</button>
 							
 						</div>
-					<p class="text-start mt-3 fs-1">Has olvidado tu contraseña ?<a href="${pageContext.request.contextPath}/" class="mt-3">click aqui</a></p>
+					<p class="text-start mt-3 fs-1">Has olvidado tu contraseña ?<a href="${pageContext.request.contextPath}/empresas/recuperarContraseña.jsp" class="mt-3">click aqui</a></p>
 					</form>
 				</div>
 			</div>

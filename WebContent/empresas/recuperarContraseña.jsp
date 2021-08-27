@@ -30,9 +30,9 @@
 						action="${pageContext.request.contextPath}/empresas.do">
 						<input hidden="hidden" value="recuperarPassword" name="op">
 						<div class="form-group mt-3">
-							<h3>Iniciar Sesion</h3>
+							<h3>Recuperar contraseña</h3>
 							<span>Correo electronico de la cuenta a recuperar</span> <input type="text"
-								class="form-control" required name="correoEmpresa"
+								class="form-control mt-3" required name="correoEmpresa"
 								placeholder="Ingresar Usuario">
 						</div>
 						<div class="text-center mt-5">
