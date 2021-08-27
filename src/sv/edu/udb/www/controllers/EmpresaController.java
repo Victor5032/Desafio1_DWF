@@ -276,7 +276,6 @@ public class EmpresaController extends HttpServlet {
 				request.getRequestDispatcher("empresas.do?op=perfilEmpresa").forward(request, response);
 			} else {
 				listaEventos.add("El usuario o contraseña no son correctos");
-				listaEventos.add("Ya activo su cuenta con el codigo de verificacion ?");
 				request.setAttribute("listaEventos", listaEventos);
 				request.getRequestDispatcher("empresas.do?op=logIn").forward(request, response);
 			}
