@@ -21,6 +21,14 @@
                     <div class="pb-3">
                         <h3 class="text-center">Rubros</h3>
                     </div>
+                    <c:if test="${param.message == 1}">
+                    	<div class="alert alert-danger alert-dismissible d-flex align-items-center" role="alert">
+	                    	<div>	
+								Rubro eliminado
+							</div>
+							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>
+                    </c:if>
                     <div class="row">
                         <div class="col-12">
 							<div class="container-fluid">
@@ -47,9 +55,40 @@
 	                                                <div class="col-12">
 	                                                    <a href="${pageContext.request.contextPath}/admin.do?op=details-heading&codigo=${rubro.rubroID}" class="btn btn-info">Ver</a>
 	                                                    <a href="${pageContext.request.contextPath}/admin.do?op=edit-heading&codigo=${rubro.rubroID}" class="btn btn-warning">Editar</a>
-	                                                    <a href="${pageContext.request.contextPath}/admin.do?op=delete-heading&codigo=${rubro.rubroID}" class="btn btn-danger">Eliminar</a>
+	                                                    <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal${rubro.rubroID}">Eliminar</a>
 	                                                </div>
 	                                            </div>
+	                                            <div class="modal fade" id="modal${rubro.rubroID}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		                                            <div class="modal-dialog">
+		                                                <div class="modal-content">
+			                                                <div class="modal-header">
+			                                                    <h5 class="modal-title">Eliminar rubro</h5>
+			                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			                                                </div>
+			                                                <div class="modal-body">
+			                                                    <p>¿Esta seguro de eliminar el rubro <strong class="text-danger">${rubro.rubro}</strong> ?</p>
+			                                                </div>
+			                                                <div class="modal-footer">
+			                                                    <div class="row w-100">
+			                                                    	<div class="col-6">
+			                                                    		<div class="d-grid gap-2">
+                                                                            <form method="POST" action="${pageContext.request.contextPath}/admin.do">
+                                                                                <input type="hidden" name="op" id="op" value="delete-heading">
+                                                                                <input type="hidden" name="codigo" id="codigo" value="${rubro.rubroID}">
+                                                                                <button type="submit" class="btn btn-warning w-100">Eliminar</button>
+                                                                            </form>
+			                                                    		</div>
+			                                                    	</div>
+			                                                    	<div class="col-6">
+			                                                    		<div class="d-grid gap-2">
+			                                                    			<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+			                                                    		</div>
+			                                                    	</div>
+			                                                    </div>
+			                                                </div>
+		                                                </div>
+		                                            </div>
+		                                        </div>
 	                                        </td>
 	                                    </tr>
                                 	</c:forEach>

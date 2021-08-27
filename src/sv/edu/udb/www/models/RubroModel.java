@@ -14,7 +14,7 @@ public class RubroModel extends Conexion {
 		try {
 			List<Rubro> lista = new ArrayList<>();
 			
-			String sql = "SELECT * FROM rubros ORDER BY fecha_registro DESC";
+			String sql = "SELECT * FROM rubros WHERE estado = 1 ORDER BY fecha_registro DESC";
 			
 			this.conectar();
 			
@@ -79,6 +79,114 @@ public class RubroModel extends Conexion {
 			this.desconectar();
 			
 			return null;
+		}
+	}
+	
+	public int nuevoRubro(String rubro) throws SQLException {
+		String sql = "INSERT INTO rubros (rubro, estado) VALUES (?, 1)";
+		
+		try {
+			int response = 0;
+			
+			this.conectar();
+			cs = conexion.prepareCall(sql);
+			
+			cs.setString(1, rubro);
+			
+			response = cs.executeUpdate();
+			
+			this.desconectar();
+			
+			return response;
+		} catch (SQLException e) {
+			Logger.getLogger(OfertaModel.class.getName()).log(Level.SEVERE, null, e);
+			
+			this.desconectar();
+			
+			return 0;
+		}
+	}
+	
+	public int editarRubro(String rubro, int id) throws SQLException {
+		String sql = "UPDATE rubros SET rubro = ? WHERE rubro_id = ?";
+		
+		try {
+			int response = 0;
+			
+			this.conectar();
+			
+			cs = conexion.prepareCall(sql);
+			
+			cs.setString(1, rubro);
+			cs.setInt(2, id);
+			
+			response = cs.executeUpdate();
+			
+			this.desconectar();
+			
+			return response;
+		} catch (SQLException e) {
+			Logger.getLogger(OfertaModel.class.getName()).log(Level.SEVERE, null, e);
+			
+			this.desconectar();
+			
+			return 0;
+		}
+	}
+	
+	public int buscarRubro(String nombre) throws SQLException {
+		String sql = "SELECT rubro_id FROM rubros WHERE rubro = ?";
+		
+		try {
+			int response = 0;
+			
+			this.conectar();
+			
+			cs = conexion.prepareCall(sql);
+			
+			cs.setString(1, nombre);
+			
+			rs = cs.executeQuery();
+			
+			rs.last();
+			
+			response = rs.getInt("rubro_id");
+			
+			this.desconectar();
+			
+			return response;
+		} catch (SQLException e) {
+			Logger.getLogger(OfertaModel.class.getName()).log(Level.SEVERE, null, e);
+			
+			this.desconectar();
+			
+			return 0;
+		}
+	}
+	
+	public int borrarRubro(int id) throws SQLException {
+		String sql = "UPDATE rubros SET estado = 2 WHERE rubro_id = ?";
+		
+		try {
+			int response = 0;
+			
+			this.conectar();
+			
+			cs = conexion.prepareCall(sql);
+
+			cs.setInt(1, id);
+			
+			response = cs.executeUpdate();
+			
+			this.desconectar();
+			
+			return response;
+		} catch (SQLException e) {
+			Logger.getLogger(OfertaModel.class.getName()).log(Level.SEVERE, null, e);
+			
+			this.desconectar();
+			
+			return 0;
 		}
 	}
 }

@@ -25,7 +25,7 @@
                             <a href="${pageContext.request.contextPath}/admin.do?op=headings" class="btn btn-primary">Regresar</a>
                         </div>
                     </div>
-                    <c:if test="${param.message == 1}">
+                    <c:if test="${param.message == 2}">
                     	<div class="alert alert-success alert-dismissible d-flex align-items-center" role="alert">
 	                    	<div>	
 								Rubro actualizado
@@ -33,8 +33,7 @@
 							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 						</div>
                     </c:if>
-                    
-                    <c:if test="${param.message == 2}">
+                    <c:if test="${param.message == 1}">
                     	<div class="alert alert-success alert-dismissible d-flex align-items-center" role="alert">
 	                    	<div>	
 								Rubro ingresado exitosamente

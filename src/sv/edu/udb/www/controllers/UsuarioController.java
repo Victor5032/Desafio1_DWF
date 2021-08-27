@@ -178,6 +178,78 @@ public class UsuarioController extends HttpServlet {
 					}					
 					break;
 				
+				case "insert-heading":
+					if (loginRequired(request, response) > 0) {
+						String rubro = request.getParameter("rubro");
+
+						int result = 0; 
+						int mensaje = 0;
+
+						result = rubroModel.nuevoRubro(rubro);
+						
+						if (result > 0) {
+							mensaje = 1;
+						}
+						
+						int id = rubroModel.buscarRubro(rubro);
+						
+						response.sendRedirect("admin.do?op=details-heading&codigo=" + id + "&message=" + mensaje);
+					} else {
+						response.sendRedirect("admin.do");
+					}					
+					break;
+				
+				case "edit-heading":
+					if (loginRequired(request, response) > 0) {
+						String id = request.getParameter("codigo");
+						
+						request.setAttribute("rubro", rubroModel.obtenerRubro(Integer.parseInt(id)));
+						request.getRequestDispatcher("/admin/editarRubro.jsp").forward(request, response);
+					} else {
+						response.sendRedirect("admin.do");
+					}					
+					break;
+				
+				case "update-heading":
+					if (loginRequired(request, response) > 0) {
+						String codigo = request.getParameter("codigo");
+						String rubro = request.getParameter("rubro");
+						
+						int result = 0; 
+						int mensaje = 0;
+
+						result = rubroModel.editarRubro(rubro, Integer.parseInt(codigo));
+						
+						if (result > 0) {
+							mensaje = 2;
+						}
+						
+						int id = rubroModel.buscarRubro(rubro);
+						
+						response.sendRedirect("admin.do?op=details-heading&codigo=" + id + "&message=" + mensaje);
+					} else {
+						response.sendRedirect("admin.do");
+					}					
+					break;
+				
+				case "delete-heading":
+					if (loginRequired(request, response) > 0) {
+						String codigo = request.getParameter("codigo");
+						
+						int result = 0; 
+						int mensaje = 0;
+
+						result = rubroModel.borrarRubro(Integer.parseInt(codigo));
+						
+						if (result > 0) {
+							mensaje = 1;
+						}
+						
+						response.sendRedirect("admin.do?op=headings&message=" + mensaje);
+					} else {
+						response.sendRedirect("admin.do");
+					}					
+					break;
 					
 				default:
 					
