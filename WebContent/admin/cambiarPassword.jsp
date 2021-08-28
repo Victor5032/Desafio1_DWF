@@ -44,7 +44,7 @@
 									  	<div class="row">
 										  	<div class="col-12">
 										  		<label for="exampleInputEmail1" class="form-label">Contraseña actual:</label>
-	    										<input type="text" class="form-control" id="actual" name="actual" value="${usuario.nombre}">
+	    										<input type="password" class="form-control" id="actual" name="actual">
 										  	</div>
 										  </div>
 									  </div>
@@ -52,11 +52,11 @@
 									  	<div class="row">
 										  	<div class="col-6">
 										  		<label for="exampleInputEmail1" class="form-label">Nueva contraseña:</label>
-	    										<input type="text" class="form-control" id="nueva" name="nueva" value="${usuario.nombre}">
+	    										<input type="password" class="form-control" id="nueva" name="nueva">
 										  	</div>
 										  	<div class="col-6">
 										  		<label for="exampleInputEmail1" class="form-label">Confirmar nueva contraseña:</label>
-	    										<input type="text" class="form-control" id="confirmar" name="confirmar" value="${usuario.apellido}">
+	    										<input type="password" class="form-control" id="confirmar" name="confirmar">
 										  	</div>
 										  </div>
 									  </div>
