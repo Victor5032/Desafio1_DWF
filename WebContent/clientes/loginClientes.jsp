@@ -40,7 +40,7 @@
 								name="passwordCliente" class="form-control" required>
 						</div>
 						<div class="text-center mt-5">
-							<button type="submit" class="btn btn-primary">Ingresars</button>
+							<button type="submit" class="btn btn-primary">Ingresar</button>
 						</div>
 						<br/>
 						<p class="text-start mt-3">Has olvidado tu contraseña ?<a href="${pageContext.request.contextPath}/clientes/recuperarContraseña.jsp" class="mt-3">click aqui</a></p>

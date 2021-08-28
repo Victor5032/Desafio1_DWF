@@ -47,6 +47,10 @@
                                 <span>Contraseña</span>
                                 <input type="password" class="form-control" id="contraseñaPerfilClientes" disabled>
                             </div>
+                            
+                            <a class="btn btn-primary"
+								href="${contextPath}/ofertasCupones.jsp"><span
+								class="glyphicon glyphicon-edit"></span> Editar</a>
                         </div>
                     </form>
                 </div>
