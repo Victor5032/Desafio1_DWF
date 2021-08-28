@@ -63,4 +63,24 @@ public class CodigoEmpresa extends Conexion{
 			this.desconectar();
 		}
     }
+    public int codigoCliente() throws SQLException{
+    	try {
+			int codigoEmpresaActual = 0;
+			String sqlString ="select clientes.cliente_id as codigo from clientes ORDER BY clientes.cliente_id DESC LIMIT 1";
+			this.conectar();
+			st = conexion.prepareStatement(sqlString);
+			rs = st.executeQuery();
+			while(rs.next()) {
+				codigoEmpresaActual = Integer.valueOf(rs.getInt("codigo")); 
+			}
+			this.desconectar();
+			return codigoEmpresaActual;
+		} catch (Exception e) {
+			// TODO: handle exception
+			Logger.getLogger(CodigoEmpresa.class.getName()).log(Level.SEVERE, null, e);
+			return  0;
+		}finally {
+			this.desconectar();
+		}
+    }
 }

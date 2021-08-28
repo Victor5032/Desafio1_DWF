@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,6 +11,15 @@
 </head>
 <body>
     <div class="container">
+    <c:if test="${not empty listaEventos}">
+			<div class="alert alert-dark">
+				<ul>
+					<c:forEach var="eventos" items="${requestScope.listaEventos}">
+						<li>${eventos}</li>
+					</c:forEach>
+				</ul>
+			</div>
+		</c:if>
         <div class="row">
             <div class="col-12 mt-5">
                 <div class="d-flex justify-content-center align-items-center">

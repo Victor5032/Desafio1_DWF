@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,41 +11,51 @@
 </head>
 <body>
     <div class="container">
+    <c:if test="${not empty listaEventos}">
+			<div class="alert alert-dark">
+				<ul>
+					<c:forEach var="eventos" items="${requestScope.listaEventos}">
+						<li>${eventos}</li>
+					</c:forEach>
+				</ul>
+			</div>
+		</c:if>
         <div class="row">
             <div class="col-12 mt-5">
                 <h3 class="text-center">Registro para clientes</h3>
             </div>
             <div class="col-12 mt-5">
                 <div class="d-flex justify-content-center align-items-center">
-                    <form class="w-50 shadow-lg p-3 mb-5 bg-white rounded p-5">
+                    <form class="w-50 shadow-lg p-3 mb-5 bg-white rounded p-5" method="post" action="${pageContext.request.contextPath}/clientes.do">
+                       <input value="registrarClienteSinVerificar" name="op" hidden>
                         <div class="row">
                             <div class="col-6 mt-3">
                                 <span>Nombres</span>
-                                <input type="text" class="form-control" id="nombreRegistroClientes">
+                                <input type="text" name="nombreCliente" class="form-control" id="nombreRegistroClientes">
                             </div>
                             <div class="col-6 mt-3">
                                 <span>Apellidos</span>
-                                <input type="text" class="form-control" id="apellidosRegistroClientes">
+                                <input type="text" name="apellidoCliente" class="form-control" id="apellidosRegistroClientes">
                             </div>
                             <div class="col-12 mt-3">
                                 <span>Direccion</span>
-                                <input type="text" class="form-control" id="direccionRegistroClientes">
+                                <input type="text" name="direccionCliente" class="form-control" id="direccionRegistroClientes">
                             </div>
                             <div class="col-6 mt-3">
                                 <span>Telefono</span>
-                                <input type="text" class="form-control" id="telefonoRegistroClientes">
+                                <input type="text" name="telefonoCliente" class="form-control" id="telefonoRegistroClientes">
                             </div>
                             <div class="col-6 mt-3">
                                 <span>DUI</span>
-                                <input type="text" class="form-control" id="duiRegistroClientes">
+                                <input type="text" name="duiCliente" class="form-control" id="duiRegistroClientes">
                             </div>
                             <div class="col-6 mt-3">
                                 <span>Correo</span>
-                                <input type="email" class="form-control" id="correoRegistroClientes">
+                                <input type="email" name="emailCliente" class="form-control" id="correoRegistroClientes">
                             </div>
                             <div class="col-6 mt-3">
                                 <span>Contraseña</span>
-                                <input type="password" class="form-control" id="contraseñaRegistroClientes">
+                                <input type="password" name="passwordCliente" class="form-control" id="contraseñaRegistroClientes">
                             </div>
                             <div class="text-center mt-5"><button type="submit" class="btn btn-primary">Registrarse</button></div>
                         </div>
