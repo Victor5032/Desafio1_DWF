@@ -137,4 +137,25 @@ public class UsuarioModel extends Conexion {
             return null;
 		}
 	}
+	
+	public void cambiarPassword(String password, String usuario) throws SQLException {
+		String sql = "UPDATE usuarios SET password = ? WHERE usuario = ?";
+		
+		try {
+			this.conectar();
+			
+			cs = conexion.prepareCall(sql);
+			
+			cs.setString(1, password);
+			cs.setString(2, usuario);
+
+			cs.executeUpdate();
+			 
+			this.desconectar();
+		} catch (SQLException e) {
+			Logger.getLogger(UsuarioModel.class.getName()).log(Level.SEVERE, null, e);
+			
+            this.desconectar();
+		}
+	}
 }

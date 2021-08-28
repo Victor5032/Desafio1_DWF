@@ -345,7 +345,7 @@ public class UsuarioController extends HttpServlet {
 						String pass = hash.sha1Hash(request.getParameter("actual"));
 						
 						if (actual.equals(pass)) {
-							
+							model.cambiarPassword(hash.sha1Hash(request.getParameter("confirmar")), String.valueOf(session.getAttribute("user")));
 						}
 											
 						response.sendRedirect("admin.do?op=profile");
