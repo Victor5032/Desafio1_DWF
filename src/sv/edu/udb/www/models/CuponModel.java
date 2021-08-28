@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import sv.edu.udb.www.db.*;
+import sv.edu.udb.www.beans.*;
 
 public class CuponModel extends Conexion {
 	public void generarCupon(int cantidad, String codigo, int oferta, Date fecha) throws SQLException {
@@ -45,6 +46,44 @@ public class CuponModel extends Conexion {
 			Logger.getLogger(UsuarioModel.class.getName()).log(Level.SEVERE, null, e);
 
 			this.desconectar();
+		}
+	}
+	
+	public List<Cupon> cuponesOferta(int id) throws SQLException {
+		ArrayList<Cupon> cupones = new ArrayList<>();
+		
+		String sql = "SELECT * FROM cupones WHERE oferta_id = ?";
+		
+		try {
+			this.conectar();
+			
+			cs = conexion.prepareCall(sql);
+			
+			cs.setInt(1, id);
+			
+			rs = cs.executeQuery();
+			
+			while (rs.next()) {
+				Cupon cupon = new Cupon();
+				
+				cupon.setCuponId(rs.getInt("cupon_id"));
+				cupon.setCodigoPromocional(rs.getString("codigo_promocional"));
+				cupon.setFechaVencimiento(rs.getDate("fecha_vencimiento"));
+				cupon.setFechaRegistro(rs.getDate("fecha_registro"));
+				cupon.setEstado(rs.getInt("estado"));
+				
+				cupones.add(cupon);
+			}
+
+			this.desconectar();
+			
+			return cupones;
+		} catch (SQLException e) {
+			Logger.getLogger(UsuarioModel.class.getName()).log(Level.SEVERE, null, e);
+
+			this.desconectar();
+			
+			return null;
 		}
 	}
 }

@@ -145,9 +145,12 @@ public class OfertaModel extends Conexion {
 				Oferta oferta = new Oferta();
 				oferta.setIdOferta(rs.getInt("oferta_id"));
 				oferta.setTituloOferta(rs.getString("titulo"));
+				oferta.setCantidadCuponesOferta(rs.getInt("cantidad_cupones"));
 				oferta.setDescripcionOferta(rs.getString("descripcion"));
 				oferta.setPrecioRegularOferta(rs.getDouble("precio_regular"));
 				oferta.setPrecio_ofertaOferta(rs.getDouble("precio_oferta"));
+				oferta.setFechaInicioOferta(rs.getDate("fecha_inicio"));
+				oferta.setFechaFinOferta(rs.getDate("fecha_fin"));
 				oferta.setFechaRegistroOferta(rs.getDate("fecha_registro"));
 				oferta.setEstadoOferta(rs.getInt("estado"));
 

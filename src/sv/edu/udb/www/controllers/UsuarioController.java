@@ -46,6 +46,8 @@ public class UsuarioController extends HttpServlet {
 			UsuarioModel model = new UsuarioModel();
 			OfertaModel ofertaModel = new OfertaModel();
 			RubroModel rubroModel = new RubroModel();
+			EmpresaModel empresaModel = new EmpresaModel();
+			CuponModel cuponModel = new CuponModel();
 
 			String op = request.getParameter("op");
 			// System.out.println(op);
@@ -101,6 +103,7 @@ public class UsuarioController extends HttpServlet {
 						String id = request.getParameter("codigo");
 						
 						request.setAttribute("oferta", ofertaModel.obtenerOferta(Integer.parseInt(id)));
+						request.setAttribute("cupones", cuponModel.cuponesOferta(Integer.parseInt(id)));
 						request.getRequestDispatcher("/admin/detalles.jsp").forward(request, response);
 					} else {
 						response.sendRedirect("admin.do");
@@ -244,6 +247,27 @@ public class UsuarioController extends HttpServlet {
 						}
 						
 						response.sendRedirect("admin.do?op=headings&message=" + mensaje);
+					} else {
+						response.sendRedirect("admin.do");
+					}					
+					break;
+					
+				case "empresas":
+					if (loginRequired(request, response) > 0) {
+						request.setAttribute("empresas", empresaModel.listarEmpresa());
+						request.getRequestDispatcher("/admin/empresas.jsp").forward(request, response);
+					} else {
+						response.sendRedirect("admin.do");
+					}					
+					break;
+				
+				case "ver-empresa":
+					if (loginRequired(request, response) > 0) {
+						String id = request.getParameter("codigo");
+						
+						request.setAttribute("empresa", empresaModel.obtenerEmpresa(Integer.parseInt(id)));
+						request.setAttribute("ofertas", ofertaModel.ofertasEmpresa(Integer.parseInt(id)));
+						request.getRequestDispatcher("/admin/verEmpresa.jsp").forward(request, response);
 					} else {
 						response.sendRedirect("admin.do");
 					}					

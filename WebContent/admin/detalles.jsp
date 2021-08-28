@@ -117,6 +117,61 @@
 	                    		</div>
 	                    	</div>
                         </c:if>
+						<c:if test="${oferta.estadoOferta == 1}">
+							<div class="pt-5 pb-3">
+								<h3 class="text-center">
+									Cupones generados
+								</h3>
+						  	</div>
+						  	<div class="card">
+						  		<div class="card-header text-center">
+							  		<strong>Cupones solicitados:</strong>&nbsp;${oferta.cantidadCuponesOferta}
+							  	</div>
+							  	<div class="card-body">
+							  		<table class="table table-striped table-hover" id="myTable">
+		                                <thead class="table-dark text-center">
+		                                    <tr>
+		                                        <th scope="col">#</th>
+		                                        <th scope="col">Codigo promocional</th>
+		                                        <th scope="col">Fecha de Vencimiento</th>
+		                                        <th scope="col">Estado</th>
+		                                    </tr>
+		                                </thead>
+		                                <tbody class="text-center">
+		                                	<c:forEach items="${requestScope.cupones}" var="cupon">
+		                                		<tr>
+			                                        <th scope="row">${cupon.cuponId}</th>
+			                                        <td>${cupon.codigoPromocional}</td>
+			                                        <td>${cupon.fechaVencimiento}</td>
+			                                        <td>
+			                                        	<c:if test="${cupon.estado == 1}">
+			                                        		<span class="text-success">
+			                                        			<strong>Disponible</strong>
+			                                        		</span>
+			                                        	</c:if>
+			                                        	<c:if test="${cupon.estado == 2}">
+			                                        		<span class="text-primary">
+			                                        			<strong>Adquirido</strong>
+			                                        		</span>
+			                                        	</c:if>
+			                                        	<c:if test="${cupon.estado == 3}">
+			                                        		<span class="text-warning">
+			                                        			<strong>Usado</strong>
+			                                        		</span>
+			                                        	</c:if>
+			                                        	<c:if test="${cupon.estado == 4}">
+			                                        		<span class="text-danger">
+			                                        			<strong>Vencido</strong>
+			                                        		</span>
+			                                        	</c:if>
+			                                        </td>
+			                                    </tr>
+		                                	</c:forEach>
+		                                </tbody>
+		                            </table>
+							  	</div>
+						  	</div>
+						</c:if>
                     </div>
                 </div>
             </section>
@@ -125,5 +180,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="//cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
         <script src="https://use.fontawesome.com/7e8731e53c.js"></script>
+        <script src="${pageContext.request.contextPath}/public/js/dataTable.js"></script>
     </body>
 </html>

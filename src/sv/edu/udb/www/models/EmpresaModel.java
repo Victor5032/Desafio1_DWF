@@ -327,8 +327,19 @@ public class EmpresaModel extends Conexion {
 			rs = cs.executeQuery();
 
 			if (rs.next()) {
+				RubroModel rubro = new RubroModel();
+				
+				String rubroNombre = rubro.obtenerRubro(rs.getInt("rubro_id")).getRubro();
+				System.out.println(rubroNombre);
+				empresa.setEmpresa_id(rs.getInt("empresa_id"));
 				empresa.setCodigo_empresa(rs.getString("codigo"));
 				empresa.setNombreEmpresa(rs.getString("nombre"));
+				empresa.setDireccionEmpresa(rs.getString("direccion"));
+				empresa.setContactoEmpresa(rs.getString("contacto"));
+				empresa.setTelefonoEmpresa(rs.getString("telefono"));
+				empresa.setComisionEmpresa(rs.getDouble("comision"));
+				empresa.setCorreoEmpresa(rs.getString("correo"));
+				empresa.setRubroNombre(rubroNombre);
 
 				this.desconectar();
 
@@ -346,5 +357,42 @@ public class EmpresaModel extends Conexion {
 			return null;
 		}
 	}
+	
+	// Listado de empresas
+	public List<Empresa> listarEmpresa() throws SQLException {
+		ArrayList<Empresa> empresas = new ArrayList<Empresa>();
+		
+		String sql = "SELECT * FROM empresas WHERE estado = 1";
+		
+		try {
+			this.conectar();
 
+			cs = conexion.prepareCall(sql);
+
+			rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Empresa empresa = new Empresa();
+				
+				empresa.setEmpresa_id(rs.getInt("empresa_id"));
+				empresa.setCodigo_empresa(rs.getString("codigo"));
+				empresa.setNombreEmpresa(rs.getString("nombre"));
+				empresa.setContactoEmpresa(rs.getString("contacto"));
+				empresa.setTelefonoEmpresa(rs.getString("telefono"));
+				empresa.setComisionEmpresa(rs.getDouble("comision"));
+				
+				empresas.add(empresa);
+			}
+
+			this.desconectar();
+
+			return empresas;
+		} catch (SQLException ex) {
+			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
+
+			this.desconectar();
+
+			return null;
+		}
+	}
 }

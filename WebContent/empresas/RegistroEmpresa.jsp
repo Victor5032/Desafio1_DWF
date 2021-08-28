@@ -7,20 +7,20 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge'>
 <title>Registro de Empresas</title>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<link rel="stylesheet"
-	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-	crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 </head>
 
 <body>
-	<%@ include file="navbar.jsp"%>
+	<%@ include file="../admin/menu.jsp"%>
 	<div class="container">
 		<div class="row">
-			<div class="col-12 mt-5">
-				<h3 class="text-center">Registro para Empresas</h3>
+			<div class="col-12 mt-5 mb-3">
+				<h3 class="text-center">Ingreso de nueva Empresas</h3>
 			</div>
-			<div class="col-12 mt-5">
+			<div class="container-fluid">
+				<a class="btn btn-primary" href="${pageContext.request.contextPath}/admin.do?op=empresas">Regresar</a>
+			</div>
+			<div class="col-12 mt-3">
 				<div class="d-flex justify-content-center align-items-center">
 					<form class="w-50 shadow-lg p-3 mb-5 bg-white rounded p-5"
 						action="${pageContext.request.contextPath}/empresas.do"
@@ -54,10 +54,10 @@
 									required>
 							</div>
 							<div class="col-6 mt-3">
-								<span>Seleccione un rubro</span> <select
-									class="form-select" name="rubro" aria-label="Default select example">
+								<span>Seleccione un rubro</span>
+								<select class="form-select" name="rubro" aria-label="Default select example">
 									<c:forEach items="${requestScope.rubros}" var="rubros">
-									<option value="${rubros.rubroID}">${rubros.rubro}</option>
+										<option value="${rubros.rubroID}">${rubros.rubro}</option>
 									</c:forEach>
 								</select>
 							</div>
@@ -69,8 +69,8 @@
 						</div>
 						<div class="col-10 m-3">
 							<div class="text-center">
-								<input class="btn btn-success mt-2" type="submit"
-									value="Registrar" /> <a href="#" class="btn btn-danger mt-2">Cancelar</a>
+								<input class="btn btn-success mt-2" type="submit" value="Registrar" />
+								<a href="${pageContext.request.contextPath}/admin.do?op=empresas" class="btn btn-danger mt-2">Cancelar</a>
 							</div>
 						</div>
 					</form>

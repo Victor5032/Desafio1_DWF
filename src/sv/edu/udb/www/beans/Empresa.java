@@ -12,6 +12,7 @@ public class Empresa {
     private String correoEmpresa;
     private String empresa_password;
     private int rubro_id;
+    private String rubroNombre;
     private double comisionEmpresa;
     private Date fecha_registro;
     private int estado_empresa;
@@ -119,6 +120,14 @@ public class Empresa {
 
     public void setRubro_id(int rubro_id) {
         this.rubro_id = rubro_id;
+    }
+    
+    public String getRubroNombre() {
+        return this.rubroNombre;
+    }
+
+    public void setRubroNombre(String rubroNombre) {
+        this.rubroNombre = rubroNombre;
     }
 
     public double getComisionEmpresa() {
