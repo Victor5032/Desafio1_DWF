@@ -3,7 +3,7 @@ package sv.edu.udb.www.models;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import java.util.*;
 import sv.edu.udb.www.beans.Clientes;
 import sv.edu.udb.www.db.Conexion;
 import sv.edu.udb.www.utils.CodigoEmpresa;
@@ -194,6 +194,79 @@ public class ClientesModel extends Conexion {
 			// TODO: handle exception
 			Logger.getLogger(ClientesModel.class.getName()).log(Level.SEVERE, null, e);
 			this.desconectar();
+		}
+	}
+	
+	public List<Clientes> listadoClientes() throws SQLException {
+		ArrayList<Clientes> clientes = new ArrayList<Clientes>();
+		
+		String sql = "SELECT * FROM clientes WHERE estado = 1";
+		
+		try {
+			this.conectar();
+
+			cs = conexion.prepareCall(sql);
+
+			rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Clientes cliente = new Clientes();
+				
+				cliente.setClienteID(rs.getInt("cliente_id"));
+				cliente.setNombres(rs.getString("nombres"));
+				cliente.setApellidos(rs.getString("apellidos"));
+				cliente.setTelefono(rs.getString("telefono"));
+				cliente.setDireccion(rs.getString("direccion"));
+				cliente.setDui(rs.getString("dui"));
+				
+				clientes.add(cliente);
+			}
+
+			this.desconectar();
+
+			return clientes;
+		} catch (SQLException ex) {
+			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
+
+			this.desconectar();
+
+			return null;
+		}
+	}
+	
+	public Clientes obtenerCliente(int id) throws SQLException {
+		try {
+			String sql = "SELECT * FROM clientes WHERE cliente_id = ?";
+
+			Clientes cliente = new Clientes();
+
+			this.conectar();
+
+			cs = conexion.prepareCall(sql);
+
+			cs.setInt(1, id);
+
+			rs = cs.executeQuery();
+
+			if (rs.next()) {
+				cliente.setClienteID(rs.getInt("cliente_id"));
+				cliente.setNombres(rs.getString("nombres"));
+				cliente.setApellidos(rs.getString("apellidos"));
+
+				this.desconectar();
+
+				return cliente;
+			}
+
+			this.desconectar();
+
+			return null;
+		} catch (SQLException ex) {
+			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
+
+			this.desconectar();
+
+			return null;
 		}
 	}
 }
