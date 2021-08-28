@@ -16,7 +16,7 @@
         </div>
         <div class="d-flex">
             <div class="navbar-nav">
-                <a class="nav-link" href="${pageContext.request.contextPath}/admin.do?op=profile">Activo como: <strong><c:out value="${cookie['usuario'].getValue()}" /></strong></a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/admin.do?op=profile">Activo como: <strong><c:out value="${sessionScope.user}" /></strong></a>
                 <a class="nav-link" href="${pageContext.request.contextPath}/admin.do?op=logout">Cerrar sesión</a>
             </div>
         </div>

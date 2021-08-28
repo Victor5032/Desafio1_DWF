@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import java.security.NoSuchAlgorithmException;
 
 import sv.edu.udb.www.models.*;
+import sv.edu.udb.www.utils.*;
 
 /**
  * Servlet implementation class UsuarioController
@@ -48,9 +49,10 @@ public class UsuarioController extends HttpServlet {
 			RubroModel rubroModel = new RubroModel();
 			EmpresaModel empresaModel = new EmpresaModel();
 			CuponModel cuponModel = new CuponModel();
-
+			ClientesModel clienteModel = new ClientesModel();
+			
 			String op = request.getParameter("op");
-			// System.out.println(op);
+			
 			switch (op) {
 				case "login":
 					String user = request.getParameter("usuario");
@@ -59,6 +61,7 @@ public class UsuarioController extends HttpServlet {
 					if (model.loginAdmin(user, password) > 0) {
 						sesion = 1;
 						
+						session.setAttribute("user", user);
 						cookie = new Cookie("usuario", user);
 						
 						response.addCookie(cookie);
@@ -74,6 +77,8 @@ public class UsuarioController extends HttpServlet {
 					
 					cookie = new Cookie("usuario", null);
 					cookie.setMaxAge(0); 
+					
+					session.invalidate();
 
 					response.sendRedirect("admin.do");
 					break;
@@ -271,6 +276,82 @@ public class UsuarioController extends HttpServlet {
 					} else {
 						response.sendRedirect("admin.do");
 					}					
+					break;
+				
+				case "clientes":
+					if (loginRequired(request, response) > 0) {
+						request.setAttribute("clientes", clienteModel.listadoClientes());
+						request.getRequestDispatcher("/admin/clientes.jsp").forward(request, response);
+					} else {
+						response.sendRedirect("admin.do");
+					}					
+					break;
+					
+				case "ver-cliente":
+					if (loginRequired(request, response) > 0) {
+						String id = request.getParameter("codigo");
+						
+						request.setAttribute("cliente", clienteModel.obtenerCliente(Integer.parseInt(id)));
+						request.getRequestDispatcher("/admin/verCliente.jsp").forward(request, response);
+					} else {
+						response.sendRedirect("admin.do");
+					}					
+					break;
+				
+				case"profile":
+					if (loginRequired(request, response) > 0) {
+						request.setAttribute("usuario", model.perfil(String.valueOf(session.getAttribute("user"))));
+						request.getRequestDispatcher("/admin/perfil.jsp").forward(request, response);
+					} else {
+						response.sendRedirect("admin.do");
+					}
+					break;
+					
+				case"password":
+					if (loginRequired(request, response) > 0) {
+						request.getRequestDispatcher("/admin/cambiarPassword.jsp").forward(request, response);
+					} else {
+						response.sendRedirect("admin.do");
+					}
+					break;
+					
+				case "profile-update":
+					if (loginRequired(request, response) > 0) {
+						String nombres = request.getParameter("nombres");
+						String apellidos = request.getParameter("apellidos");
+						String usuario = request.getParameter("usuario");
+						String email = request.getParameter("email");
+						String usuarioActual = String.valueOf(session.getAttribute("user"));
+						
+						int res = model.actualizarPerfil(nombres, apellidos, usuario, email, usuarioActual);
+						
+						if (res == 1) {
+							session.setAttribute("user", usuario);
+							cookie = new Cookie("usuario", usuario);
+						}
+						
+						response.sendRedirect("admin.do?op=profile");
+					} else {
+						response.sendRedirect("admin.do");
+					}
+					break;
+					
+				case "change-password":
+					if (loginRequired(request, response) > 0) {
+						String actual = model.passwordActual(String.valueOf(session.getAttribute("user")));
+						
+						Sha1 hash = new Sha1();
+						
+						String pass = hash.sha1Hash(request.getParameter("actual"));
+						
+						if (actual.equals(pass)) {
+							
+						}
+											
+						response.sendRedirect("admin.do?op=profile");
+					} else {
+						response.sendRedirect("admin.do");
+					}
 					break;
 					
 				default:

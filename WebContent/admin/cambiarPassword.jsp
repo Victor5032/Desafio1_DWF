@@ -8,7 +8,7 @@
         <meta charset="UTF-8">
     	<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		<title>Perfil - Administrador</title>
+		<title>Cambiar contraseña - Administrador</title>
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 		<link href="//cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" type=text/css>
     </head>
@@ -28,8 +28,8 @@
                     <div class="row">
                     	<div class="col-12">
                     		<nav class="nav nav-pills nav-justified">
-                                <a class="nav-link active" aria-current="page" href="admin.do?op=profile">Mis datos</a>
-                                <a class="nav-link" href="admin.do?op=password">Cambiar mi contraseña</a>
+                                <a class="nav-link" aria-current="page" href="admin.do?op=profile">Mis datos</a>
+                                <a class="nav-link active" aria-current="page" href="admin.do?op=password">Cambiar mi contraseña</a>
                             </nav>
                     	</div>
                     </div>
@@ -39,33 +39,29 @@
                             <div class="card">
                                 <div class="card-body">
                                 	<form method="POST" action="${pageContext.request.contextPath}/admin.do">
-                                		<input type="hidden" name="op" id="op" value="profile-update" >
+                                		<input type="hidden" name="op" id="op" value="change-password" >
 									  <div class="mb-3">
 									  	<div class="row">
-										  	<div class="col-6">
-										  		<label for="exampleInputEmail1" class="form-label">Nombres:</label>
-	    										<input type="text" class="form-control" id="nombres" name="nombres" value="${usuario.nombre}">
-										  	</div>
-										  	<div class="col-6">
-										  		<label for="exampleInputEmail1" class="form-label">Apellidos:</label>
-	    										<input type="text" class="form-control" id="apellidos" name="apellidos" value="${usuario.apellido}">
+										  	<div class="col-12">
+										  		<label for="exampleInputEmail1" class="form-label">Contraseña actual:</label>
+	    										<input type="text" class="form-control" id="actual" name="actual" value="${usuario.nombre}">
 										  	</div>
 										  </div>
 									  </div>
 									  <div class="mb-3">
 									  	<div class="row">
 										  	<div class="col-6">
-										  		<label for="exampleInputEmail1" class="form-label">Usuario:</label>
-	    										<input type="text" class="form-control" id="usuario" name="usuario" value="${usuario.usuario}">
+										  		<label for="exampleInputEmail1" class="form-label">Nueva contraseña:</label>
+	    										<input type="text" class="form-control" id="nueva" name="nueva" value="${usuario.nombre}">
 										  	</div>
 										  	<div class="col-6">
-										  		<label for="exampleInputEmail1" class="form-label">Correo:</label>
-	    										<input type="email" class="form-control" id="email" name="email" value="${usuario.correo}">
+										  		<label for="exampleInputEmail1" class="form-label">Confirmar nueva contraseña:</label>
+	    										<input type="text" class="form-control" id="confirmar" name="confirmar" value="${usuario.apellido}">
 										  	</div>
 										  </div>
 									  </div>
 									  <center>
-									  	<button type="submit" class="btn btn-success">Actualizar información</button>
+									  	<button type="submit" class="btn btn-warning">Actualizar contraseña</button>
 									  </center>
 									</form>
                                 </div>

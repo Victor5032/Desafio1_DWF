@@ -11,8 +11,6 @@ import sv.edu.udb.www.utils.SendEmail;
 import sv.edu.udb.www.utils.Sha1;
 
 public class ClientesModel extends Conexion {
-
-	
 	
 	public int verificarCorreoNoExiste(String emailCliente) throws SQLException{
 		try {
@@ -218,6 +216,7 @@ public class ClientesModel extends Conexion {
 				cliente.setTelefono(rs.getString("telefono"));
 				cliente.setDireccion(rs.getString("direccion"));
 				cliente.setDui(rs.getString("dui"));
+				cliente.setEmail(rs.getString("email"));
 				
 				clientes.add(cliente);
 			}
@@ -252,6 +251,12 @@ public class ClientesModel extends Conexion {
 				cliente.setClienteID(rs.getInt("cliente_id"));
 				cliente.setNombres(rs.getString("nombres"));
 				cliente.setApellidos(rs.getString("apellidos"));
+				cliente.setFechaRegistro(rs.getDate("fecha_registro"));
+				cliente.setEstadoVerificacion(rs.getInt("verificacion"));
+				cliente.setDireccion(rs.getString("direccion"));
+				cliente.setDui(rs.getString("dui"));
+				cliente.setEmail(rs.getString("email"));
+				cliente.setTelefono(rs.getString("telefono"));
 
 				this.desconectar();
 
