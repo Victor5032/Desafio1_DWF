@@ -11,7 +11,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import sv.edu.udb.www.models.OfertaModel;;
+import sv.edu.udb.www.models.OfertaModel;
+import sv.edu.udb.www.models.EmpresaModel;
 
 /**
  * Servlet implementation class OfertaCuponesController
@@ -20,6 +21,7 @@ import sv.edu.udb.www.models.OfertaModel;;
 public class OfertaCuponesController extends HttpServlet {
 	
 	OfertaModel modelo= new OfertaModel();
+	EmpresaModel modeloEmpresa = new EmpresaModel();
 	
 	int idEmpresa;
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -38,6 +40,9 @@ public class OfertaCuponesController extends HttpServlet {
 			case "ofertasEmpresa":
 				ofertas(request, response);
 				break;
+			case "detallesCupones":
+				 verDetallesCupones(request, response);
+				 break;
 			default:
 				break;
 			}
@@ -67,6 +72,26 @@ public class OfertaCuponesController extends HttpServlet {
 		try {
 			request.setAttribute("ofertasCupones",modelo.obtenerOfertasClientes());
 			request.getRequestDispatcher("/clientes/ofertasCupones.jsp").forward(request, response);
+		}catch (SQLException | ServletException | IOException ex) {
+			Logger.getLogger(OfertaCuponesController.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		
+	}
+	
+	private void verDetallesCupones(HttpServletRequest request, HttpServletResponse response) {
+		
+		String idOferta = request.getParameter("idoferta");
+		String idEmpresa = request.getParameter("empresa");
+		int ofertaID = Integer.parseInt(idOferta);
+		int empresaID = Integer.parseInt(idEmpresa);
+		
+		try {
+			String cuponDisponible = modelo.cuponDisponible(ofertaID);
+			request.setAttribute("detallesCupones",modelo.mostrarDetallesCupon(ofertaID));
+			request.setAttribute("cuponDisponible", cuponDisponible);
+			request.setAttribute("cuponId", modelo.cuponId(cuponDisponible));
+			request.setAttribute("empresa",modeloEmpresa.obtenerEmpresa(empresaID));
+			request.getRequestDispatcher("/clientes/detallesCupones.jsp").forward(request, response);
 		}catch (SQLException | ServletException | IOException ex) {
 			Logger.getLogger(OfertaCuponesController.class.getName()).log(Level.SEVERE, null, ex);
 		}
