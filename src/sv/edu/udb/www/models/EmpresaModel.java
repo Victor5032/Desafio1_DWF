@@ -42,6 +42,27 @@ public class EmpresaModel extends Conexion {
 //			this.desconectar();
 //		}
 //	}
+	public int verificarCorreoNoExistente(String correoEmpresa) throws SQLException{
+		try {
+			int verificado = 1;
+			String sqlString = "CALL validarCorreoExistenteEmpresa(?)";
+			this.conectar();
+			cs = conexion.prepareCall(sqlString);
+			cs.setString(1, correoEmpresa);
+            rs = cs.executeQuery();			
+			if(rs.next()) {
+				verificado = 0;
+			}
+			this.desconectar();
+			return verificado;
+		} catch (Exception e) {
+			// TODO: handle exception
+			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, e);
+			this.desconectar();
+			return 0;
+		}
+	}
+	
 
 	public List<Rubro> listarRubros() throws SQLException {
 		try {

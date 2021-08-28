@@ -13,6 +13,15 @@
 <body>
 	<%@ include file="../admin/menu.jsp"%>
 	<div class="container">
+	<c:if test="${not empty listaEventos}">
+			<div class="alert alert-dark">
+				<ul>
+					<c:forEach var="eventos" items="${requestScope.listaEventos}">
+						<li>${eventos}</li>
+					</c:forEach>
+				</ul>
+			</div>
+		</c:if>
 		<div class="row">
 			<div class="col-12 mt-5 mb-3">
 				<h3 class="text-center">Ingreso de nueva Empresas</h3>

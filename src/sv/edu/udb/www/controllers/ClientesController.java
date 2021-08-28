@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import sv.edu.udb.www.beans.Clientes;
 import sv.edu.udb.www.models.ClientesModel;
+import sv.edu.udb.www.models.OfertaModel;
 
 /**
  * Servlet implementation class ClientesController
@@ -25,6 +26,7 @@ public class ClientesController extends HttpServlet {
 
 	ArrayList<String> listaEventos = new ArrayList<String>();
 	ClientesModel modelo = new ClientesModel();
+	OfertaModel ofertaModel = new OfertaModel();
 
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -39,6 +41,15 @@ public class ClientesController extends HttpServlet {
 				break;
 			case "verificacion":
 				verificarCliente(request, response);
+				break;
+			case "login":
+				clienteLogin(request, response, session);
+				break;
+			case "logout":
+				logoutCliente(request, response, session);
+				break;
+			case "forgotPassword":
+				recuperarPassword(request, response);
 				break;
 			default:
 				break;
@@ -85,19 +96,83 @@ public class ClientesController extends HttpServlet {
 	public String getServletInfo() {
 		return "Short description";
 	}// </editor-fold>
-	
+
+	private void recuperarPassword(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			listaEventos.clear();
+			String correoClienteString = request.getParameter("correoCliente");
+			int clienteID = modelo.correoArecuperarExist(correoClienteString);
+			if (clienteID > 0) {
+				if (modelo.recuperarNuevoPassword(correoClienteString, clienteID) > 0) {
+					listaEventos.add("Revise su correo");
+					request.setAttribute("listaEventos", listaEventos);
+					request.getRequestDispatcher("/clientes/loginClientes.jsp").forward(request, response);
+				}
+			} else {
+				listaEventos.add("La direccion proporcionada no ha sido encontrada");
+				request.setAttribute("listaEventos", listaEventos);
+				request.getRequestDispatcher("/clientes/recuperarContraseña.jsp").forward(request, response);
+
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			Logger.getLogger(ClientesController.class.getName()).log(Level.SEVERE, null, e);
+		}
+	}
+
+	private void logoutCliente(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+		try {
+			listaEventos.clear();
+			session.removeAttribute("usser");
+			session.removeAttribute("name");
+			session.removeAttribute("apellido");
+			if (session.getAttribute("usser") == null && session.getAttribute("name") == null
+					&& session.getAttribute("apellido") == null) {
+				request.getRequestDispatcher("/clientes/loginClientes.jsp").forward(request, response);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			Logger.getLogger(ClientesController.class.getName()).log(Level.SEVERE, null, e);
+		}
+	}
+
+	private void clienteLogin(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+		try {
+			Clientes miClientes = new Clientes();
+			listaEventos.clear();
+			String correoCleinteString = request.getParameter("correoCliente");
+			String passwordString = request.getParameter("passwordCliente");
+			miClientes = modelo.iniciarSesion(correoCleinteString, passwordString);
+			if (miClientes != null) {
+				session.setAttribute("usser", miClientes.getClienteID());
+				session.setAttribute("name", miClientes.getNombres());
+				session.setAttribute("apellido", miClientes.getApellidos());
+				request.setAttribute("ofertasCupones", ofertaModel.obtenerOfertasClientes());
+				request.getRequestDispatcher("/clientes/ofertasCupones.jsp").forward(request, response);
+			} else {
+				listaEventos.add("El correo o contraseña que ha ingresado no son correcto");
+				listaEventos.add("Ya activo su cuenta ?");
+				request.setAttribute("listaEventos", listaEventos);
+				request.getRequestDispatcher("/clientes/loginClientes.jsp").forward(request, response);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			Logger.getLogger(ClientesController.class.getName()).log(Level.SEVERE, null, e);
+		}
+	}
+
 	private void verificarCliente(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			listaEventos.clear();
 			String clienteTokenString = request.getParameter("tokenCliente");
-			if(modelo.verificarTokenExistente(clienteTokenString) > 0) {
+			if (modelo.verificarTokenExistente(clienteTokenString) > 0) {
 				listaEventos.add("sua cuenta ha sido verificada con exito");
 				listaEventos.add("inicie sesion con sus credenciales");
-			    request.setAttribute("listaEventos", listaEventos);
+				request.setAttribute("listaEventos", listaEventos);
 				request.getRequestDispatcher("/clientes/loginClientes.jsp").forward(request, response);
-			}else {
+			} else {
 				listaEventos.add("el token no es correcto, vuelva a intentarlo");
-				request.setAttribute("listaEnventos",listaEventos);	
+				request.setAttribute("listaEventos", listaEventos);
 				request.getRequestDispatcher("/clientes/verificarToken.jsp").forward(request, response);
 			}
 		} catch (Exception e) {
@@ -105,24 +180,31 @@ public class ClientesController extends HttpServlet {
 			Logger.getLogger(ClientesController.class.getName()).log(Level.SEVERE, null, e);
 		}
 	}
-	
+
 	private void ingresarClienteAverificar(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			listaEventos.clear();
-			Clientes miCliente = new Clientes();
-			miCliente.setNombres(request.getParameter("nombreCliente"));
-			miCliente.setApellidos(request.getParameter("apellidoCliente"));
-			miCliente.setTelefono(request.getParameter("telefonoCliente"));
-			miCliente.setDireccion(request.getParameter("direccionCliente"));
-			miCliente.setDui(request.getParameter("duiCliente"));
-			miCliente.setEmail(request.getParameter("emailCliente"));
-			miCliente.setPassword(request.getParameter("passwordCliente"));
-			if(modelo.registrarClientePendienteVerificaion(miCliente) > 0 ) {
-				listaEventos.add("Se ha enviado un codigo de verificacion al correo indicado");
-				request.setAttribute("listaEventos", listaEventos);
-				request.getRequestDispatcher("/clientes/verificarToken.jsp").forward(request, response);
+			String correoString = request.getParameter("emailCliente");
+			if (modelo.verificarCorreoNoExiste(correoString) > 0) {
+				Clientes miCliente = new Clientes();
+				miCliente.setNombres(request.getParameter("nombreCliente"));
+				miCliente.setApellidos(request.getParameter("apellidoCliente"));
+				miCliente.setTelefono(request.getParameter("telefonoCliente"));
+				miCliente.setDireccion(request.getParameter("direccionCliente"));
+				miCliente.setDui(request.getParameter("duiCliente"));
+				miCliente.setEmail(request.getParameter("emailCliente"));
+				miCliente.setPassword(request.getParameter("passwordCliente"));
+				if (modelo.registrarClientePendienteVerificaion(miCliente) > 0) {
+					listaEventos.add("Se ha enviado un codigo de verificacion al correo indicado");
+					request.setAttribute("listaEventos", listaEventos);
+					request.getRequestDispatcher("/clientes/verificarToken.jsp").forward(request, response);
+				} else {
+					listaEventos.add("Ha surgido un problema, vuelva a intentarlo");
+					request.setAttribute("listaEventos", listaEventos);
+					request.getRequestDispatcher("/clientes/registroClientes.jsp").forward(request, response);
+				}
 			}else {
-				listaEventos.add("Ha surgido un problema, vuelva a intentarlo");
+				listaEventos.add("Ya existe una cuenta asociada a esta direccion de correo");
 				request.setAttribute("listaEventos", listaEventos);
 				request.getRequestDispatcher("/clientes/registroClientes.jsp").forward(request, response);
 			}
@@ -131,6 +213,5 @@ public class ClientesController extends HttpServlet {
 			Logger.getLogger(ClientesController.class.getName()).log(Level.SEVERE, null, e);
 		}
 	}
-	
-	
+
 }

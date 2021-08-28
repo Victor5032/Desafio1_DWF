@@ -8,9 +8,10 @@
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
 	crossorigin="anonymous">
-<title>Inicio de Sesion</title>
+<title>Recuperar contraseña</title>
 </head>
 <body>
+<%@ include file="navbarCliente.jsp"%>
 	<div class="container">
 		<c:if test="${not empty listaEventos}">
 			<div class="alert alert-dark">
@@ -27,15 +28,15 @@
 					<form class="w-25 shadow-lg p-3 mb-5 bg-white rounded p-5"
 						method="POST"
 						action="${pageContext.request.contextPath}/clientes.do">
-						<input hidden="hidden" value="verificacion" name="op">
+						<input hidden="hidden" value="forgotPassword" name="op">
 						<div class="form-group mt-3">
-							<h3>Ingrese el codigo </h3>
-							<span>Codigo de verificacion</span> <input type="text"
-								class="form-control" required name="tokenCliente"
-								placeholder="Ingrese el codigo de verificacion">
-								<div class="text-center mt-5">
-							<input class="btn btn-success mt-2" type="submit"
-								value="ingresar" />
+							<h3>Recuperar contraseña</h3>
+							<span>Correo electronico de la cuenta a recuperar</span> <input type="text"
+								class="form-control mt-3" required name="correoCliente"
+								placeholder="Ingresar correo">
+						</div>
+						<div class="text-center mt-5">
+							<button type="submit" class="btn btn-primary">enviar</button>
 						</div>
 					</form>
 				</div>

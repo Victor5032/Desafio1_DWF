@@ -12,6 +12,103 @@ import sv.edu.udb.www.utils.Sha1;
 
 public class ClientesModel extends Conexion {
 
+	
+	
+	public int verificarCorreoNoExiste(String emailCliente) throws SQLException{
+		try {
+			int filasObtenidas = 1;
+			String sqlString = "CALL validarCorreoExistenteCliente(?)";
+			this.conectar();
+			cs = conexion.prepareCall(sqlString);
+			cs.setString(1, emailCliente);
+			rs = cs.executeQuery();
+			if(rs.next()) {
+				filasObtenidas = 0 ;
+			}
+			this.desconectar();
+			return filasObtenidas;
+		} catch (Exception e) {
+			// TODO: handle exception
+			Logger.getLogger(ClientesModel.class.getName()).log(Level.SEVERE, null, e);
+			this.desconectar();
+			return 1;
+		}
+	}
+	
+	
+	
+	public int correoArecuperarExist(String correoCliente)throws SQLException{
+		try {
+			int clienteAsociado = 0;
+			String sqlString = "CALL correoClienteExistente(?)";
+			this.conectar();
+			cs = conexion.prepareCall(sqlString);
+			cs.setString(1, correoCliente);
+			rs = cs.executeQuery();
+			if(rs.next()) {
+				clienteAsociado = rs.getInt("cliente_id");
+			}
+			this.desconectar();
+			return clienteAsociado;
+		} catch (Exception e) {
+			// TODO: handle exception
+			Logger.getLogger(ClientesModel.class.getName()).log(Level.SEVERE, null, e);
+			this.desconectar();
+			return 0;
+		}
+	}
+	
+	public int recuperarNuevoPassword(String correoCliente, int clienteID) throws SQLException {
+		try {
+			int filasAfectadas = 0;
+			Sha1 sha1 = new Sha1();
+			SendEmail mEmail = new SendEmail();
+			String sqlString = "CALL recuperarPasswordCliente(?,?)";
+			this.conectar();
+			cs = conexion.prepareCall(sqlString);
+			String newpasswordString = mEmail.restablecerPasswordCliente(correoCliente);
+			cs.setString(1, sha1.sha1Hash(newpasswordString));
+			cs.setInt(2, clienteID);
+			filasAfectadas = cs.executeUpdate();
+			this.desconectar();
+			return filasAfectadas;
+		} catch (Exception e) {
+			// TODO: handle exception
+			Logger.getLogger(ClientesModel.class.getName()).log(Level.SEVERE, null, e);
+			this.desconectar();
+			return 0;
+		}
+	}
+	
+	public Clientes iniciarSesion(String correo, String password) throws SQLException{
+		try {
+			Sha1 getSha1 = new Sha1();
+			Clientes miCliente = new Clientes();
+			String sqlString = "CALL loginCliente(?,?)";
+			this.conectar();
+			cs = conexion.prepareCall(sqlString);
+			cs.setString(1, getSha1.sha1Hash(password));
+			cs.setString(2, correo);
+			rs = cs.executeQuery();
+			if(rs.next()) {
+				miCliente.setClienteID(rs.getInt("cliente_id"));
+				miCliente.setNombres(rs.getString("nombres"));
+				miCliente.setApellidos(rs.getString("apellidos"));
+				this.desconectar();
+				return miCliente;
+			}
+			this.desconectar();
+			return null;
+		} catch (Exception e) {
+			// TODO: handle exception
+			Logger.getLogger(ClientesModel.class.getName()).log(Level.SEVERE, null, e);
+			this.desconectar();
+			return null;
+		}
+	}
+	
+	
+	
 	public int verificarTokenExistente(String tokenString) throws SQLException {
 		try {
 			int filasEncontradas = 0;

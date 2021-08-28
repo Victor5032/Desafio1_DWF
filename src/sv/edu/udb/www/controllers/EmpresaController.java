@@ -83,8 +83,8 @@ public class EmpresaController extends HttpServlet {
 				updatePassword(request, response);
 				break;
 			case "recuperarPassword":
-				recuperarPassword(request,response);
-			break;
+				recuperarPassword(request, response);
+				break;
 			default:
 				break;
 			}
@@ -141,50 +141,49 @@ public class EmpresaController extends HttpServlet {
 			// TODO: handle exception
 		}
 	}
-    
-	//aqui nos quedamos
+
+	// aqui nos quedamos
 	private void recuperarPassword(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			listaEventos.clear();
 			String emailExiString = request.getParameter("correoEmpresa");
 			int empresaID = model.actualMailExist(emailExiString);
-			if(empresaID > 0 ) {
-				if(model.recuperarPassword(emailExiString, empresaID) > 0 ) {
+			if (empresaID > 0) {
+				if (model.recuperarPassword(emailExiString, empresaID) > 0) {
 					listaEventos.add("Revise su correo, se le ha enviado su nueva contraseña");
 					request.setAttribute("listaEventos", listaEventos);
 					request.getRequestDispatcher("/empresas/LoginEmpresas.jsp").forward(request, response);
 				}
-			}else {
+			} else {
 				listaEventos.add("La direccion email que ha proporcionado, no se ha encontrado");
 				request.setAttribute("listaEventos", listaEventos);
 				request.getRequestDispatcher("/empresas/LoginEmpresas.jsp").forward(request, response);
 			}
-			
+
 		} catch (Exception ex) {
 			// TODO: handle exception
 			Logger.getLogger(EmpresaController.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
-	
-	
+
 	private void updatePassword(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			listaEventos.clear();
-            String actualPasswordString = request.getParameter("actualPassword");
-            int empresaID = Integer.valueOf(request.getParameter("empresaID"));
-            if(model.actualPasswordExists(actualPasswordString, empresaID) > 0 ) {
-                String nwPasswordString = request.getParameter("newPassword");
-                if(model.updatePassword(nwPasswordString, empresaID) > 0) {
-                	listaEventos.add("Su contraseña ha sido modificada exitosamente.");
-                	request.setAttribute("listaEventos", listaEventos);
-                	request.getRequestDispatcher("empresas.do?op=perfilEmpresa").forward(request, response);
-                }
-            }else {
-            	listaEventos.add("La contraseña ingresa no coincide con su contraseña actual");
-            	request.setAttribute("listaEventos", listaEventos);
-            	request.getRequestDispatcher("/empresas/changePassword.jsp").forward(request, response);
-            }
-            
+			String actualPasswordString = request.getParameter("actualPassword");
+			int empresaID = Integer.valueOf(request.getParameter("empresaID"));
+			if (model.actualPasswordExists(actualPasswordString, empresaID) > 0) {
+				String nwPasswordString = request.getParameter("newPassword");
+				if (model.updatePassword(nwPasswordString, empresaID) > 0) {
+					listaEventos.add("Su contraseña ha sido modificada exitosamente.");
+					request.setAttribute("listaEventos", listaEventos);
+					request.getRequestDispatcher("empresas.do?op=perfilEmpresa").forward(request, response);
+				}
+			} else {
+				listaEventos.add("La contraseña ingresa no coincide con su contraseña actual");
+				request.setAttribute("listaEventos", listaEventos);
+				request.getRequestDispatcher("/empresas/changePassword.jsp").forward(request, response);
+			}
+
 		} catch (Exception ex) {
 			// TODO: handle exception
 			Logger.getLogger(EmpresaController.class.getName()).log(Level.SEVERE, null, ex);
@@ -233,26 +232,34 @@ public class EmpresaController extends HttpServlet {
 //		}
 //	}
 
-	private void validarEmpresa(HttpServletRequest request, HttpServletResponse response) throws MessagingException {
+	private void validarEmpresa(HttpServletRequest request, HttpServletResponse response) throws MessagingException{
 		try {
-			CodigoEmpresa codigoEmpresa = new CodigoEmpresa();
-			empresa.setCodigo_empresa(codigoEmpresa.nuevoCodigoEmpresa());
-			empresa.setNombreEmpresa(request.getParameter("empresaNombre"));
-			empresa.setContactoEmpresa(request.getParameter("empresaContacto"));
-			empresa.setDireccionEmpresa(request.getParameter("direccionEmpresa"));
-			empresa.setTelefonoEmpresa(request.getParameter("telefonoEmpresa"));
-			empresa.setCorreoEmpresa(request.getParameter("correoEmpresa"));
-			empresa.setRubro_id(Integer.valueOf(request.getParameter("rubro")));
-			empresa.setComisionEmpresa(Double.valueOf(request.getParameter("comision")));
-			if (model.registrarEmpresaPendienteVerificaion(empresa) > 0) {
-				request.getSession().setAttribute("exito", "Revise su correo electronico");
-				response.sendRedirect(request.getContextPath() + "/admin.do?op=empresas");
-			} else {
-				request.getSession().setAttribute("fracaso", "something gone wrong");
-				response.sendRedirect(request.getContextPath() + "/empresas.do?op=nuevaEmpresa");
+			listaEventos.clear();
+			String correoEmpresaString = request.getParameter("correoEmpresa");
+			if (model.verificarCorreoNoExistente(correoEmpresaString) > 0) {
+				CodigoEmpresa codigoEmpresa = new CodigoEmpresa();
+				empresa.setCodigo_empresa(codigoEmpresa.nuevoCodigoEmpresa());
+				empresa.setNombreEmpresa(request.getParameter("empresaNombre"));
+				empresa.setContactoEmpresa(request.getParameter("empresaContacto"));
+				empresa.setDireccionEmpresa(request.getParameter("direccionEmpresa"));
+				empresa.setTelefonoEmpresa(request.getParameter("telefonoEmpresa"));
+				empresa.setCorreoEmpresa(request.getParameter("correoEmpresa"));
+				empresa.setRubro_id(Integer.valueOf(request.getParameter("rubro")));
+				empresa.setComisionEmpresa(Double.valueOf(request.getParameter("comision")));
+				if (model.registrarEmpresaPendienteVerificaion(empresa) > 0) {
+					request.getSession().setAttribute("exito", "Revise su correo electronico");
+					response.sendRedirect(request.getContextPath() + "/admin.do?op=empresas");
+				} else {
+					request.getSession().setAttribute("fracaso", "something gone wrong");
+					response.sendRedirect(request.getContextPath() + "/empresas.do?op=nuevaEmpresa");
+				}
+			}else {
+				listaEventos.add("La direccion de correo ingresada ya esta asociada a una cuenta");
+				request.setAttribute("listaEventos", listaEventos);
+				request.getRequestDispatcher("/empresas/RegistroEmpresa.jsp").forward(request, response);
 			}
 
-		} catch (IOException | SQLException | NoSuchAlgorithmException |MessagingException ex) {
+		} catch (IOException | SQLException | NoSuchAlgorithmException | MessagingException | ServletException ex) {
 			// TODO: handle exception
 			Logger.getLogger(EmpresaController.class.getName()).log(Level.SEVERE, null, ex);
 		}
