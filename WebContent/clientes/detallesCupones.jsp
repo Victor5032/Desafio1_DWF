@@ -28,24 +28,23 @@
 						<div class="container">
 							<div class="row">
 								<div class="col-6 p-3">
-									<p class="card-text">Numero de Cupon: <br> ${cuponDisponible}</p>
+									<p class="card-text">Codigo de cupon: <br> ${cuponDisponible}</p>
 								</div>
 								<div class="col-6 p-3">
-									<p class="card-text">Nombre Empresa: <br> ${empresa.nombreEmpresa}</p>
+									<p class="card-text">Nombre de empresa: <br> ${empresa.nombreEmpresa}</p>
 								</div>
 								<div class="col-12 p-3">
 									<p class="card-text">Descripcion: <br> ${detallesCupones.descripcionOferta}</p>
 								</div>
 								<div class="col-6 p-3">
-									<p class="card-text">Precio Regular: <br> <strike>$${detallesCupones.precioRegularOferta}</strike></p>
+									<p class="card-text">Precio regular: <br> <strike>$${detallesCupones.precioRegularOferta}</strike></p>
 								</div>
 								<div class="col-6 p-3">
-									<p class="card-text">Precio Oferta: <br> $${detallesCupones.precio_ofertaOferta}</p>
+									<p class="card-text">Precio oferta: <br> $${detallesCupones.precio_ofertaOferta}</p>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div class="card-footer text-muted">Cupones Disponibles: ${detallesCupones.cantidadCuponesOferta}</div>
 				</div>
 			</div>
             <div class="col-6 mt-5 shadow-lg rounded">
@@ -53,23 +52,23 @@
                 <div class="d-flex justify-content-center align-items-center">
                     <form class="w-100 shadow-lg p-3 mb-5 bg-white rounded p-5" method="POST" action="">
 						<input type="hidden" name="cupon" id="cupon" value="${cuponId}">
-						<input type="hidden" name="idCliente" id="idCliente" value="">
+						<input type="hidden" name="idCliente" id="idCliente" value="${sessionScope.usser}">
                         <div class="row">
                             <div class="col-6 mt-3">
                                 <span>Numero de tarjeta</span>
-                                <input type="text" class="form-control" id="numeroTarjeta" name="numeroTarjeta">
+                                <input type="text" class="form-control" id="numeroTarjeta" name="numeroTarjeta" value="">
                             </div>
                             <div class="col-6 mt-3">
                                 <span>Fecha de expiracion (mm/aa)</span>
-                                <input type="text" class="form-control" id="fechaExpiracion" name="fechaExpiracion">
+                                <input type="text" class="form-control" id="fechaExpiracion" name="fechaExpiracion" value="">
                             </div>
                             <div class="col-6 mt-3">
                                 <span>Titular de la tarjeta</span>
-                                <input type="text" class="form-control" id="titularTarjeta" name="titularTarjeta">
+                                <input type="text" class="form-control" id="titularTarjeta" name="titularTarjeta" value="">
                             </div>
                             <div class="col-6 mt-3">
                                 <span>Codigo de seguridad</span>
-                                <input type="password" class="form-control" id="codigoSeguridad" name="codigoSeguridad">
+                                <input type="password" class="form-control" id="codigoSeguridad" name="codigoSeguridad" value="">
                             </div>
                             <div class="text-center mt-5"><button type="submit" class="btn btn-warning">Realizar pago</button></div>
                         </div>
