@@ -290,7 +290,6 @@ public class OfertaModel extends Conexion {
 			rs.last();
 			
 			response = rs.getInt("cantidad_cupones");
-			System.out.println(response);
 			this.desconectar();
 			
 			return response;
@@ -432,4 +431,121 @@ public class OfertaModel extends Conexion {
 			return null;
 		}
 	}
+	
+	public Oferta mostrarDetallesCupon(int idOferta) throws SQLException{
+		
+		try {
+			Oferta verDetalle = new Oferta();
+			String sql="SELECT * FROM `ofertas` WHERE oferta_id = ?";
+			this.conectar();
+			cs=conexion.prepareCall(sql);
+			
+			cs.setInt(1, idOferta);
+			
+			rs=cs.executeQuery(); 
+			
+			if(rs.next()) {
+				verDetalle.setTituloOferta(rs.getString("titulo"));
+				verDetalle.setIdOferta(rs.getInt("oferta_id"));
+				verDetalle.setDescripcionOferta(rs.getString("descripcion"));
+				verDetalle.setPrecioRegularOferta(rs.getDouble("precio_regular"));
+				verDetalle.setPrecio_ofertaOferta(rs.getDouble("precio_oferta"));
+				verDetalle.setCantidadCuponesOferta(cuponesCantidad(rs.getInt("oferta_id")));
+			}
+			
+			this.desconectar();
+			return verDetalle;
+		}catch (SQLException ex) {
+
+			Logger.getLogger(OfertaModel.class.getName()).log(Level.SEVERE, null, ex);
+			
+			this.desconectar();
+			return null;
+		}
+		
+	}
+	
+	public int cuponesCantidad(int idOferta) throws SQLException{
+		try {
+			System.out.print(idOferta);
+			int respuesta = 0;
+			String sql="SELECT COUNT(*) AS cantidad FROM `cupones` WHERE oferta_id = ? AND estado = 1";
+			this.conectar();
+			cs=conexion.prepareCall(sql);
+			
+			cs.setInt(1, idOferta);
+			
+			rs=cs.executeQuery(); 
+			
+			if(rs.next()) {
+				respuesta = rs.getInt("cantidad");
+			}
+			
+			this.desconectar();
+			return respuesta;
+		}catch (SQLException ex) {
+
+			Logger.getLogger(OfertaModel.class.getName()).log(Level.SEVERE, null, ex);
+			
+			this.desconectar();
+			return 0;
+		}
+	}	
+	
+	public String cuponDisponible(int idOferta) throws SQLException{
+		try {
+			String respuesta = null;
+			String sql="SELECT * FROM `cupones` WHERE oferta_id = ? and estado = 1 LIMIT 1";
+			this.conectar();
+			cs=conexion.prepareCall(sql);
+			
+			cs.setInt(1, idOferta);
+			
+			rs=cs.executeQuery(); 
+			
+			if(rs.next()) {
+				respuesta = rs.getString("codigo_promocional");
+			}
+			
+			this.desconectar();
+			return respuesta;
+		}catch (SQLException ex) {
+
+			Logger.getLogger(OfertaModel.class.getName()).log(Level.SEVERE, null, ex);
+			
+			this.desconectar();
+			return null;
+		}
+	}	
+	
+	public int cuponId(String codigo) throws SQLException {
+		try {
+			int respuesta = 0;
+			String sql = "SELECT cupon_id FROM `cupones` WHERE codigo_promocional = ?";
+			
+			this.conectar();
+			
+			cs =  conexion.prepareCall(sql);
+			
+			cs.setString(1, codigo);
+			
+			rs = cs.executeQuery();
+			
+			if (rs.next()) {
+				respuesta = rs.getInt("cupon_id");
+			}
+			
+			this.desconectar();
+			
+			return respuesta;
+		} catch (SQLException ex) {
+			Logger.getLogger(UsuarioModel.class.getName()).log(Level.SEVERE, null, ex);
+
+			this.desconectar();
+
+			return 0;
+		}
+	}
+	
 }
+

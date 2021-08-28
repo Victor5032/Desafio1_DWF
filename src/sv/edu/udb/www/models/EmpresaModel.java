@@ -349,9 +349,7 @@ public class EmpresaModel extends Conexion {
 
 			if (rs.next()) {
 				RubroModel rubro = new RubroModel();
-				
 				String rubroNombre = rubro.obtenerRubro(rs.getInt("rubro_id")).getRubro();
-				System.out.println(rubroNombre);
 				empresa.setEmpresa_id(rs.getInt("empresa_id"));
 				empresa.setCodigo_empresa(rs.getString("codigo"));
 				empresa.setNombreEmpresa(rs.getString("nombre"));
