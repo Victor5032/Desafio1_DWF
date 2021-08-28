@@ -29,15 +29,15 @@
 									<div class="card-header">
 									
 									${ofertacupon.tituloOferta}</div>
+									<img src="https://animalcrossinglife.com/wp-content/uploads/2020/10/coupon-di-sahara-icona-assets-acnh-animal-crossing-new-horizons.png">
 									<div class="card-body">
 										<p class="card-text">  ${ofertacupon.descripcionOferta}</p>
-										<p class="card-text text-success">${ofertacupon.precio_ofertaOferta}</p>
+										<p class="card-text text-success">$${ofertacupon.precio_ofertaOferta}</p>
 										<p class="card-text">
-											<strike>${ofertacupon.precioRegularOferta}</strike>
+											$<strike>${ofertacupon.precioRegularOferta}</strike>
 										</p>
 										<p class="card-text">Cantidad cupones: ${ofertacupon.cantidadCuponesOferta}</p>
-										<a
-											href="${pageContext.request.contextPath}/ofertacupon.do?op=confirmar&idoferta=${ofertacupon.idOferta}&idempresa=${ofertacupon.idEmpresaOferta}"
+										<a href="${pageContext.request.contextPath}/ofertacupon.do?op=detallesCupones&idoferta=${ofertacupon.idOferta}&empresa=${ofertacupon.idEmpresaOferta}"
 											class="btn btn-primary">Adquirir</a>
 									</div>
 								</div>
