@@ -48,6 +48,11 @@
 										<div class="col-12">
 											<button type="submit" class="btn btn-dark">Ingresar</button>
 										</div>
+										<div class="col-12">
+											<div class="mt-3">
+												<a href="${pageContext.request.contextPath}/admin.do?op=recuperar" class="link-dark">Recuperar contraseña</a>
+											</div>
+										</div>
 									</div>
 								</div>
 							</form>
