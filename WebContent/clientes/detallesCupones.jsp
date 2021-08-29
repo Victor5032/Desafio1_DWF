@@ -19,7 +19,7 @@
 <body>
 	<div class="container mt-5 mb-5">
 		<div class="row">
-			<div class="col-6 shadow-lg rounded mt-5">
+			<div class="col-md-6 shadow-lg rounded mt-5">
 				<h3 class="text-center mt-5 mb-5">Detalles de oferta</h3>
 				<div class="card text-center w-100">
 					<div class="card-header bg-transparent border-success">${detallesCupones.tituloOferta}</div>
@@ -47,7 +47,7 @@
 					</div>
 				</div>
 			</div>
-            <div class="col-6 mt-5 shadow-lg rounded">
+            <div class="col-md-6 mt-5 shadow-lg rounded">
 				<h3 class="text-center mt-5 mb-5">Metodo de pago</h3>
                 <div class="d-flex justify-content-center align-items-center">
                     <form class="w-100 shadow-lg p-3 mb-5 bg-white rounded p-5" method="POST" action="">
