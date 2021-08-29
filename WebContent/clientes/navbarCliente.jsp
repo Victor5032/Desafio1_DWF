@@ -13,7 +13,7 @@
 			<div class="navbar-nav">
 				<c:choose>
 					<c:when test="${not empty sessionScope.usser}">
-						<a class="nav-link" href="#">Activo como: <strong><c:out
+						<a class="nav-link" href="${pageContext.request.contextPath}/clientes.do?op=perfil&clienteID=${sessionScope.usser}">Activo como: <strong><c:out
 									value="${sessionScope.name} ${sessionScope.apellido}" /></strong></a>
 						<a class="nav-link"
 							href="${pageContext.request.contextPath}/clientes.do?op=logout">Cerrar

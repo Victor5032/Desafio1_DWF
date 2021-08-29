@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.mail.Session;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,6 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.jasper.tagplugins.jstl.core.If;
+
+import sv.edu.udb.www.beans.ClienteCupon;
 import sv.edu.udb.www.beans.Clientes;
 import sv.edu.udb.www.models.ClientesModel;
 import sv.edu.udb.www.models.OfertaModel;
@@ -50,6 +54,15 @@ public class ClientesController extends HttpServlet {
 				break;
 			case "forgotPassword":
 				recuperarPassword(request, response);
+				break;
+			case "perfil":
+				perfilCliente(request, response);
+				break;
+			case "updateInfo":
+				updateInfoCliente(request, response, session);
+				break;
+			case "updatePassword":
+				changePassword(request, response);
 				break;
 			default:
 				break;
@@ -96,6 +109,72 @@ public class ClientesController extends HttpServlet {
 	public String getServletInfo() {
 		return "Short description";
 	}// </editor-fold>
+
+	private void changePassword(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			listaEventos.clear();
+			String oldPasswoString = request.getParameter("actualPassword");
+			int clienteID = Integer.valueOf(request.getParameter("clienteID"));
+			if(modelo.actualPasswordExist(oldPasswoString, clienteID) > 0 ) {
+				String newPasswordString = request.getParameter("newPassword");
+				if(modelo.updatedPassword(newPasswordString, clienteID) > 0 ) {
+					listaEventos.add("Su contraseña ha sido modificada");
+					request.setAttribute("listaEventos", listaEventos);
+					request.getRequestDispatcher("/clientes/cambiarPassword.jsp").forward(request, response);
+				}
+			}else {
+				listaEventos.add("La contraseña que ha ingresado no coincide con su actual contraseña");
+				request.setAttribute("listaEventos", listaEventos);
+				request.getRequestDispatcher("/clientes/cambiarPassword.jsp").forward(request, response);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			Logger.getLogger(ClientesController.class.getName()).log(Level.SEVERE, null, e);
+		}
+	}
+	
+	private void updateInfoCliente(HttpServletRequest request, HttpServletResponse response , HttpSession session) {
+		try {
+			
+			listaEventos.clear();
+            int clienteID = Integer.valueOf(request.getParameter("clienteID"));
+			Clientes miCliente = new Clientes();
+			miCliente.setNombres(request.getParameter("nombreCliente"));
+			miCliente.setApellidos(request.getParameter("apellidoCliente"));
+			miCliente.setDireccion(request.getParameter("direccionCliente"));
+			miCliente.setTelefono(request.getParameter("telefonoCliente"));
+			miCliente.setDui(request.getParameter("duiCliente"));
+			miCliente.setEmail(request.getParameter("correoCliente"));
+			if(modelo.UpdateClient(miCliente, clienteID) > 0) {
+				session.setAttribute("name", miCliente.getNombres());
+				session.setAttribute("apellido", miCliente.getApellidos());
+				listaEventos.add("Su informacion se ha actualizado con exito");
+				request.setAttribute("listaEventos", listaEventos);
+				request.getRequestDispatcher("/clientes.do?op=perfil").forward(request, response);
+			}
+			
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			Logger.getLogger(ClientesController.class.getName()).log(Level.SEVERE, null, e);
+		}
+	}
+
+	private void perfilCliente(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			Clientes miCliente = new Clientes();
+			int clienteId = Integer.valueOf(request.getParameter("clienteID"));
+			miCliente = modelo.obtenerCliente(clienteId);
+			if (miCliente != null) {
+				request.setAttribute("listacupones", modelo.cuponesDeUncliente(clienteId));
+				request.setAttribute("cliente", miCliente);
+				request.getRequestDispatcher("/clientes/perfilCliente.jsp").forward(request, response);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			Logger.getLogger(ClientesController.class.getName()).log(Level.SEVERE, null, e);
+		}
+	}
 
 	private void recuperarPassword(HttpServletRequest request, HttpServletResponse response) {
 		try {
@@ -203,7 +282,7 @@ public class ClientesController extends HttpServlet {
 					request.setAttribute("listaEventos", listaEventos);
 					request.getRequestDispatcher("/clientes/registroClientes.jsp").forward(request, response);
 				}
-			}else {
+			} else {
 				listaEventos.add("Ya existe una cuenta asociada a esta direccion de correo");
 				request.setAttribute("listaEventos", listaEventos);
 				request.getRequestDispatcher("/clientes/registroClientes.jsp").forward(request, response);

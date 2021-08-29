@@ -3,7 +3,13 @@ package sv.edu.udb.www.models;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.taglibs.standard.lang.jstl.test.beans.PublicBean1;
+import org.apache.tomcat.jdbc.pool.interceptor.SlowQueryReport;
+
 import java.util.*;
+
+import sv.edu.udb.www.beans.ClienteCupon;
 import sv.edu.udb.www.beans.Clientes;
 import sv.edu.udb.www.db.Conexion;
 import sv.edu.udb.www.utils.CodigoEmpresa;
@@ -12,7 +18,127 @@ import sv.edu.udb.www.utils.Sha1;
 
 public class ClientesModel extends Conexion {
 	
-	public int verificarCorreoNoExiste(String emailCliente) throws SQLException{
+	public int actualPasswordExist(String actualPassword , int clienteID) throws SQLException {
+		try {
+			Sha1 getSha1 = new Sha1();
+			int filasObtenidas = 0;
+			String sqlString = "SELECT clientes.cliente_id from `clientes` WHERE clientes.password = (?) and clientes.cliente_id = ? ";
+			this.desconectar();
+			cs = conexion.prepareCall(sqlString);
+			cs.setString(1, getSha1.sha1Hash(actualPassword));
+			cs.setInt(2, clienteID);
+			rs = cs.executeQuery();
+			if(rs.next()) {
+				filasObtenidas ++ ;
+			}
+			this.desconectar();
+			return filasObtenidas;
+		} catch (Exception e) {
+			// TODO: handle exception
+			Logger.getLogger(ClientesModel.class.getName()).log(Level.SEVERE, null, e);
+			this.desconectar();
+			return 0;
+		}
+	}
+	
+	public int updatedPassword(String nuevoPassword, int clienteID) throws SQLException {
+		try {
+			int filasAfectadas = 0;
+			Sha1 getSha1 = new Sha1();
+			String sqlString = "UPDATE `clientes` SET `password`= (?) WHERE clientes.cliente_id = (?)";
+			this.conectar();
+			cs = conexion.prepareCall(sqlString);
+			cs.setString(1, getSha1.sha1Hash(nuevoPassword));
+			cs.setInt(2, clienteID);
+			filasAfectadas = cs.executeUpdate();
+			this.desconectar();
+			return filasAfectadas;
+		} catch (Exception e) {
+			// TODO: handle exception
+			Logger.getLogger(ClientesModel.class.getName()).log(Level.SEVERE, null, e);
+			this.desconectar();
+			return 0;
+		}
+	}
+	
+	
+	public int UpdateClient(Clientes miCliente, int clienteID) throws SQLException {
+		try {
+			int filasAfectadas = 0;
+			String sqlString = "UPDATE `clientes` SET `nombres`= (?) ,`apellidos`= (?) ,`telefono`= (?) ,`direccion`= (?) ,`dui`= (?) ,`email`= (?) WHERE clientes.cliente_id = ? ";
+			this.conectar();
+			cs = conexion.prepareCall(sqlString);
+			cs.setString(1, miCliente.getNombres());
+			cs.setString(2, miCliente.getApellidos());
+			cs.setString(3, miCliente.getTelefono());
+            cs.setString(4, miCliente.getDireccion());
+            cs.setString(5, miCliente.getDui());
+            cs.setString(6, miCliente.getEmail());
+            cs.setInt(7, clienteID);
+            filasAfectadas = cs.executeUpdate();
+			this.desconectar();
+			return filasAfectadas;
+		} catch (Exception e) {
+			// TODO: handle exception
+			Logger.getLogger(ClientesModel.class.getName()).log(Level.SEVERE, null, e);
+			this.desconectar();
+			return 0;
+		}
+	}
+
+	public Clientes obtenerClientePerfil(int idCliente) throws SQLException {
+		try {
+			Clientes miCliente = new Clientes();
+			String sqlString = "SELECT * FROM `clientes` WHERE clientes.cliente_id = ?";
+			cs = conexion.prepareCall(sqlString);
+			cs.setInt(1, idCliente);
+			rs = cs.executeQuery();
+			if (rs.next()) {
+				miCliente.setNombres(rs.getString("nombres"));
+				miCliente.setApellidos(rs.getString("apellidos"));
+				miCliente.setDireccion(rs.getString("direccion"));
+				miCliente.setTelefono(rs.getString("telefono"));
+				miCliente.setDui(rs.getString("dui"));
+				miCliente.setEmail(rs.getString("email"));
+				return miCliente;
+			}
+			return null;
+		} catch (Exception e) {
+			// TODO: handle exception
+			Logger.getLogger(ClientesModel.class.getName()).log(Level.SEVERE, null, e);
+			this.desconectar();
+			return null;
+		}
+	}
+
+	public List<ClienteCupon> cuponesDeUncliente(int clienteId) throws SQLException {
+		try {
+			List<ClienteCupon> misCupones = new ArrayList<ClienteCupon>();
+			String sqlString = "SELECT cliente_cupones.cliente_id , cliente_cupones.cupon_id,cliente_cupones.fecha_compra, cupones.cupon_id, cupones.estado, cupones.oferta_id, ofertas.oferta_id, ofertas.titulo, ofertas.descripcion, ofertas.precio_regular, ofertas.precio_oferta from cliente_cupones INNER JOIN cupones on cliente_cupones.cupon_id = cupones.cupon_id INNER JOIN ofertas on cupones.oferta_id = ofertas.oferta_id WHERE cliente_cupones.cliente_id = ? ORDER BY `cliente_cupones`.`fecha_compra` DESC";
+            this.conectar();
+            cs = conexion.prepareCall(sqlString);
+            cs.setInt(1, clienteId);
+            rs = cs.executeQuery();
+            while(rs.next()) {
+            	ClienteCupon cuponesComprados = new ClienteCupon();
+            	cuponesComprados.setTituloClienteCupon(rs.getString( "titulo"));
+            	cuponesComprados.setDescripcionClienteCupon( rs.getString("descripcion"));
+            	cuponesComprados.setPrecioRegular(rs.getDouble("precio_regular"));
+            	cuponesComprados.setPrecioOferta(rs.getDouble("precio_oferta"));
+            	cuponesComprados.setFechaCompraDate(rs.getDate("fecha_compra"));
+            	cuponesComprados.setEstadoCupon(rs.getInt("estado"));
+            	misCupones.add(cuponesComprados);
+            }
+			return misCupones;
+		} catch (Exception e) {
+			// TODO: handle exception
+			Logger.getLogger(ClientesModel.class.getName()).log(Level.SEVERE, null, e);
+			this.desconectar();
+			return null;
+		}
+	}
+
+	public int verificarCorreoNoExiste(String emailCliente) throws SQLException {
 		try {
 			int filasObtenidas = 1;
 			String sqlString = "CALL validarCorreoExistenteCliente(?)";
@@ -20,8 +146,8 @@ public class ClientesModel extends Conexion {
 			cs = conexion.prepareCall(sqlString);
 			cs.setString(1, emailCliente);
 			rs = cs.executeQuery();
-			if(rs.next()) {
-				filasObtenidas = 0 ;
+			if (rs.next()) {
+				filasObtenidas = 0;
 			}
 			this.desconectar();
 			return filasObtenidas;
@@ -32,10 +158,8 @@ public class ClientesModel extends Conexion {
 			return 1;
 		}
 	}
-	
-	
-	
-	public int correoArecuperarExist(String correoCliente)throws SQLException{
+
+	public int correoArecuperarExist(String correoCliente) throws SQLException {
 		try {
 			int clienteAsociado = 0;
 			String sqlString = "CALL correoClienteExistente(?)";
@@ -43,7 +167,7 @@ public class ClientesModel extends Conexion {
 			cs = conexion.prepareCall(sqlString);
 			cs.setString(1, correoCliente);
 			rs = cs.executeQuery();
-			if(rs.next()) {
+			if (rs.next()) {
 				clienteAsociado = rs.getInt("cliente_id");
 			}
 			this.desconectar();
@@ -55,7 +179,7 @@ public class ClientesModel extends Conexion {
 			return 0;
 		}
 	}
-	
+
 	public int recuperarNuevoPassword(String correoCliente, int clienteID) throws SQLException {
 		try {
 			int filasAfectadas = 0;
@@ -77,8 +201,8 @@ public class ClientesModel extends Conexion {
 			return 0;
 		}
 	}
-	
-	public Clientes iniciarSesion(String correo, String password) throws SQLException{
+
+	public Clientes iniciarSesion(String correo, String password) throws SQLException {
 		try {
 			Sha1 getSha1 = new Sha1();
 			Clientes miCliente = new Clientes();
@@ -88,7 +212,7 @@ public class ClientesModel extends Conexion {
 			cs.setString(1, getSha1.sha1Hash(password));
 			cs.setString(2, correo);
 			rs = cs.executeQuery();
-			if(rs.next()) {
+			if (rs.next()) {
 				miCliente.setClienteID(rs.getInt("cliente_id"));
 				miCliente.setNombres(rs.getString("nombres"));
 				miCliente.setApellidos(rs.getString("apellidos"));
@@ -104,9 +228,7 @@ public class ClientesModel extends Conexion {
 			return null;
 		}
 	}
-	
-	
-	
+
 	public int verificarTokenExistente(String tokenString) throws SQLException {
 		try {
 			int filasEncontradas = 0;
@@ -135,7 +257,7 @@ public class ClientesModel extends Conexion {
 	}
 
 	private void activarUsuario(int clienteID) throws SQLException {
-           try {
+		try {
 			String sqlString = "CALL activarCliente(?,?)";
 			this.conectar();
 			cs = conexion.prepareCall(sqlString);
@@ -194,12 +316,12 @@ public class ClientesModel extends Conexion {
 			this.desconectar();
 		}
 	}
-	
+
 	public List<Clientes> listadoClientes() throws SQLException {
 		ArrayList<Clientes> clientes = new ArrayList<Clientes>();
-		
+
 		String sql = "SELECT * FROM clientes WHERE estado = 1";
-		
+
 		try {
 			this.conectar();
 
@@ -209,7 +331,7 @@ public class ClientesModel extends Conexion {
 
 			while (rs.next()) {
 				Clientes cliente = new Clientes();
-				
+
 				cliente.setClienteID(rs.getInt("cliente_id"));
 				cliente.setNombres(rs.getString("nombres"));
 				cliente.setApellidos(rs.getString("apellidos"));
@@ -217,7 +339,7 @@ public class ClientesModel extends Conexion {
 				cliente.setDireccion(rs.getString("direccion"));
 				cliente.setDui(rs.getString("dui"));
 				cliente.setEmail(rs.getString("email"));
-				
+
 				clientes.add(cliente);
 			}
 
@@ -232,7 +354,7 @@ public class ClientesModel extends Conexion {
 			return null;
 		}
 	}
-	
+
 	public Clientes obtenerCliente(int id) throws SQLException {
 		try {
 			String sql = "SELECT * FROM clientes WHERE cliente_id = ?";
