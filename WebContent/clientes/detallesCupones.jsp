@@ -53,6 +53,7 @@
                     <form class="w-100 shadow-lg p-3 mb-5 bg-white rounded p-5" method="POST" action="">
 						<input type="hidden" name="cupon" id="cupon" value="${cuponId}">
 						<input type="hidden" name="idCliente" id="idCliente" value="${sessionScope.usser}">
+						<input type="hidden" name="ultimos4" id="ultimos4" value="">
                         <div class="row">
                             <div class="col-6 mt-3">
                                 <span>Numero de tarjeta</span>
@@ -85,11 +86,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
 <script>
+	var campoTarjeta = document.getElementById("numeroTarjeta");
+
+	campoTarjeta.onchange = function(){
+		var numTarjeta = campoTarjeta.value;
+		var cadena = NumTarjeta.split("-");
+		console.log(cadena);
+
+	}
     window.onload = function(){
         $('#numeroTarjeta').mask('0000-0000-0000-0000');
         $('#fechaExpiracion').mask('00/00');
         $('#codigoSeguridad').mask('000');
     }
+
+
 </script>
 </html>
 
