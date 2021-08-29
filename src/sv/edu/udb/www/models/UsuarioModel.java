@@ -2,11 +2,15 @@ package sv.edu.udb.www.models;
 
 import java.util.*;
 import java.util.logging.*;
+
+import javax.mail.MessagingException;
+
 import java.sql.*;
 import java.security.NoSuchAlgorithmException;
 
 import sv.edu.udb.www.db.Conexion;
 import sv.edu.udb.www.beans.*;
+import sv.edu.udb.www.utils.SendEmail;
 import sv.edu.udb.www.utils.Sha1;
 
 public class UsuarioModel extends Conexion {
@@ -156,6 +160,66 @@ public class UsuarioModel extends Conexion {
 			Logger.getLogger(UsuarioModel.class.getName()).log(Level.SEVERE, null, e);
 			
             this.desconectar();
+		}
+	}
+	
+	public int ifMailExist(String email) throws SQLException{
+		try {
+			int response = 0;
+			
+			String sqlString = "SELECT * FROM usuarios WHERE correo = ?";
+			
+			this.conectar();
+			
+			cs = conexion.prepareCall(sqlString);
+			cs.setString(1, email);
+			
+			rs = cs.executeQuery();
+			
+			if(rs.next()) {
+				response = rs.getInt("usuario_id");
+			}
+			
+			this.desconectar();
+			
+			return response;
+		} catch (SQLException ex) {
+			Logger.getLogger(UsuarioModel.class.getName()).log(Level.SEVERE, null, ex);
+			
+			this.desconectar();
+			
+			return 0;
+		}
+	}
+	
+	public int recuperarPassword(String email, int id) throws SQLException {
+		try {
+			int response = 0;
+			
+			Sha1 sha1 = new Sha1();
+			SendEmail mEmail = new SendEmail();
+			
+			String sql = "UPDATE usuarios SET password = ? WHERE correo = ?";
+			
+			this.conectar();		
+			
+			cs = conexion.prepareCall(sql);
+			
+			String newPasswordString = mEmail.recuperarPasswordMail(email);
+			
+			cs.setString(1, sha1.sha1Hash(newPasswordString));
+			cs.setString(2, email);
+			
+			response = cs.executeUpdate();
+			
+			this.desconectar();
+			
+			return response;
+		} catch (SQLException | MessagingException | NoSuchAlgorithmException ex) {
+			// TODO: handle exception
+			Logger.getLogger(EmpresaModel.class.getName()).log(Level.SEVERE, null, ex);
+			this.desconectar();
+			return 0;
 		}
 	}
 }

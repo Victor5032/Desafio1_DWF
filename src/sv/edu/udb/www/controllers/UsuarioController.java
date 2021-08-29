@@ -1,6 +1,8 @@
 package sv.edu.udb.www.controllers;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -25,13 +27,13 @@ public class UsuarioController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	static int sesion = 0;
+	
+	ArrayList<String> mensajes = new ArrayList<>();
     
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException, NoSuchAlgorithmException, SQLException {
 		HttpSession session = request.getSession();
 		Cookie cookie = null;
-		
-		ArrayList<String> mensajes = new ArrayList<>();
 		 
 		try (PrintWriter out = response.getWriter()) {
 			if (request.getParameter("op") == null) {
@@ -70,6 +72,22 @@ public class UsuarioController extends HttpServlet {
 						request.getRequestDispatcher("/admin/Loginadmin.jsp").forward(request, response);
 					}
 					
+					break;
+					
+				case "recuperar":
+					if (loginRequired(request, response) > 0) {
+						response.sendRedirect("admin.do");
+					} else {						
+						request.getRequestDispatcher("/admin/recuperarContraseña.jsp").forward(request, response);
+					}
+					break;
+					
+				case "recuperarPassword":
+					if (loginRequired(request, response) > 0) {
+						response.sendRedirect("admin.do");
+					} else {						
+						recuperarPassword(request, response, model);
+					}
 					break;
 				
 				case "logout":
@@ -403,5 +421,31 @@ public class UsuarioController extends HttpServlet {
 		} 
 		
 		return res;
+	}
+	
+	private void recuperarPassword(HttpServletRequest request, HttpServletResponse response, UsuarioModel model) {
+		try {
+			mensajes.clear();
+			
+			String email = request.getParameter("correoAdmin");
+			
+			int adminId = model.ifMailExist(email);
+			
+			if (adminId > 0) {
+				if (model.recuperarPassword(email, adminId) > 0) {
+					mensajes.add("Revise su correo, se le ha enviado su nueva contraseña");
+					request.setAttribute("mensajes", mensajes);
+					request.getRequestDispatcher("/admin/Loginadmin.jsp").forward(request, response);
+				}
+			} else {
+				mensajes.add("La direccion email que ha proporcionado, no se ha encontrado");
+				request.setAttribute("mensajes", mensajes);
+				request.getRequestDispatcher("/admin/Loginadmin.jsp").forward(request, response);
+			}
+
+		} catch (Exception ex) {
+			// TODO: handle exception
+			Logger.getLogger(EmpresaController.class.getName()).log(Level.SEVERE, null, ex);
+		}
 	}
 }

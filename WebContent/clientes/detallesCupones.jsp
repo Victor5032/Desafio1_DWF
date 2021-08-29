@@ -19,7 +19,7 @@
 <%@ include file="navbarCliente.jsp"%>
 	<div class="container mt-5 mb-5">
 		<div class="row">
-			<div class="col-6 shadow-lg rounded mt-5">
+			<div class="col-md-6 shadow-lg rounded mt-5">
 				<h3 class="text-center mt-5 mb-5">Detalles de oferta</h3>
 				<div class="card text-center w-100">
 					<div class="card-header bg-transparent border-success">${detallesCupones.tituloOferta}</div>
@@ -47,12 +47,13 @@
 					</div>
 				</div>
 			</div>
-            <div class="col-6 mt-5 shadow-lg rounded">
+            <div class="col-md-6 mt-5 shadow-lg rounded">
 				<h3 class="text-center mt-5 mb-5">Metodo de pago</h3>
                 <div class="d-flex justify-content-center align-items-center">
                     <form class="w-100 shadow-lg p-3 mb-5 bg-white rounded p-5" method="POST" action="">
 						<input type="hidden" name="cupon" id="cupon" value="${cuponId}">
 						<input type="hidden" name="idCliente" id="idCliente" value="${sessionScope.usser}">
+						<input type="hidden" name="ultimos4" id="ultimos4" value="">
                         <div class="row">
                             <div class="col-6 mt-3">
                                 <span>Numero de tarjeta</span>
@@ -85,11 +86,25 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
 <script>
+	//Input de la tarjeta ingresada por el cliente
+	var campoTarjeta = document.getElementById("numeroTarjeta");
+
+	//Input hidden donde se ingresan los ultimos 4 digitos de la tarjeta
+	var ultimos4 = document.getElementById("ultimos4");
+
+	campoTarjeta.onchange = function(){
+		var numTarjeta = campoTarjeta.value;
+		var cadena = numTarjeta.split("-");
+		var cuatroUltimos = cadena[3];
+		ultimos4.value = cuatroUltimos;
+	}
     window.onload = function(){
         $('#numeroTarjeta').mask('0000-0000-0000-0000');
         $('#fechaExpiracion').mask('00/00');
         $('#codigoSeguridad').mask('000');
     }
+
+
 </script>
 </html>
 
