@@ -86,13 +86,17 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
 <script>
+	//Input de la tarjeta ingresada por el cliente
 	var campoTarjeta = document.getElementById("numeroTarjeta");
+
+	//Input hidden donde se ingresan los ultimos 4 digitos de la tarjeta
+	var ultimos4 = document.getElementById("ultimos4");
 
 	campoTarjeta.onchange = function(){
 		var numTarjeta = campoTarjeta.value;
-		var cadena = NumTarjeta.split("-");
-		console.log(cadena);
-
+		var cadena = numTarjeta.split("-");
+		var cuatroUltimos = cadena[3];
+		ultimos4.value = cuatroUltimos;
 	}
     window.onload = function(){
         $('#numeroTarjeta').mask('0000-0000-0000-0000');
