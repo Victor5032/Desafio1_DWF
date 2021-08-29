@@ -43,6 +43,9 @@ public class OfertaCuponesController extends HttpServlet {
 			case "detallesCupones":
 				 verDetallesCupones(request, response);
 				 break;
+			case "asignarCompraCliente":
+				cambiarEstadoCupon(request, response);
+				break;
 			default:
 				break;
 			}
@@ -82,6 +85,46 @@ public class OfertaCuponesController extends HttpServlet {
 		
 		String idOferta = request.getParameter("idoferta");
 		String idEmpresa = request.getParameter("empresa");
+		int ofertaID = Integer.parseInt(idOferta);
+		int empresaID = Integer.parseInt(idEmpresa);
+		
+		try {
+			String cuponDisponible = modelo.cuponDisponible(ofertaID);
+			request.setAttribute("detallesCupones",modelo.mostrarDetallesCupon(ofertaID));
+			request.setAttribute("cuponDisponible", cuponDisponible);
+			request.setAttribute("cuponId", modelo.cuponId(cuponDisponible));
+			request.setAttribute("empresa",modeloEmpresa.obtenerEmpresa(empresaID));
+			request.getRequestDispatcher("/clientes/detallesCupones.jsp").forward(request, response);
+		}catch (SQLException | ServletException | IOException ex) {
+			Logger.getLogger(OfertaCuponesController.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		
+	}
+
+	private void cambiarEstadoCupon(HttpServletRequest request, HttpServletResponse response) {
+
+		request.getRequestDispatcher("/clientes/cuponesComprados.jsp").forward(request, response);
+		
+		int cupon = Integer.parseInt(request.getParameter("cupon"));
+
+		System.out.println(cupon + "Aqui");
+		
+		try {
+			request.setAttribute("detallesCupones",modelo.cambiarEstadoCupon(cupon));
+			request.getRequestDispatcher("/clientes/cuponesComprados.jsp").forward(request, response);
+		}catch (SQLException | ServletException | IOException ex) {
+			Logger.getLogger(OfertaCuponesController.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		
+	}
+
+	private void asignarCuponCliente(HttpServletRequest request, HttpServletResponse response) {
+		
+		String idCliente = request.getParameter("idCliente");
+		String ultimos4 = request.getParameter("ultimos4");
+		
+		String cupon = request.getParameter("cupon");
+		String idCliente = request.getParameter("idCliente");
 		int ofertaID = Integer.parseInt(idOferta);
 		int empresaID = Integer.parseInt(idEmpresa);
 		

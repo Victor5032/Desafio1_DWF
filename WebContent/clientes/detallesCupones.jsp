@@ -50,26 +50,26 @@
             <div class="col-md-6 mt-5 shadow-lg rounded">
 				<h3 class="text-center mt-5 mb-5">Metodo de pago</h3>
                 <div class="d-flex justify-content-center align-items-center">
-                    <form class="w-100 shadow-lg p-3 mb-5 bg-white rounded p-5" method="POST" action="">
+                    <form class="w-100 shadow-lg p-3 mb-5 bg-white rounded p-5" method="POST" action="${pageContext.request.contextPath}/clientes.do?op=asignarCompraCliente">
 						<input type="hidden" name="cupon" id="cupon" value="${cuponId}">
 						<input type="hidden" name="idCliente" id="idCliente" value="${sessionScope.usser}">
 						<input type="hidden" name="ultimos4" id="ultimos4" value="">
                         <div class="row">
                             <div class="col-6 mt-3">
                                 <span>Numero de tarjeta</span>
-                                <input type="text" class="form-control" id="numeroTarjeta" name="numeroTarjeta" value="">
+                                <input type="text" class="form-control" id="numeroTarjeta" name="numeroTarjeta" value="" required>
                             </div>
                             <div class="col-6 mt-3">
                                 <span>Fecha de expiracion (mm/aa)</span>
-                                <input type="text" class="form-control" id="fechaExpiracion" name="fechaExpiracion" value="">
+                                <input type="text" class="form-control" id="fechaExpiracion" name="fechaExpiracion" value="" required>
                             </div>
                             <div class="col-6 mt-3">
                                 <span>Titular de la tarjeta</span>
-                                <input type="text" class="form-control" id="titularTarjeta" name="titularTarjeta" value="">
+                                <input type="text" class="form-control" id="titularTarjeta" name="titularTarjeta" value="" required>
                             </div>
                             <div class="col-6 mt-3">
                                 <span>Codigo de seguridad</span>
-                                <input type="password" class="form-control" id="codigoSeguridad" name="codigoSeguridad" value="">
+                                <input type="password" class="form-control" id="codigoSeguridad" name="codigoSeguridad" value="" required>
                             </div>
                             <div class="text-center mt-5"><button type="submit" class="btn btn-warning">Realizar pago</button></div>
                         </div>

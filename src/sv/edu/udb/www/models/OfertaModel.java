@@ -546,6 +546,64 @@ public class OfertaModel extends Conexion {
 			return 0;
 		}
 	}
+
+	public int cambiarEstadoCupon(int codigo_id) throws SQLException {
+		try {
+			int respuesta = 0;
+			String sql = "UPDATE cupones SET estado = 2 WHERE cupon_id = ?";
+			
+			this.conectar();
+			
+			cs =  conexion.prepareCall(sql);
+			
+			cs.setInt(1, codigo_id);
+			
+			rs = cs.executeQuery();
+			
+			if (rs.next()) {
+				respuesta = rs.getInt("cupon_id");
+			}
+			
+			this.desconectar();
+			
+			return respuesta;
+		} catch (SQLException ex) {
+			Logger.getLogger(UsuarioModel.class.getName()).log(Level.SEVERE, null, ex);
+
+			this.desconectar();
+
+			return 0;
+		}
+	}
+
+	public int asignarCuponCliente(int cupon_id, int cliente_id, int ultimos4) throws SQLException {
+
+		String sql = "INSERT INTO cliente_cupones (cupon_id, cliente_id, ultimos4) VALUES (?, ?, ?)";
+		
+		try {
+			int response = 0;
+			
+			this.conectar();
+			
+			cs = conexion.prepareCall(sql);
+			
+			cs.setInt(1, cupon_id);
+			cs.setInt(2, cliente_id);
+			cs.setInt(3, ultimos4);
+			
+			response = cs.executeUpdate();
+			
+			this.desconectar();
+			
+			return response;
+		} catch (SQLException e) {
+			Logger.getLogger(OfertaModel.class.getName()).log(Level.SEVERE, null, e);
+			
+			this.desconectar();
+			
+			return 0;
+		}
+	}
 	
 }
 
