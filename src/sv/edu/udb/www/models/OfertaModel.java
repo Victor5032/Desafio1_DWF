@@ -312,6 +312,7 @@ public class OfertaModel extends Conexion {
 			rs=cs.executeQuery(); 
 			
 			while (rs.next()) {
+				CuponModel cupones = new CuponModel();
 				Oferta misOfertas = new Oferta();
 				misOfertas.setIdOferta(rs.getInt("oferta_id"));
 				misOfertas.setIdEmpresaOferta(rs.getInt("empresa_id"));
@@ -321,7 +322,7 @@ public class OfertaModel extends Conexion {
 				misOfertas.setPrecio_ofertaOferta(rs.getDouble("precio_oferta"));
 				misOfertas.setFechaInicioOferta(rs.getDate("fecha_inicio"));
 				misOfertas.setFechaFinOferta(rs.getDate("fecha_fin"));
-				misOfertas.setCantidadCuponesOferta(rs.getInt("cantidad_cupones"));
+				misOfertas.setCantidadCuponesOferta(cupones.cuponesCantidad(rs.getInt("oferta_id")));
 				listaOfertaDisponibles.add(misOfertas);
 			}
 			
@@ -445,12 +446,13 @@ public class OfertaModel extends Conexion {
 			rs=cs.executeQuery(); 
 			
 			if(rs.next()) {
+				CuponModel cupones = new CuponModel();
 				verDetalle.setTituloOferta(rs.getString("titulo"));
 				verDetalle.setIdOferta(rs.getInt("oferta_id"));
 				verDetalle.setDescripcionOferta(rs.getString("descripcion"));
 				verDetalle.setPrecioRegularOferta(rs.getDouble("precio_regular"));
 				verDetalle.setPrecio_ofertaOferta(rs.getDouble("precio_oferta"));
-				verDetalle.setCantidadCuponesOferta(cuponesCantidad(rs.getInt("oferta_id")));
+				verDetalle.setCantidadCuponesOferta(cupones.cuponesCantidad(rs.getInt("oferta_id")));
 			}
 			
 			this.desconectar();
@@ -465,32 +467,7 @@ public class OfertaModel extends Conexion {
 		
 	}
 	
-	public int cuponesCantidad(int idOferta) throws SQLException{
-		try {
-			System.out.print(idOferta);
-			int respuesta = 0;
-			String sql="SELECT COUNT(*) AS cantidad FROM `cupones` WHERE oferta_id = ? AND estado = 1";
-			this.conectar();
-			cs=conexion.prepareCall(sql);
-			
-			cs.setInt(1, idOferta);
-			
-			rs=cs.executeQuery(); 
-			
-			if(rs.next()) {
-				respuesta = rs.getInt("cantidad");
-			}
-			
-			this.desconectar();
-			return respuesta;
-		}catch (SQLException ex) {
-
-			Logger.getLogger(OfertaModel.class.getName()).log(Level.SEVERE, null, ex);
-			
-			this.desconectar();
-			return 0;
-		}
-	}	
+	
 	
 	public String cuponDisponible(int idOferta) throws SQLException{
 		try {
@@ -558,11 +535,9 @@ public class OfertaModel extends Conexion {
 			
 			cs.setInt(1, codigo_id);
 			
-			rs = cs.executeQuery();
-			
-			if (rs.next()) {
-				respuesta = rs.getInt("cupon_id");
-			}
+		
+			cs.executeUpdate();
+		
 			
 			this.desconectar();
 			

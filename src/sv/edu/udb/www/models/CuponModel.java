@@ -86,4 +86,33 @@ public class CuponModel extends Conexion {
 			return null;
 		}
 	}
+	
+	/*CANTIDAD DE CUPONES*/
+	public int cuponesCantidad(int idOferta) throws SQLException{
+		try {
+			System.out.print(idOferta);
+			int respuesta = 0;
+			String sql="SELECT COUNT(*) AS cantidad FROM `cupones` WHERE oferta_id = ? AND estado = 1";
+			this.conectar();
+			cs=conexion.prepareCall(sql);
+			
+			cs.setInt(1, idOferta);
+			
+			rs=cs.executeQuery(); 
+			
+			if(rs.next()) {
+				respuesta = rs.getInt("cantidad");
+			}
+			
+			this.desconectar();
+			return respuesta;
+		}catch (SQLException ex) {
+
+			Logger.getLogger(OfertaModel.class.getName()).log(Level.SEVERE, null, ex);
+			
+			this.desconectar();
+			return 0;
+		}
+	}	
+	
 }

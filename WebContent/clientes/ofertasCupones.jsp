@@ -35,9 +35,17 @@
 										<p class="card-text text-success">Precio Oferta: <br>$${ofertacupon.precio_ofertaOferta}</p>
 										<p class="card-text">
 											Precio Regular: <br></b>$<strike>${ofertacupon.precioRegularOferta}</strike>
+										
 										</p>
+										<c:if test="${ofertacupon.cantidadCuponesOferta > 0}">
 										<a href="${pageContext.request.contextPath}/ofertacupon.do?op=detallesCupones&idoferta=${ofertacupon.idOferta}&empresa=${ofertacupon.idEmpresaOferta}"
 											class="btn btn-primary">Adquirir</a>
+										</c:if>
+										
+										<c:if test="${ofertacupon.cantidadCuponesOferta == 0}">
+										Agotados
+										</c:if>
+																				
 									</div>
 								</div>
 							</div>

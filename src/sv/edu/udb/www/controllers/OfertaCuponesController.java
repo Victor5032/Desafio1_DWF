@@ -11,6 +11,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.jasper.tagplugins.jstl.core.Out;
+
 import sv.edu.udb.www.models.OfertaModel;
 import sv.edu.udb.www.models.EmpresaModel;
 
@@ -44,6 +47,7 @@ public class OfertaCuponesController extends HttpServlet {
 				 verDetallesCupones(request, response);
 				 break;
 			case "asignarCompraCliente":
+				out.print("esta entrenado");
 				cambiarEstadoCupon(request, response);
 				break;
 			default:
@@ -103,43 +107,25 @@ public class OfertaCuponesController extends HttpServlet {
 
 	private void cambiarEstadoCupon(HttpServletRequest request, HttpServletResponse response) {
 
-		request.getRequestDispatcher("/clientes/cuponesComprados.jsp").forward(request, response);
-		
-		int cupon = Integer.parseInt(request.getParameter("cupon"));
-
-		System.out.println(cupon + "Aqui");
-		
-		try {
-			request.setAttribute("detallesCupones",modelo.cambiarEstadoCupon(cupon));
-			request.getRequestDispatcher("/clientes/cuponesComprados.jsp").forward(request, response);
-		}catch (SQLException | ServletException | IOException ex) {
-			Logger.getLogger(OfertaCuponesController.class.getName()).log(Level.SEVERE, null, ex);
-		}
-		
-	}
-
-	private void asignarCuponCliente(HttpServletRequest request, HttpServletResponse response) {
-		
 		String idCliente = request.getParameter("idCliente");
 		String ultimos4 = request.getParameter("ultimos4");
-		
-		String cupon = request.getParameter("cupon");
-		String idCliente = request.getParameter("idCliente");
-		int ofertaID = Integer.parseInt(idOferta);
-		int empresaID = Integer.parseInt(idEmpresa);
-		
+		int cupon = Integer.parseInt(request.getParameter("cupon"));
+
+			
 		try {
-			String cuponDisponible = modelo.cuponDisponible(ofertaID);
-			request.setAttribute("detallesCupones",modelo.mostrarDetallesCupon(ofertaID));
-			request.setAttribute("cuponDisponible", cuponDisponible);
-			request.setAttribute("cuponId", modelo.cuponId(cuponDisponible));
-			request.setAttribute("empresa",modeloEmpresa.obtenerEmpresa(empresaID));
-			request.getRequestDispatcher("/clientes/detallesCupones.jsp").forward(request, response);
-		}catch (SQLException | ServletException | IOException ex) {
+			modelo.cambiarEstadoCupon(cupon);
+			
+			modelo.asignarCuponCliente(cupon, Integer.parseInt(idCliente), Integer.parseInt(ultimos4));
+			
+			
+		response.sendRedirect(request.getContextPath() +"/clientes.do?op=perfil&clienteID="+idCliente);
+		}catch (SQLException | IOException ex) {
 			Logger.getLogger(OfertaCuponesController.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		
 	}
+
+	
 	
 	private void insertar(HttpServletRequest request, HttpServletResponse response) {
 		

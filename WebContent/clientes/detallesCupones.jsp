@@ -50,7 +50,7 @@
             <div class="col-md-6 mt-5 shadow-lg rounded">
 				<h3 class="text-center mt-5 mb-5">Metodo de pago</h3>
                 <div class="d-flex justify-content-center align-items-center">
-                    <form class="w-100 shadow-lg p-3 mb-5 bg-white rounded p-5" method="POST" action="${pageContext.request.contextPath}/clientes.do?op=asignarCompraCliente">
+                    <form class="w-100 shadow-lg p-3 mb-5 bg-white rounded p-5" method="POST" action="${pageContext.request.contextPath}/ofertacupon.do?op=asignarCompraCliente">
 						<input type="hidden" name="cupon" id="cupon" value="${cuponId}">
 						<input type="hidden" name="idCliente" id="idCliente" value="${sessionScope.usser}">
 						<input type="hidden" name="ultimos4" id="ultimos4" value="">
