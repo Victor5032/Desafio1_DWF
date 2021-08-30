@@ -62,6 +62,7 @@
 							</div>
                             <input class="btn btn-warning mt-3" type="submit" value="Actualizar informacion">
                         </div>
+                       
                     </form>
                 </div>
             </div>
