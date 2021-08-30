@@ -32,7 +32,7 @@
                             </div>
                             <div class="col-12 mt-3">
                                 <span>Descripcion</span>
-                                <textarea class="form-control" name="ofertaDescripcion" id="descripcionOferta" cols="10" rows="5"
+                                <textarea required class="form-control" name="ofertaDescripcion" id="descripcionOferta" cols="10" rows="5"
                                 required></textarea>
                             </div>
 
@@ -52,7 +52,7 @@
 
                             <div class="col-6 mt-3">
                                 <span>Fecha Final</span>
-                                <input class="form-control" type="date" name="ofertaFinal"  required="" id="fechaFinal" />
+                                <input class="form-control" type="date" name="ofertaFinal"  required id="fechaFinal" />
 
                             </div>
                             <div class="col-6 mt-3">
@@ -61,7 +61,11 @@
                             </div>
                             <div class="col-6 mt-3">
                                 <span>Extras</span>
-                                <input class="form-control" name="ofertasExtras" type="text" id="extrasOfertas" >
+                                <input class="form-control" name="ofertasExtras" type="text" id="extrasOfertas">
+                            </div>
+                            <div class="col-6 mt-3">
+                                <span>precio por cupon</span>
+                                <input class="form-control" required name="precioXcupon" type="number" step=".01" id="extrasOfertas">
                             </div>
                         </div>
                         <div class="col-10 m-3">

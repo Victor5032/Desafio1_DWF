@@ -13,7 +13,7 @@ public class OfertaModel extends Conexion {
 	public int insertarOfertaEnEspera(int idEmpresa, Oferta oferta) throws SQLException {
 		try {
 			int filasAfectadas = 0;
-			String callSqlString = "CALL insertOfertaEnEspera(?,?,?,?,?,?,?,?,?)";
+			String callSqlString = "CALL insertOfertaEnEspera(?,?,?,?,?,?,?,?,?,?)";
 			this.conectar();
 			cs = conexion.prepareCall(callSqlString);
 			cs.setInt(1, idEmpresa);
@@ -24,7 +24,8 @@ public class OfertaModel extends Conexion {
 			cs.setDate(6, oferta.getFechaInicioOferta());
 			cs.setDate(7, oferta.getFechaFinOferta());
 			cs.setInt(8, oferta.getCantidadCuponesOferta());
-			cs.setString(9, oferta.getExtrasOferta());
+			cs.setDouble(9, oferta.getPrecioXcupon());
+			cs.setString(10, oferta.getExtrasOferta());
 			filasAfectadas = cs.executeUpdate();
 			this.desconectar();
 			return filasAfectadas;
@@ -64,6 +65,7 @@ public class OfertaModel extends Conexion {
 				oferta.setPrecioRegularOferta(rs.getDouble("precio_regular"));
 				oferta.setPrecio_ofertaOferta(rs.getDouble("precio_oferta"));
 				oferta.setCantidadCuponesOferta(rs.getInt("cantidad_cupones"));
+				oferta.setPrecioXcupon(rs.getDouble("precio_cupones"));
 				oferta.setExtrasOferta(rs.getString("extras"));
 				oferta.setObservacionesOferta(rs.getString("observaciones"));
 				oferta.setEstadoOferta(rs.getInt("estado"));
@@ -103,7 +105,7 @@ public class OfertaModel extends Conexion {
 	public int updateOferta(Oferta oferta, int idEmpresa) throws SQLException{
         try {
 			int filasAfectadas = 0;
-            String slqString = "CALL updateOferta(?,?,?,?,?,?,?,?,?,?)";
+            String slqString = "CALL updateOferta(?,?,?,?,?,?,?,?,?,?,?)";
 			this.conectar();
 			cs = conexion.prepareCall(slqString);
 			cs.setString(1, oferta.getTituloOferta());
@@ -113,9 +115,10 @@ public class OfertaModel extends Conexion {
 			cs.setDate(5, oferta.getFechaInicioOferta());
 			cs.setDate(6, oferta.getFechaFinOferta());
 			cs.setInt(7, oferta.getCantidadCuponesOferta());
-			cs.setString(8, oferta.getExtrasOferta());
-			cs.setInt(9, oferta.getIdOferta());
-			cs.setInt(10, idEmpresa);
+			cs.setDouble(8, oferta.getPrecioXcupon());
+			cs.setString(9, oferta.getExtrasOferta());
+			cs.setInt(10, oferta.getIdOferta());
+			cs.setInt(11, idEmpresa);
             filasAfectadas = cs.executeUpdate();
 			this.desconectar(); 
             return filasAfectadas;

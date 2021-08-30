@@ -143,6 +143,7 @@ public class OfertaController extends HttpServlet {
 			miOferta.setFechaFinOferta(Date.valueOf(request.getParameter("ofertaFinal")));
 			miOferta.setCantidadCuponesOferta(Integer.valueOf(request.getParameter("ofertaCantidadCupones")));
 			miOferta.setExtrasOferta(request.getParameter("ofertasExtras"));
+			miOferta.setPrecioXcupon(Double.valueOf(request.getParameter("precioXcupon")));
 			if (model.insertarOfertaEnEspera(idEmpresa, miOferta) > 0) {
 				listaEventos.add("Oferta enviada a revision con exito");
 				request.setAttribute("listaEventos", listaEventos);
@@ -184,6 +185,7 @@ public class OfertaController extends HttpServlet {
 			miOferta.setFechaInicioOferta(Date.valueOf(request.getParameter("ofertaInicio")));
 			miOferta.setFechaFinOferta(Date.valueOf(request.getParameter("ofertaFinal")));
 			miOferta.setCantidadCuponesOferta(Integer.valueOf(request.getParameter("ofertaCantidadCupones")));
+			miOferta.setPrecioXcupon(Double.valueOf(request.getParameter("precioXcupon")));
 			miOferta.setExtrasOferta(request.getParameter("ofertasExtras"));
 			if (model.updateOferta(miOferta, idEmpresa) > 0) {
 				listaEventos.add("La oferta fue actualizada y ha sido enviada a revision nuevamente");

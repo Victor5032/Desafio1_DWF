@@ -79,6 +79,10 @@
 									id="extrasOfertas" >
 							</div>
 							<div class="col-12 mt-3">
+                                <span>precio por cupon</span>
+                                <input class="form-control" value="${oferta.precioXcupon}" required name="precioXcupon" type="number" step=".01" id="extrasOfertas">
+                            </div>
+							<div class="col-12 mt-3">
 								<span>Observaciones</span>
 								<c:set value="" var="observaciones" />
 								<c:choose>
@@ -118,7 +122,7 @@
 							<div class="text-center">
 								<input class="btn btn-success mt-2" type="submit"
 									value="Actualizar" />
-								<button type="button" class="btn btn-danger mt-2"
+								<button hidden type="button" class="btn btn-danger mt-2"
 									data-bs-toggle="modal" data-bs-target="#exampleModal">
 									Eliminar oferta</button>
 							</div>
