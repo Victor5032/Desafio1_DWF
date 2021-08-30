@@ -90,7 +90,7 @@ public class CuponModel extends Conexion {
 	/*CANTIDAD DE CUPONES*/
 	public int cuponesCantidad(int idOferta) throws SQLException{
 		try {
-			System.out.print(idOferta);
+			
 			int respuesta = 0;
 			String sql="SELECT COUNT(*) AS cantidad FROM `cupones` WHERE oferta_id = ? AND estado = 1";
 			this.conectar();
