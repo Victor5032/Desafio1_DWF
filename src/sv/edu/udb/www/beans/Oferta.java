@@ -18,7 +18,7 @@ public class Oferta {
 	private Date fechaRegistroOferta;
 	private int estadoOferta;
     private double precioXcupon;
-	
+	 
 	
 	public Oferta() {
 		this.precioXcupon = 0.0;
