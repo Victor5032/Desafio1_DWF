@@ -2,12 +2,10 @@
 
 ##### © 2021
 
-Srek is love shrek is life
+Gonzalez Merlos  Fernando Antonio 
+López Maldonado Emerson Adonay 
+López Rivera Victor José 
+Otero Henriquez Kevin Armando
+Edwin Alberto Orellana Rosales
 
-att: Fernando Merlos uwu 
-
-
-Palabras clave:
-
-
-oyo es oyo
+Cuponera 1.0
