@@ -9,10 +9,16 @@ public class ClienteCupon {
 	private double precioOferta;
 	private Date fechaCompraDate;
 	private int estadoCupon;
+	private String codigoCupon;
 
-     
-	
-	
+	public String getCodigoCupon() {
+		return codigoCupon;
+	}
+
+	public void setCodigoCupon(String codigoCupon) {
+		this.codigoCupon = codigoCupon;
+	}
+
 	public int getEstadoCupon() {
 		return estadoCupon;
 	}

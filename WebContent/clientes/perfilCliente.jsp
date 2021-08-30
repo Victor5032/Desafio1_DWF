@@ -80,6 +80,7 @@
 						<th scope="col">Precio oferta</th>
 						<th scope="col">Fecha de compra</th>
 						<th scope="col">Estado del cupon</th>
+						<th scope="col">Codigo del cupon</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -94,7 +95,7 @@
 	                                        		Disponible
 	                                        	</c:if> <c:if
 									test="${cupones.estadoCupon == 2}">
-	                                        		por ver
+	                                        		Comprado
 	                                        	</c:if> <c:if
 									test="${cupones.estadoCupon == 3}">
 	                                        		usado
@@ -102,6 +103,7 @@
 									test="${cupones.estadoCupon == 4}">
 	                                        		vencido
 	                                        	</c:if></td>
+	                                        	<td>${cupones.codigoCupon}</td>
 							
 						</tr>
 					</c:forEach>

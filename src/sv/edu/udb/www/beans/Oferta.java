@@ -17,8 +17,11 @@ public class Oferta {
 	private String observacionesOferta;
 	private Date fechaRegistroOferta;
 	private int estadoOferta;
-
+    private double precioXcupon;
+	
+	
 	public Oferta() {
+		this.precioXcupon = 0.0;
 		this.idOferta= 0;
 		this.idEmpresaOferta = 0;
 		this.tituloOferta = "";
@@ -34,9 +37,10 @@ public class Oferta {
 		this.estadoOferta = 0;
 	}
 
-	public Oferta(int idEmpresaOferta, String tituloOferta, String descripcionOferta, double precioRegularOferta,
+	public Oferta(double precioXcupon, int idEmpresaOferta, String tituloOferta, String descripcionOferta, double precioRegularOferta,
 			double precio_ofertaOferta, Date fechaInicioOferta, Date fechaFinOferta, int cantidadCuponesOferta,
 			String extrasOferta, String observacionesOferta, Date fechaRegistroOferta, int estadoOferta) {
+		this.precioXcupon = precioXcupon;
 		this.idEmpresaOferta = idEmpresaOferta;
 		this.tituloOferta = tituloOferta;
 		this.descripcionOferta = descripcionOferta;
@@ -51,6 +55,17 @@ public class Oferta {
 		this.estadoOferta = estadoOferta;
 	}
 	
+	
+	
+	
+	public double getPrecioXcupon() {
+		return precioXcupon;
+	}
+
+	public void setPrecioXcupon(double precioXcupon) {
+		this.precioXcupon = precioXcupon;
+	}
+
 	public int getIdOferta() {
 		return idOferta;
 	}

@@ -76,7 +76,7 @@
 							<div class="col-6 mt-3">
 								<span>Extras</span> <input value="${oferta.extrasOferta }"
 									class="form-control" name="ofertasExtras" type="text"
-									id="extrasOfertas" required>
+									id="extrasOfertas" >
 							</div>
 							<div class="col-12 mt-3">
 								<span>Observaciones</span>
@@ -92,7 +92,7 @@
 								</c:choose>
 								<input value='<c:out value="${observaciones}"/>'
 									class="form-control" type="text" readonly
-									id="observacionOfertas" required>
+									id="observacionOfertas" >
 							</div>
 							<div class="col-12 mt-3">
 								<span>Estado</span>
