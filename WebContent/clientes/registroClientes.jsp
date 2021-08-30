@@ -10,6 +10,7 @@
     <title>Registrar cliente</title>
 </head>
 <body>
+<%@ include file="navbarCliente.jsp"%>
     <div class="container">
     <c:if test="${not empty listaEventos}">
 			<div class="alert alert-dark">
@@ -58,6 +59,7 @@
                                 <input type="password" name="passwordCliente" class="form-control" id="contraseñaRegistroClientes">
                             </div>
                             <div class="text-center mt-5"><button type="submit" class="btn btn-primary">Registrarse</button></div>
+                           
                         </div>
                     </form>
                 </div>
