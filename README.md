@@ -2,10 +2,10 @@
 
 ##### © 2021
 
-Gonzalez Merlos  Fernando Antonio 
-López Maldonado Emerson Adonay 
-López Rivera Victor José 
-Otero Henriquez Kevin Armando
-Edwin Alberto Orellana Rosales
+- Gonzalez Merlos Fernando Antonio 
+- López Maldonado Emerson Adonay 
+- López Rivera Victor José 
+- Otero Henriquez Kevin Armando
+- Edwin Alberto Orellana Rosales
 
 Cuponera 1.0
