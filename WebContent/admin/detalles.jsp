@@ -74,6 +74,16 @@
                                     		</p>
                                    		</div>
                                    	</div>
+                                   	<c:if test="${oferta.estadoOferta == 3 or oferta.estadoOferta == 2}">
+                                   		<br>
+                                   		<div class="row">
+                                   			<div class="col-12">
+                                   				<center>
+                                   					<strong>Precio por cupón:</strong>&nbsp;<span class="text-primary">$${oferta.precioXcupon}</span>
+                                   				</center>
+                                   			</div>
+                                   		</div>
+                                   	</c:if>
                                     <br>
                                     <c:if test="${not empty oferta.extrasOferta}">
 	                                	<p class="card-text"><strong>Extras:&nbsp;</strong>${oferta.extrasOferta}</p>
@@ -126,6 +136,8 @@
 						  	<div class="card">
 						  		<div class="card-header text-center">
 							  		<strong>Cupones solicitados:</strong>&nbsp;${oferta.cantidadCuponesOferta}
+							  		<br>
+							  		<strong>Precio por cupón:</strong>&nbsp;$${oferta.precioXcupon}
 							  	</div>
 							  	<div class="card-body">
 							  		<table class="table table-striped table-hover" id="myTable">

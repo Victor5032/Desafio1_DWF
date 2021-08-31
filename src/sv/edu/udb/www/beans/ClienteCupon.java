@@ -9,7 +9,11 @@ public class ClienteCupon {
 	private double precioOferta;
 	private Date fechaCompraDate;
 	private int estadoCupon;
+	private String estado;
 	private String codigoCupon;
+	private Date fechaVencimiento;
+	private String cliente;
+	private String dui;
 
 	public String getCodigoCupon() {
 		return codigoCupon;
@@ -17,6 +21,14 @@ public class ClienteCupon {
 
 	public void setCodigoCupon(String codigoCupon) {
 		this.codigoCupon = codigoCupon;
+	}
+	
+	public String getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(String cliente) {
+		this.cliente = cliente;
 	}
 
 	public int getEstadoCupon() {
@@ -66,5 +78,28 @@ public class ClienteCupon {
 	public void setFechaCompraDate(Date fechaCompraDate) {
 		this.fechaCompraDate = fechaCompraDate;
 	}
+	
+	public Date getFechaVencimiento() {
+		return fechaVencimiento;
+	}
 
+	public void setFechaVencimiento(Date fechaVencimiento) {
+		this.fechaVencimiento = fechaVencimiento;
+	}
+	
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+	
+	public String getDui() {
+		return dui;
+	}
+
+	public void setDui(String dui) {
+		this.dui = dui;
+	}
 }

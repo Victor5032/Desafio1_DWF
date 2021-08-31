@@ -75,37 +75,51 @@
 			<table class="table">
 				<thead>
 					<tr>
+						<th scope="col">Codigo del cupon</th>
 						<th scope="col">Titulo</th>
 						<th scope="col">Descripcion</th>
 						<th scope="col">Precio regular</th>
 						<th scope="col">Precio oferta</th>
 						<th scope="col">Fecha de compra</th>
 						<th scope="col">Estado del cupon</th>
-						<th scope="col">Codigo del cupon</th>
+						<c:if test="${cupones.estadoCupon == 2}">
+							<th scope="col">Descargar</th>
+						</c:if>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach items="${requestScope.listacupones}" var="cupones">
 						<tr>
+							<td>${cupones.codigoCupon}</td>
 							<td>${cupones.tituloClienteCupon}</td>
 							<td>${cupones.descripcionClienteCupon}</td>
 							<td>${cupones.precioRegular}</td>
 							<td>${cupones.precioOferta}</td>
 							<td>${cupones.fechaCompraDate}</td>
-							<td><c:if test="${cupones.estadoCupon == 1}">
-	                                        		Disponible
-	                                        	</c:if> <c:if
-									test="${cupones.estadoCupon == 2}">
-	                                        		Comprado
-	                                        	</c:if> <c:if
-									test="${cupones.estadoCupon == 3}">
-	                                        		usado
-	                                        	</c:if> <c:if
-									test="${cupones.estadoCupon == 4}">
-	                                        		vencido
-	                                        	</c:if></td>
-	                                        	<td>${cupones.codigoCupon}</td>
-							
+							<c:if test="${cupones.estadoCupon == 1}">
+                            	<td>Disponible</td>
+                            </c:if>
+                            <c:if test="${cupones.estadoCupon == 2}">
+								<td>Comprado</td>
+								<td>
+									<form method="POST" action="${pageContext.request.contextPath}/clientes.do">
+										<input type="hidden" name="op" id="op" value="cuponPdf">
+										<input type="hidden" name="codigo" id="codigo" value="${cupones.codigoCupon}">
+										<input type="hidden" name="titulo" id="titulo" value="${cupones.tituloClienteCupon}">
+										<input type="hidden" name="regular" id="regular" value="${cupones.precioRegular}">
+										<input type="hidden" name="oferta" id="oferta" value="${cupones.precioOferta}">
+										<input type="hidden" name="comprado" id="comprado" value="${cupones.fechaCompraDate}">
+										<input type="hidden" name="vencimiento" id="vencimiento" value="${cupones.fechaVencimiento}">
+										<button type="submit" class="btn btn-danger">PDF</button>
+									</form>
+								</td>
+							</c:if>
+							<c:if test="${cupones.estadoCupon == 3}">
+	                        	<td>Canjeado</td>
+	                        </c:if>
+	                        <c:if test="${cupones.estadoCupon == 4}"> 
+	                        	<td>Vencido</td>
+							</c:if>							
 						</tr>
 					</c:forEach>
 

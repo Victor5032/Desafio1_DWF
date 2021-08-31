@@ -48,7 +48,12 @@
 				</div>
 			</div>
             <div class="col-md-6 mt-5 shadow-lg rounded">
-				<h3 class="text-center mt-5 mb-5">Metodo de pago</h3>
+				<h3 class="text-center mt-5 mb-3">Procesar pago</h3>
+				<center>
+					<h4>
+						<strong>Precio del cupón:</strong>&nbsp;<span class="text-primary">$${detallesCupones.precioXcupon}</span>
+					</h4>
+				</center>
                 <div class="d-flex justify-content-center align-items-center">
                     <form class="w-100 shadow-lg p-3 mb-5 bg-white rounded p-5" method="POST" action="${pageContext.request.contextPath}/ofertacupon.do?op=asignarCompraCliente">
 						<input type="hidden" name="cupon" id="cupon" value="${cuponId}">

@@ -69,6 +69,7 @@ public class OfertaModel extends Conexion {
 				oferta.setExtrasOferta(rs.getString("extras"));
 				oferta.setObservacionesOferta(rs.getString("observaciones"));
 				oferta.setEstadoOferta(rs.getInt("estado"));
+				oferta.setPrecioXcupon(rs.getDouble("precio_cupones"));
 				this.desconectar();
 				return oferta;
 			}
@@ -260,6 +261,7 @@ public class OfertaModel extends Conexion {
 				oferta.setCantidadCuponesOferta(rs.getInt("cantidad_cupones"));
 				oferta.setFechaRegistroOferta(rs.getDate("fecha_registro"));
 				oferta.setEstadoOferta(rs.getInt("estado"));
+				oferta.setPrecioXcupon(rs.getDouble("precio_cupones"));
 				
 				lista.add(oferta);
 			}
@@ -326,6 +328,7 @@ public class OfertaModel extends Conexion {
 				misOfertas.setFechaInicioOferta(rs.getDate("fecha_inicio"));
 				misOfertas.setFechaFinOferta(rs.getDate("fecha_fin"));
 				misOfertas.setCantidadCuponesOferta(cupones.cuponesCantidad(rs.getInt("oferta_id")));
+				misOfertas.setPrecioXcupon(rs.getDouble("precio_cupones"));
 				listaOfertaDisponibles.add(misOfertas);
 			}
 			
@@ -456,6 +459,7 @@ public class OfertaModel extends Conexion {
 				verDetalle.setPrecioRegularOferta(rs.getDouble("precio_regular"));
 				verDetalle.setPrecio_ofertaOferta(rs.getDouble("precio_oferta"));
 				verDetalle.setCantidadCuponesOferta(cupones.cuponesCantidad(rs.getInt("oferta_id")));
+				verDetalle.setPrecioXcupon(rs.getDouble("precio_cupones"));
 			}
 			
 			this.desconectar();

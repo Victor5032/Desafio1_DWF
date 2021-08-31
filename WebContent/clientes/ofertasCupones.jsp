@@ -37,8 +37,12 @@
 											Precio Regular: <br></b>$<strike>${ofertacupon.precioRegularOferta}</strike>
 										
 										</p>
+										<p class="card-text">
+											Precio por cupón: <br></b><span class="text-primary"><strong>$${ofertacupon.precioXcupon}</strong></span>
+										
+										</p>
 										<c:if test="${ofertacupon.cantidadCuponesOferta > 0}">
-										<a href="${pageContext.request.contextPath}/ofertacupon.do?op=detallesCupones&idoferta=${ofertacupon.idOferta}&empresa=${ofertacupon.idEmpresaOferta}"
+											<a href="${pageContext.request.contextPath}/ofertacupon.do?op=detallesCupones&idoferta=${ofertacupon.idOferta}&empresa=${ofertacupon.idEmpresaOferta}"
 											class="btn btn-primary">Adquirir</a>
 										</c:if>
 										

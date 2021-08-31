@@ -114,7 +114,7 @@ public class ClientesModel extends Conexion {
 	public List<ClienteCupon> cuponesDeUncliente(int clienteId) throws SQLException {
 		try {
 			List<ClienteCupon> misCupones = new ArrayList<ClienteCupon>();
-			String sqlString = "SELECT cliente_cupones.cliente_id , cliente_cupones.cupon_id,cliente_cupones.fecha_compra, cupones.cupon_id, cupones.codigo_promocional,  cupones.estado, cupones.oferta_id, ofertas.oferta_id, ofertas.titulo, ofertas.descripcion, ofertas.precio_regular, ofertas.precio_oferta from cliente_cupones INNER JOIN cupones on cliente_cupones.cupon_id = cupones.cupon_id INNER JOIN ofertas on cupones.oferta_id = ofertas.oferta_id WHERE cliente_cupones.cliente_id = ? ORDER BY `cliente_cupones`.`fecha_compra` DESC";
+			String sqlString = "SELECT cliente_cupones.cliente_id , cliente_cupones.cupon_id,cliente_cupones.fecha_compra, cupones.cupon_id, cupones.codigo_promocional,  cupones.estado, cupones.fecha_vencimiento, cupones.oferta_id, ofertas.oferta_id, ofertas.titulo, ofertas.descripcion, ofertas.precio_regular, ofertas.precio_oferta from cliente_cupones INNER JOIN cupones on cliente_cupones.cupon_id = cupones.cupon_id INNER JOIN ofertas on cupones.oferta_id = ofertas.oferta_id WHERE cliente_cupones.cliente_id = ? ORDER BY `cliente_cupones`.`fecha_compra` DESC";
             this.conectar();
             cs = conexion.prepareCall(sqlString);
             cs.setInt(1, clienteId);
@@ -128,6 +128,7 @@ public class ClientesModel extends Conexion {
             	cuponesComprados.setFechaCompraDate(rs.getDate("fecha_compra"));
             	cuponesComprados.setEstadoCupon(rs.getInt("estado"));
             	cuponesComprados.setCodigoCupon(rs.getString("codigo_promocional"));
+            	cuponesComprados.setFechaVencimiento(rs.getDate("fecha_vencimiento"));
             	misCupones.add(cuponesComprados);
             }
 			return misCupones;

@@ -58,6 +58,13 @@
                                     		</p>
                                    		</div>
                                    	</div>
+                                   	<div class="row">
+                                   		<div class="col-12">
+                                   			<p class="card-text text-center">
+                                    			<h4 class="text-center"><strong>Precio por cupón:&nbsp;</strong><span class="text-primary">$${oferta.precioXcupon}</span></h4>
+                                    		</p>
+                                   		</div>
+                                   	</div>
                                     <br>
                                     <c:if test="${not empty oferta.extrasOferta}">
 	                                	<p class="card-text"><strong>Extras:&nbsp;</strong>${oferta.extrasOferta}</p>
@@ -67,7 +74,7 @@
                             </div>
                         </div>
 						<div class="col-5">
-							<h4 class="text-center">¿Qué desea realizar con la oferta?</h4>
+							<h4 class="text-center">¿Qué desea realizar con esta oferta?</h4>
 							<br>
 							<form action="${pageContext.request.contextPath}/admin.do" method="POST">
 								<input type="hidden" name="op" id="op" value="sale-status">

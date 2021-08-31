@@ -1,10 +1,8 @@
 package sv.edu.udb.www.controllers;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.*;
+import java.util.*;
+import java.util.logging.*;
 
 import javax.mail.Session;
 import javax.servlet.ServletException;
@@ -15,6 +13,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.jasper.tagplugins.jstl.core.If;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfWriter;
+
+import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
+import org.apache.wicket.markup.html.link.DownloadLink;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 
 import sv.edu.udb.www.beans.ClienteCupon;
 import sv.edu.udb.www.beans.Clientes;
@@ -33,7 +38,7 @@ public class ClientesController extends HttpServlet {
 	OfertaModel ofertaModel = new OfertaModel();
 
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+			throws ServletException, IOException, DocumentException {
 		HttpSession session = request.getSession(false);
 		response.setContentType("text/html;charset=UTF-8");
 		try (PrintWriter out = response.getWriter()) {
@@ -64,6 +69,10 @@ public class ClientesController extends HttpServlet {
 			case "updatePassword":
 				changePassword(request, response);
 				break;
+				
+			case "cuponPdf":
+				generarPDF(request, response);
+				break;
 			default:
 				break;
 			}
@@ -83,7 +92,12 @@ public class ClientesController extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		processRequest(request, response);
+		try {
+			processRequest(request, response);
+		} catch (ServletException | IOException | DocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -97,7 +111,12 @@ public class ClientesController extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		processRequest(request, response);
+		try {
+			processRequest(request, response);
+		} catch (ServletException | IOException | DocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -292,5 +311,57 @@ public class ClientesController extends HttpServlet {
 			Logger.getLogger(ClientesController.class.getName()).log(Level.SEVERE, null, e);
 		}
 	}
-
+	
+	public void generarPDF(HttpServletRequest request, HttpServletResponse response) throws IOException, DocumentException {
+		/*IModel fileModel =  new LoadableDetachableModel() {
+			protected Object load() { 
+		        // A hello world PDF
+		        File f = null;
+		        
+				try {
+					f = File.createTempFile("tempFile", null);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		        
+		        Document document = new Document();
+		        
+		        try {
+					PdfWriter.getInstance(document, new FileOutputStream(f));
+				} catch (FileNotFoundException | DocumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		        
+		        document.open();
+		        try {
+					document.add(new Paragraph("Hello World!"));
+				} catch (DocumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		        document.close();
+		        
+		        return f;
+		    }
+		};
+		
+		DownloadLink link = new DownloadLink("cupon", fileModel, "cupon.pdf");
+		// If you want to delete the file after it's been downloaded
+		link.setDeleteAfterDownload(true);
+		System.out.println(link);*/
+		
+		Document document = new Document();
+        // step 2
+		PdfWriter writer =  PdfWriter.getInstance(document, new FileOutputStream("C:\\Users\\Victor López\\Documents\\Eclipse-Projects\\Desafio1_DWF\\WebContent\\pdf\\result.pdf"));
+        // step 3
+        document.open();
+        // step 4
+        document.add(new Paragraph("Hello World"));
+        document.add(new Paragraph(new Date().toString()));
+        // step 5
+        document.close();
+        writer.close();
+	}
 }
