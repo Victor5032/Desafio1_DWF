@@ -118,7 +118,7 @@ public class CuponModel extends Conexion {
 	}	
 	
 	public ClienteCupon obtenerCupon(String codigo) throws SQLException {
-		String sql = "SELECT CONCAT(clientes.nombres, ' ', clientes.apellidos) AS cliente, clientes.dui, cupones.codigo_promocional, ofertas.titulo, ofertas.precio_regular, ofertas.precio_oferta, cupones.estado FROM cliente_cupones INNER JOIN cupones ON cupones.cupon_id = cliente_cupones.cupon_id INNER JOIN clientes ON clientes.cliente_id = cliente_cupones.cliente_id INNER JOIN ofertas ON ofertas.oferta_id = cupones.oferta_id WHERE cupones.codigo_promocional = ?";
+		String sql = "SELECT CONCAT(clientes.nombres, ' ', clientes.apellidos) AS cliente, clientes.dui, cupones.codigo_promocional, ofertas.titulo, ofertas.precio_regular, ofertas.precio_oferta, cupones.fecha_vencimiento, cupones.estado FROM cliente_cupones INNER JOIN cupones ON cupones.cupon_id = cliente_cupones.cupon_id INNER JOIN clientes ON clientes.cliente_id = cliente_cupones.cliente_id INNER JOIN ofertas ON ofertas.oferta_id = cupones.oferta_id WHERE cupones.codigo_promocional = ?";
 		
 		ClienteCupon datos = new ClienteCupon();
 		
@@ -140,6 +140,7 @@ public class CuponModel extends Conexion {
 				datos.setTituloClienteCupon(rs.getString("titulo"));
 				datos.setPrecioRegular(rs.getDouble("precio_regular"));
 				datos.setPrecioOferta(rs.getDouble("precio_oferta"));
+				datos.setFechaVencimiento(rs.getDate("fecha_vencimiento"));
 				datos.setEstadoCupon(rs.getInt("estado"));
 				
 				if (rs.getInt("estado") == 2) {
@@ -174,10 +175,12 @@ public class CuponModel extends Conexion {
 	public ClienteCupon comprobarCupon(String codigo) {
 		ClienteCupon response = new ClienteCupon();
 		
+		Date fechaActual = new Date();
+		
 		try {
 			response = obtenerCupon(codigo);
 			
-			if (response.getEstadoCupon() == 4) {
+			if (response.getFechaVencimiento().before(fechaActual)) {
 				cuponVencido(codigo);
 				
 				response = obtenerCupon(codigo);
@@ -189,56 +192,22 @@ public class CuponModel extends Conexion {
 		return response;
 	}
 	
-	/*public int comprobarCupon(String codigo, String dui)  throws SQLException, ParseException {
+	public int canjearCupon(String dui, String codigo) {
 		int response = 0;
 		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		String fecha = new Date().toString();
-		
-		String sql = "SELECT COUNT(*) AS cantidad, cupones.fecha_vencimiento, cupones.codigo_promocional FROM cliente_cupones INNER JOIN clientes ON clientes.cliente_id = cliente_cupones.cliente_id INNER JOIN cupones ON cupones.cupon_id = cliente_cupones.cupon_id WHERE clientes.dui = ? AND cupones.codigo_promocional = ? AND cupones.estado = 2";
-		
 		try {
-			
-			this.conectar();
-			
-			cs = conexion.prepareCall(sql);
-			
-			cs.setString(1, dui);
-			cs.setString(2, codigo);
-			
-			rs = cs.executeQuery();
-			
-			if (rs.next()) {
-				if (rs.getInt("cantidad") > 0) {
-					Date fechaActual = dateFormat.parse(fecha);
-					Date fechaVencimiento = dateFormat.parse(rs.getString("fecha_vencimiento"));
-					
-					if (fechaVencimiento.after(fechaActual)) {
-						// El cupón esta vencido
-						response = 3;
-						
-						cuponVencido(rs.getString("codigo_promocional"));
-					}
-					
-					// Cupón canjeado
-					response = 1;
-				} else {
-					// Si el cliente no ha comprado ningún cupón
-					response = 2;
-				}
+			if (cuponCanjeado(codigo) == 1) {
+				response = 1;
 			}
-			
-			this.desconectar();
 			
 			return response;
 		} catch (SQLException ex) {
 			Logger.getLogger(CuponModel.class.getName()).log(Level.SEVERE, null, ex);
-			
-			this.desconectar();
-			
-			return response;
 		}
-	}*/
+		
+		return response;
+	}
+	
 	
 	public void cuponVencido(String codigo) throws SQLException {
 		String sql="UPDATE cupones SET estado = 4 WHERE codigo_promocional = ?";
@@ -262,7 +231,9 @@ public class CuponModel extends Conexion {
 		}
 	}
 	
-	/*public void cuponUsado(String codigo) throws SQLException {
+	public int cuponCanjeado(String codigo) throws SQLException {
+		int response = 0;
+		
 		String sql="UPDATE cupones SET estado = 3 WHERE codigo_promocional = ?";
 		
 		try {		
@@ -272,15 +243,18 @@ public class CuponModel extends Conexion {
 			
 			cs.setString(1, codigo);
 			
-			rs = cs.executeQuery(); 
+			response = cs.executeUpdate(); 
 			
 			this.desconectar();
-
+			
+			return response;
 		}catch (SQLException ex) {
 
 			Logger.getLogger(OfertaModel.class.getName()).log(Level.SEVERE, null, ex);
 			
 			this.desconectar();
 		}
-	}*/
+		
+		return response;
+	}
 }

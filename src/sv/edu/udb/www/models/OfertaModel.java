@@ -262,16 +262,7 @@ public class OfertaModel extends Conexion {
 				oferta.setCantidadCuponesOferta(rs.getInt("cantidad_cupones"));
 				oferta.setFechaRegistroOferta(rs.getDate("fecha_registro"));
 				oferta.setEstadoOferta(rs.getInt("estado"));
-<<<<<<< HEAD
-<<<<<<< HEAD
 				oferta.setPrecioXcupon(rs.getDouble("precio_cupones"));
-				
-=======
-
->>>>>>> 40f7dd893097d0275f5f1079fdb2103a661686f8
-=======
-
->>>>>>> 40f7dd893097d0275f5f1079fdb2103a661686f8
 				lista.add(oferta);
 			}
 
